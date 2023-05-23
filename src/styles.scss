@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import 'bootstrap/scss/bootstrap';
+
+.btn-warning {
+    color: white;
+    background-color: #F2A922;
+    border-color: #F2A922
+}
+
+.bg-success {
+    background-color: #006F57;
+}

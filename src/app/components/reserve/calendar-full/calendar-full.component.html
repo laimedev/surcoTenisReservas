@@ -1,14 +1,20 @@
 <div class="container pt-5">
 
-
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Cargando localidades...</p>
+  </div>
   <div class="row">
 
     <div class="form-group col-4 pt-3">
       <h4>Seleccione la cancha de preferencia: </h4>
     </div>
+   
 
+ 
     <div class="form-group col-8 pt-3 pb-5">
       <select  class="form-select" (change)="updateLocalidad($event)">
+        <option >Seleccione una cancha</option>
         <option [value]="data.codLocalidad" *ngFor="let data of localidad" >{{data.nomLocalidad}}</option>
       </select>
     </div>

@@ -57,13 +57,14 @@ export class CalendarFullComponent implements OnInit {
     eventsSet: this.handleEvents.bind(this),
     select: this.handleEventsDate.bind(this),
     slotMinTime: '06:00:00',
-    slotMaxTime: '22:00:00',
+    slotMaxTime: '21:50:00',
     slotDuration: '00:50:00',
     contentHeight: 'auto',
+    slotMinWidth:100,
     validRange: () => {
       return {
         start: moment().toDate(),
-        end: moment().add(10, 'days').toDate()
+        end: moment().add(7, 'days').toDate()
       };
     },
     locale: esLocale
@@ -78,8 +79,10 @@ export class CalendarFullComponent implements OnInit {
 
 
   public localidad: any = [];
-  localidadSelect: any;
+  localidadSelect: any 
   userDataJson: string | null | undefined;
+  isLoading: boolean | undefined;
+  spinner: any;
 
 
   constructor(public http: HttpClient,
@@ -101,8 +104,6 @@ export class CalendarFullComponent implements OnInit {
     this.clqSrv.initCulqi();
     this.loadEvents();
     this.obetenerLocalidades();
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     
   }
 
@@ -214,13 +215,11 @@ console.log(this.localidadSelect)
     this.http.post(url, payload, httpOptions).subscribe(
        (response) => {
          this.toastr.success('Reservation saved successfully:', 'Éxito');
-         this.router.navigate(['/reserve']); // Cam
-         this.activeModal.dismiss();
+         this.activeModal.close();
          this.loadEvents(this.localidadSelect)
        },
        (error) => {
-         console.log('Error saving reservation:', error);
-         this.toastr.error('Error saving reservation:', error);
+         this.toastr.error('Error saving reservation:', error.error);
          // Manejar el error de guardado de reserva si es necesario
        }
      );
@@ -248,12 +247,22 @@ console.log(this.localidadSelect)
 
 
 
-  obetenerLocalidades(){
-    this.reserveServices.getLocalidad().subscribe( resp => {
-      console.log(resp);
-      this.localidad = resp;
-    })
+  obetenerLocalidades() {
+    this.isLoading = true; // Mostrar el spinner de carga
+  
+    this.reserveServices.getLocalidad().subscribe(
+      (resp) => {
+        console.log(resp);
+        this.localidad = resp;
+        this.isLoading = false; // Ocultar el spinner de carga
+      },
+      (error) => {
+        console.log(error);
+        this.isLoading = false; // Ocultar el spinner de carga
+      }
+    );
   }
+  
   
   openReservationModal() {
     this.modalService.open(this.reservationModal, { centered: true }); // Abre el modal utilizando la referencia

@@ -1,5 +1,3 @@
-
-
 <div class="container pt-5">
 
     <div class="row">
@@ -11,28 +9,42 @@
           <div class='demo-app-main'>
             <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
               <ng-template #eventContent let-arg>
-                <b>{{ arg.timeText }}</b><br>
+                <b>{{ arg.timeText }} </b>
                 <i class="event-title">{{ arg.event.title }}</i>
               </ng-template>
             </full-calendar>
           
-            <div class="reservation-form" *ngIf="showReservationForm">
-              <h3>Crear Reserva</h3>
-              <form (submit)="submitReservationForm()">
-                <label for="startDateTime">Fecha y Hora de Inicio:</label>
-                <!--<input type="datetime-local" id="startDateTime" [(ngModel)]="reservationForm.startDateTime" name="startDateTime">-->
-                <input type="datetime-local" id="startDateTime" [ngModel]="reservationForm.startDateTime" name="startDateTime">
-        
-          
-                <label for="endDateTime">Fecha y Hora de Fin:</label>
-                <input type="datetime-local" id="endDateTime" [(ngModel)]="reservationForm.endDateTime" name="endDateTime">
-          
-                <label for="comment">Comentario:</label>
-                <textarea id="comment" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
-          
-                <button type="submit">Guardar Reserva</button>
-              </form>
-            </div>
+            
+            <ng-template #reservationModal let-modal="ngbModal">
+              <div class="modal-header">
+                <h4 class="modal-title">Crear Reserva</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form (submit)="submitReservationForm()">
+                  <label for="startDateTime">Fecha y Hora de Inicio:</label>
+                  <input type="datetime-local" id="startDateTime" [(ngModel)]="reservationForm.startDateTime" name="startDateTime" readonly>
+                
+                  <label for="endDateTime">Fecha y Hora de Fin:</label>
+                  <input type="datetime-local" id="endDateTime" [(ngModel)]="reservationForm.endDateTime" name="endDateTime" readonly>
+                
+                  <label for="name">Nombre de la persona con quien jugará:</label>
+                  <input type="text" id="name" [(ngModel)]="reservationForm.name" name="name" required>
+                
+                  <label for="dni">DNI de la persona con quien jugará:</label>
+                  <input type="text" id="dni" [(ngModel)]="reservationForm.dni" name="dni" required>
+                
+                  <label for="comment">Comentario:</label>
+                  <textarea id="comment" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
+                
+                  <button type="submit">Guardar Reserva</button>
+                </form>
+                
+              </div>
+            </ng-template>
+            
           </div>
           
         

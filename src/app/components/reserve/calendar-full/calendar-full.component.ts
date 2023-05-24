@@ -11,9 +11,8 @@ import listPlugin from '@fullcalendar/list';
 import * as moment from 'moment';
 import { SharedModule } from '../../../shared/shared.module';
 import esLocale from '@fullcalendar/core/locales/es';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-
+import { ToastrService } from 'ngx-toastr';
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-calendar-full',
@@ -88,7 +87,9 @@ export class CalendarFullComponent implements OnInit {
     public router: Router,
     public reserveServices: ReserveService,
     private changeDetector: ChangeDetectorRef,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    private activeModal: NgbActiveModal
     ){
 
   }
@@ -160,8 +161,8 @@ export class CalendarFullComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
+    if (confirm(`Esta fecha ya fue seleccionada`)) {
+    
     }
   }
 
@@ -212,11 +213,14 @@ console.log(this.localidadSelect)
   
     this.http.post(url, payload, httpOptions).subscribe(
        (response) => {
-         console.log('Reservation saved successfully:', response);
-         // Realizar acciones adicionales después de guardar la reserva si es necesario
+         this.toastr.success('Reservation saved successfully:', 'Éxito');
+         this.router.navigate(['/reserve']); // Cam
+         this.activeModal.dismiss();
+         this.loadEvents(this.localidadSelect)
        },
        (error) => {
          console.log('Error saving reservation:', error);
+         this.toastr.error('Error saving reservation:', error);
          // Manejar el error de guardado de reserva si es necesario
        }
      );

@@ -13,6 +13,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarFullComponent } from './components/reserve/calendar-full/calendar-full.component';
 import { SharedModule } from './shared/shared.module';
 import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -35,6 +36,7 @@ import { ToastrModule } from 'ngx-toastr';
     FormsModule,
     FullCalendarModule,
     ToastrModule.forRoot(),
+    BrowserAnimationsModule
     
   ],
   providers: [],

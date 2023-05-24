@@ -17,7 +17,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     CommonModule,

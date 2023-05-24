@@ -10,6 +10,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import * as moment from 'moment';
 import { SharedModule } from '../../../shared/shared.module';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-calendar-full',
   templateUrl: './calendar-full.component.html',
@@ -61,11 +62,14 @@ export class CalendarFullComponent implements OnInit {
   }];
 
 
+  public localidad: any = [];
 
   constructor(public http: HttpClient,
     private clqSrv : ReserveService,
     public router: Router,
-    private changeDetector: ChangeDetectorRef
+    public reserveServices: ReserveService,
+    private changeDetector: ChangeDetectorRef,
+    private modalService: NgbModal
     ){
 
   }
@@ -76,10 +80,14 @@ export class CalendarFullComponent implements OnInit {
 
     this.clqSrv.initCulqi();
     this.loadEvents();
+    this.obetenerLocalidades();
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     
   }
+
+
+
 
 
   payment(){
@@ -87,11 +95,16 @@ export class CalendarFullComponent implements OnInit {
   }
 
 
+  updateLocalidad(event: any){
+    console.log(event.target.value);
+    this.loadEvents(event.target.value)
+  }
+
   irLogin(){
     this.router.navigate(["reserve/login"])
   }
-  loadEvents() {
-    const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=2';
+  loadEvents(id?: any) {
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${id}`;
 
     this.http.get<any[]>(url).subscribe(
       (data: any[]) => {
@@ -143,6 +156,7 @@ export class CalendarFullComponent implements OnInit {
     this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
     this.reservationForm.endDateTime = this.formatDateTime(clickDate.end.toISOString());
     console.log(this.reservationForm.startDateTime);
+    console.log(this.reservationForm.endDateTime);
   }
 
   submitReservationForm() {
@@ -199,6 +213,15 @@ export class CalendarFullComponent implements OnInit {
 
   formatDateTime(dateTimeString: string): string {
     return moment(dateTimeString).format('YYYY-MM-DDTHH:mm');
+  }
+
+
+
+  obetenerLocalidades(){
+    this.reserveServices.getLocalidad().subscribe( resp => {
+      console.log(resp);
+      this.localidad = resp;
+    })
   }
   
 }

@@ -12,8 +12,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 
-
-
 @NgModule({
   declarations: [
     LoginComponent,

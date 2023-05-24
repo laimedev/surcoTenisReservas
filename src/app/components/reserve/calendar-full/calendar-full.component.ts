@@ -10,7 +10,11 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import * as moment from 'moment';
 import { SharedModule } from '../../../shared/shared.module';
+import esLocale from '@fullcalendar/core/locales/es';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+
+
 @Component({
   selector: 'app-calendar-full',
   templateUrl: './calendar-full.component.html',
@@ -18,7 +22,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class CalendarFullComponent implements OnInit {
-
+  @ViewChild('reservationModal') reservationModal: any;
   // settings: any = {
   //   title: '',
   //   currency: '',
@@ -41,9 +45,9 @@ export class CalendarFullComponent implements OnInit {
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'timeGridDay'
     },
-    initialView: 'dayGridMonth',
+    initialView: 'timeGridDay',
     events: [],
     weekends: true,
     editable: true,
@@ -52,7 +56,19 @@ export class CalendarFullComponent implements OnInit {
     dayMaxEvents: true,
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
-    select: this.handleEventsDate.bind(this)
+    select: this.handleEventsDate.bind(this),
+    slotMinTime: '06:00:00',
+    slotMaxTime: '22:00:00',
+    slotDuration: '00:50:00',
+    contentHeight: 'auto',
+    validRange: () => {
+      return {
+        start: moment().toDate(),
+        end: moment().add(10, 'days').toDate()
+      };
+    },
+    locale: esLocale
+    
   };
   currentEvents: EventApi[] = [];
 
@@ -63,6 +79,7 @@ export class CalendarFullComponent implements OnInit {
 
 
   public localidad: any = [];
+
 
   constructor(public http: HttpClient,
     private clqSrv : ReserveService,
@@ -96,7 +113,6 @@ export class CalendarFullComponent implements OnInit {
 
 
   updateLocalidad(event: any){
-    console.log(event.target.value);
     this.loadEvents(event.target.value)
   }
 
@@ -156,7 +172,7 @@ export class CalendarFullComponent implements OnInit {
     this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
     this.reservationForm.endDateTime = this.formatDateTime(clickDate.end.toISOString());
     console.log(this.reservationForm.startDateTime);
-    console.log(this.reservationForm.endDateTime);
+    this.openReservationModal()
   }
 
   submitReservationForm() {
@@ -222,6 +238,10 @@ export class CalendarFullComponent implements OnInit {
       console.log(resp);
       this.localidad = resp;
     })
+  }
+  
+  openReservationModal() {
+    this.modalService.open(this.reservationModal, { centered: true }); // Abre el modal utilizando la referencia
   }
   
 }

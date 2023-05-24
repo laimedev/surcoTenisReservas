@@ -6,6 +6,38 @@
         <div class="text-center">
             <h1>Agregar calendario</h1>
         </div>
+        <div class='demo-app'>
+
+          <div class='demo-app-main'>
+            <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
+              <ng-template #eventContent let-arg>
+                <b>{{ arg.timeText }}</b><br>
+                <i class="event-title">{{ arg.event.title }}</i>
+              </ng-template>
+            </full-calendar>
+          
+            <div class="reservation-form" *ngIf="showReservationForm">
+              <h3>Crear Reserva</h3>
+              <form (submit)="submitReservationForm()">
+                <label for="startDateTime">Fecha y Hora de Inicio:</label>
+                <!--<input type="datetime-local" id="startDateTime" [(ngModel)]="reservationForm.startDateTime" name="startDateTime">-->
+                <input type="datetime-local" id="startDateTime" [ngModel]="reservationForm.startDateTime" name="startDateTime">
+        
+          
+                <label for="endDateTime">Fecha y Hora de Fin:</label>
+                <input type="datetime-local" id="endDateTime" [(ngModel)]="reservationForm.endDateTime" name="endDateTime">
+          
+                <label for="comment">Comentario:</label>
+                <textarea id="comment" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
+          
+                <button type="submit">Guardar Reserva</button>
+              </form>
+            </div>
+          </div>
+          
+        
+        </div>
+        
     </div>
 
 

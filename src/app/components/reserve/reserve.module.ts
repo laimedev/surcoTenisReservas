@@ -9,6 +9,8 @@ import { RegisterComponent } from './register/register.component';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
+import { FullCalendarModule } from '@fullcalendar/angular';
+
 
 
 
@@ -22,7 +24,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     ReserveRoutingModule,
     NgbModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    FullCalendarModule    
   ]
 })
 export class ReserveModule { }

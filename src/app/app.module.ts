@@ -8,11 +8,17 @@ import { ReserveModule } from './components/reserve/reserve.module';
 import { HeaderComponent } from './components/header/header.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarFullComponent } from './components/reserve/calendar-full/calendar-full.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
+    CalendarFullComponent
+    
   ],
   imports: [
     BrowserModule,
@@ -20,7 +26,12 @@ import { HttpClientModule } from '@angular/common/http';
     AuthModule,
     ReserveModule,
     NgbModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    FullCalendarModule,
+    
+    
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

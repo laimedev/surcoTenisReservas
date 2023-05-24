@@ -7,7 +7,7 @@ import { NgbCarousel, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
-
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 
@@ -20,7 +20,9 @@ import { RegisterComponent } from './register/register.component';
   imports: [
     CommonModule,
     ReserveRoutingModule,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class ReserveModule { }

@@ -1,7 +1,40 @@
 
 
 <div class="container pt-5">
-    <h1>Agregar calendario</h1>
+
+    <div class="row">
+        <div class="text-center">
+            <h1>Agregar calendario</h1>
+        </div>
+    </div>
+
+
+    <div >
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-center">Carrito de Compra</h5>
+            <ul *ngFor="let item of product">
+              <!-- <li>{{ item.description }}  => {{ item.amount | currency : "S/. " }}</li> -->
+            </ul>
+            <section class=" text-center">
+              <button (click)="payment()" class="text-white btn btn-sm btn-success">Total a Pagar: </button>
+            </section>
+          </div>
+        </div>
+      </div>
+
+
+
+
+    <div class="row text-center" >
+        <div class="col-6">
+            <button class="btn btn-primary">Abrir pasarela de pagos</button>
+        </div>
+
+        <div class="col-6">
+            <button class="btn btn-success" (click)="irLogin()">Abrir modal de login</button>
+        </div>
+    </div>
   </div>
 
 

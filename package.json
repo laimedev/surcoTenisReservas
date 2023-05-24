@@ -31,6 +31,8 @@
     "moment": "^2.29.4",
     "ng-culqi": "^1.0.3",
     "ngx-cookie-service": "^16.0.0",
+    "ngx-toastr": "^17.0.2",
+    "ngx-webstorage-service": "^5.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.7.5",
     "tslib": "^2.3.0",

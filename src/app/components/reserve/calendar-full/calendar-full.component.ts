@@ -79,6 +79,8 @@ export class CalendarFullComponent implements OnInit {
 
 
   public localidad: any = [];
+  localidadSelect: any;
+  userDataJson: string | null | undefined;
 
 
   constructor(public http: HttpClient,
@@ -120,6 +122,7 @@ export class CalendarFullComponent implements OnInit {
     this.router.navigate(["reserve/login"])
   }
   loadEvents(id?: any) {
+    this.localidadSelect = id
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${id}`;
 
     this.http.get<any[]>(url).subscribe(
@@ -176,15 +179,19 @@ export class CalendarFullComponent implements OnInit {
   }
 
   submitReservationForm() {
+
+    this.userDataJson = localStorage.getItem('userData');
+    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+
     const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
 
     const startDateTime = new Date(this.reservationForm.startDateTime);
     const endDateTime = new Date(this.reservationForm.endDateTime);
-
+console.log(this.localidadSelect)
     const payload = {
       ddUsuario: 1,
-      ddlClientes: 30,
-      ddlLocalidad: 2,
+      ddlClientes: userData.codCliente,
+      ddlLocalidad: this.localidadSelect,
       ddCaja: 7,
       txtFecha: this.formatDate(this.reservationForm.startDateTime),
       txtHoraInicial: this.formatTime(this.reservationForm.startDateTime),
@@ -195,9 +202,15 @@ export class CalendarFullComponent implements OnInit {
       txtComentario: this.reservationForm.comment
     };
 
-    console.log({ payload });
+    console.log({payload})
 
-     this.http.post(url, payload).subscribe(
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+  
+    this.http.post(url, payload, httpOptions).subscribe(
        (response) => {
          console.log('Reservation saved successfully:', response);
          // Realizar acciones adicionales después de guardar la reserva si es necesario
@@ -210,9 +223,7 @@ export class CalendarFullComponent implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    const isoString = date.toISOString(); // Obtener representación en formato ISO
-    return isoString.slice(0, 16); // Recortar los últimos caracteres
+    return moment(dateString).format('YYYY-MM-DD');
   }
 
   formatTime(dateTimeString: string): string {

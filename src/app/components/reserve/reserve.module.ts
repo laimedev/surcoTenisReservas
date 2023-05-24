@@ -12,6 +12,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -24,6 +25,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     ReactiveFormsModule,
     FormsModule,
     FullCalendarModule    
-  ]
+  ],
+  providers: [],
 })
 export class ReserveModule { }

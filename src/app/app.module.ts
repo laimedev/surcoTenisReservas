@@ -12,6 +12,11 @@ import { FormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarFullComponent } from './components/reserve/calendar-full/calendar-full.component';
 import { SharedModule } from './shared/shared.module';
+import { ToastrModule } from 'ngx-toastr';
+
+
+
+
 
 @NgModule({
   declarations: [
@@ -29,8 +34,7 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     FormsModule,
     FullCalendarModule,
-    
-    
+    ToastrModule.forRoot(),
     
   ],
   providers: [],

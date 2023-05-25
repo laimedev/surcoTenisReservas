@@ -9,8 +9,8 @@
           </div>
           <form class="pt-3" #registerForm="ngForm" (ngSubmit)="registerUser(registerForm.value)">
             <div class="form-group pt-3">
-              <label for="tipoDocumento">Tipo de Documento</label>
-              <select class="form-control" id="tipo_documento" name="tipo_documento" [(ngModel)]="registerForm.value.tipo_documento" required>
+              <select class="form-select" id="tipo_documento" name="tipo_documento" [(ngModel)]="registerForm.value.tipo_documento" required>
+                <option value="">Tipo de documento</option>
                 <option value="Dni">DNI</option>
                 <option value="Nie">NIE</option>
                 <option value="Passaporte">Pasaporte</option>

@@ -13,7 +13,7 @@
 
  
     <div class="form-group col-8 pt-3 pb-5">
-      <select  class="form-select" (change)="updateLocalidad($event)">
+      <select  class="form-select" data-style="btn-primary" (change)="updateLocalidad($event)">
         <option >Seleccione una cancha</option>
         <option [value]="data.codLocalidad" *ngFor="let data of localidad" >{{data.nomLocalidad}}</option>
       </select>

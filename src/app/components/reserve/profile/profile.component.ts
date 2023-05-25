@@ -1,20 +1,17 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
-import { AuthService } from '../services/auth.service';
-
 import Swal from 'sweetalert2';
-import { ToastrService } from 'ngx-toastr';
-
-
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
-export class RegisterComponent implements OnInit{
+export class ProfileComponent implements OnInit {
+
+  public userData = JSON.parse(localStorage.getItem("userData")!);
 
 
   isLoading: boolean | undefined;
@@ -151,41 +148,110 @@ export class RegisterComponent implements OnInit{
   dateMonth: any = '';
   dateYear: any = '';
   submitted = false;
-  
-  constructor(private cookie: CookieService,
-    private toastr: ToastrService,
-    public router: Router,
-    public authService: AuthService){
+
+
+  reservas: any = [];
+
+
+
+  constructor(public http: HttpClient,
+    public router: Router){
+
     this.formRegister = new FormGroup({
-      tipo_documento: new FormControl('', [ Validators.required,]),
-      numDocumento: new FormControl('', [ Validators.required,]),
-      nombres: new FormControl('', [ Validators.required]),
-      primer_apellido: new FormControl('', [ Validators.required]),
-      segundo_apellido: new FormControl('', [ Validators.required]),
+        tipo_documento: new FormControl('', [ Validators.required,]),
+        numDocumento: new FormControl('', [ Validators.required,]),
+        nombres: new FormControl('', [ Validators.required]),
+        primer_apellido: new FormControl('', [ Validators.required]),
+        segundo_apellido: new FormControl('', [ Validators.required]),
 
-      dia: new FormControl('', [ Validators.required]),
-      mes: new FormControl('', [ Validators.required]),
-      anio: new FormControl('', [ Validators.required]),
+        genero: new FormControl('', [ Validators.required]),
+        email: new FormControl('', [ Validators.required]),
+        telefono: new FormControl('', [ Validators.required]),
+        nivel: new FormControl('', [ Validators.required]),
+        posicion: new FormControl('', [ Validators.required]),
+      }
+    )
 
-      fechNac: new FormControl( '' , [ Validators.required]),
-      genero: new FormControl('', [ Validators.required]),
-      email: new FormControl('', [ Validators.required]),
-      password: new FormControl('', [ Validators.required]),
-      passwordConfirmation: new FormControl('', [ Validators.required]),
-      telefono: new FormControl('', [ Validators.required]),
-      nivel: new FormControl('', [ Validators.required]),
-      posicion: new FormControl('', [ Validators.required]),
-    }
-  )
+  }
+
+  ngOnInit(){
+
+    this.getInfoClient();
+    this.getReserveByClient();
+
+  }
+
+  
+
+
+
+  getReserveByClient(){
+    const token = localStorage.getItem("token");
+		const authToken = `Bearer ${token}` ;
+		const headers =  new HttpHeaders({
+		'Authorization': authToken
+		});
+
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar-cliente/${this.userData.codCliente}`;
+
+    this.http.get<any[]>(url, {headers}).subscribe(
+      (data: any) => {
+        
+        this.reservas = data;
+        console.log(data);
+
+      },
+      (error: any) => {
+        console.log('Error fetching events:', error);
+      }
+    );
+
 
   }
 
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    
+  getInfoClient(){
+
+    const token = localStorage.getItem("token");
+		const authToken = `Bearer ${token}` ;
+		const headers =  new HttpHeaders({
+		'Authorization': authToken
+		});
+
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/cliente/perfil/${this.userData.codCliente}`;
+    this.http.get<any[]>(url, {headers}).subscribe(
+      (data: any) => {
+        
+        console.log(data);
+
+        this.formRegister.get('tipo_documento')?.setValue(data.tipo_documento);
+        this.formRegister.get('numDocumento')?.setValue(data.numDocumento);
+        this.formRegister.get('nombres')?.setValue(data.nombres);
+        this.formRegister.get('primer_apellido')?.setValue(data.primer_apellido);
+        this.formRegister.get('segundo_apellido')?.setValue(data.segundo_apellido);
+        this.formRegister.get('genero')?.setValue(data.genero);
+        this.formRegister.get('telefono')?.setValue(data.telefono);
+        this.formRegister.get('email')?.setValue(data.email);
+        this.formRegister.get('nivel')?.setValue(data.nivel);
+        this.formRegister.get('posicion')?.setValue(data.posicion);
+
+      },
+      (error: any) => {
+        console.log('Error fetching events:', error);
+      }
+    );
   }
+
+
+
+
+  sendRegister(){
+
+
+  }
+
+
+
 
 
   setDay(event: any){
@@ -199,67 +265,6 @@ export class RegisterComponent implements OnInit{
   setYear(event: any){
     this.dateYear = event.target.value;
   }
-
-
- 
-
-
-
-  sendRegister(){
-    this.isLoading = true; // Mostrar el spinner de carga
-
-    const fechaNac = `${this.dateDay}/${this.dateMonth}/${this.dateYear} `;
-    this.formRegister.get('fechNac')?.setValue(fechaNac)
-
-    console.log(this.formRegister.value);
-
-
-    if(this.formRegister.valid) {
-      console.log(this.formRegister.value);
-      this.authService.registerCLient(this.formRegister.value).subscribe( (resp: any) => {
-        console.log(resp);
-        this.isLoading = false; 
-
-
-        
-
-        Swal.fire({
-          title: `Registrado correctamente, Bienvenido!!`,
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp'
-          }
-        })
-        this.formRegister.reset();
-
-        const userData = {
-          nombre: resp.nombre,
-          token: resp.token,
-          codCliente: resp.codCliente
-        };
-        const userDataJson = JSON.stringify(userData);
-        localStorage.setItem('userData', userDataJson);
-        localStorage.setItem('token', resp.token);
-
-
-        // agregar token en registro como los datos de login
-        this.router.navigateByUrl("/reserve/profile")
-
-      }, error => {
-        console.log(error);
-        this.isLoading = false; 
-        this.toastr.error('Ocurrio un error:', error);
-      })
-    } else {
-      console.log('complete todo');
-      this.toastr.error('Todos los datos son importantes');
-    }
-
-    
-  }
-
 
 
 
@@ -287,5 +292,31 @@ export class RegisterComponent implements OnInit{
 
 
 
+  logout(){
+    
+
+    Swal.fire({
+      title: '¿Desea salir de la sesión?',
+      text: `Se cerrara la sesión que mantiene activa.` ,
+      icon: 'info',
+      confirmButtonColor: '#BB2D3B',
+      denyButtonColor:  '#1E2B37',
+      showDenyButton: true,
+      allowOutsideClick: false,
+      confirmButtonText: 'Si, cerrar!',
+      denyButtonText: 'No, cancelar'
+      }).then((result) => {
+        if(result.isConfirmed){
+          console.log('si');
+          localStorage.removeItem('token');
+          localStorage.removeItem('userData');
+          this.router.navigateByUrl("/reserve")
+        } else if(result.isDenied) {
+          console.log('no');
+        }
+      })
+
+
+  }
 
 }

@@ -2,7 +2,11 @@
 
   <div *ngIf="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-    <p>Cargando localidades...</p>
+    <div class="row">
+      <div class="col-12">
+        <p style="font-weight: bold; color: #fff; padding: 10px;"> Cargando localidades...</p>
+      </div>
+    </div> 
   </div>
   <div class="row">
 
@@ -73,36 +77,15 @@
         
         </div>
         
+        
     </div>
 
 
-    <div >
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title text-center">Carrito de Compra</h5>
-            <ul *ngFor="let item of product">
-              <!-- <li>{{ item.description }}  => {{ item.amount | currency : "S/. " }}</li> -->
-            </ul>
-            <section class=" text-center">
-              <button (click)="payment()" class="text-white btn btn-sm btn-success">Total a Pagar: </button>
-            </section>
-          </div>
-        </div>
-      </div>
 
-
-
-
-    <div class="row text-center" >
-        <div class="col-6">
-            <button class="btn btn-primary">Abrir pasarela de pagos</button>
-        </div>
-
-        <div class="col-6">
-            <button class="btn btn-success" (click)="irLogin()">Abrir modal de login</button>
-        </div>
-    </div>
   </div>
+
+  <br><br>
+  <br><br>
 
 
 

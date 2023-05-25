@@ -1,34 +1,49 @@
-<div class="container pt-5">
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-12 text-center">
+            <h3 style="color: #036476" class="animated fadeIn">Hola, {{userData.nombre}} </h3>
+            <p>Bienvenido a la seccion donde tendras el registro de tus reservas e información personal.</p>
+        </div>
+    </div>
 
-    
-  <div *ngIf="isLoading" class="loading-overlay">
-    <div class="spinner"></div>
-    <div class="row">
-      <div class="col-12">
-        <p style="font-weight: bold; color: #fff; padding: 10px;"> Espere un momento porfavor...</p>
-      </div>
-    </div>   
-  </div>
-       
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card p-4" >
-          <div class="card-content">
 
-              <div class="text-center">
-                  <h5 class="fw-bold" style="color: #545252">FORMULARIO DE INSCRIPCIÓN - SURCO TENIS</h5>
-                  <img src="assets/logo.png" alt="Logo" width="130" class="pt-2" >
 
-              </div>
+    <div class="row text-center pt-3">
 
-      <form class="pt-3" (ngSubmit)="sendRegister()" [formGroup]="formRegister">
+        <ul class="nav nav-tabs text-center" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">
+                Mi información personal 
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">
+               Mis reservas
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">
+                Salir
+              </button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+
+
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+
+                
+                
+                
+                
+                
+                
+                <form class="pt-3" (ngSubmit)="sendRegister()" [formGroup]="formRegister">
 
           <div class="row pt-3">
 
               <div class="col-6">
-                  <!-- <label for="email">Numero de Identificación</label> -->
-
-                  <!-- class="custom-select custom-select-lg mb-3" -->
                   <select  class="form-select"  formControlName="tipo_documento" [class.is-invalid]="isControlInvalid('tipo_documento')"
                   [class.is-valid]="isControlValid('tipo_documento')">
                       <option value="">DNI/Nie/Pasaporte</option>
@@ -42,7 +57,6 @@
                 </div>
 
               <div class="col-6">
-                  <!-- <label for="email">Numero de Identificación</label> -->
                   <input type="number" class="form-control" id="email" placeholder="Numero de Identificación"  formControlName="numDocumento" [class.is-invalid]="isControlInvalid('numDocumento')"
                   [class.is-valid]="isControlValid('numDocumento')">
                 <span *ngIf="isControlInvalid('numDocumento')" class="text-danger" >Ingrese en numero de identificación</span>
@@ -52,26 +66,20 @@
           
 
             <div class="form-group pt-3">
-              <!-- <label for="email">Nombre</label> -->
               <input type="text" class="form-control" id="email" placeholder="Ingrese su nombre"  formControlName="nombres" [class.is-invalid]="isControlInvalid('nombres')"
               [class.is-valid]="isControlValid('nombres')">
               <span *ngIf="isControlInvalid('nombres')" class="text-danger" >Ingrese su nombre</span>
-
-              
             </div>
 
 
             <div class="row pt-3">
               <div class="col-6">
-                  <!-- <label for="email">Primer apellido</label> -->
                   <input type="text" class="form-control" id="email" placeholder="Primer apellido"  formControlName="primer_apellido" [class.is-invalid]="isControlInvalid('primer_apellido')"
                   [class.is-valid]="isControlValid('primer_apellido')">
                 <span *ngIf="isControlInvalid('primer_apellido')" class="text-danger" >Ingrese su apellido</span>
-
                 </div>
   
                 <div class="col-6">
-                  <!-- <label for="email">CSegundo apellido</label> -->
                   <input type="text" class="form-control" id="email" placeholder="Segundo apellido"  formControlName="segundo_apellido" [class.is-invalid]="isControlInvalid('segundo_apellido')"
                   [class.is-valid]="isControlValid('segundo_apellido')">
                 <span *ngIf="isControlInvalid('segundo_apellido')" class="text-danger" >Ingrese su apellido</span>
@@ -79,50 +87,9 @@
                 </div>
             </div>
             
-
-
-            <div class="row pt-3">
-              <div class="col-4">
-                <!-- <label for="day">Día</label> -->
-                <select class="form-select" id="day" formControlName="dia" (change)="setDay($event)" [class.is-invalid]="isControlInvalid('dia')"
-                [class.is-valid]="isControlValid('dia')">
-                  <option value=""> Dia</option>
-                  <option *ngFor="let dia of dia" [value]="dia.value">{{dia.label}}</option>
-                  <!-- Otras opciones de día -->
-                </select>
-                <span *ngIf="isControlInvalid('dia')" class="text-danger" >Seleccione el dia</span>
-              </div>
-              <div class="col-4">
-                <!-- <label for="month">Mes</label> -->
-                <select class="form-select" id="month"  formControlName="mes" (change)="setMonth($event)" [class.is-invalid]="isControlInvalid('mes')"
-                [class.is-valid]="isControlValid('mes')">
-                  <option value=""> Mes</option>
-                  <option *ngFor="let mes of mes" [value]="mes.value">{{mes.label}}</option>
-                  <!-- Otras opciones de mes -->
-                </select>
-                <span *ngIf="isControlInvalid('mes')" class="text-danger" >Seleccione el mes</span>
-
-              </div>
-              <div class="col-4">
-                <!-- <label for="year">Año</label> -->
-                <select class="form-select" id="year"  formControlName="anio" (change)="setYear($event)" [class.is-invalid]="isControlInvalid('anio')"
-                [class.is-valid]="isControlValid('anio')">
-                  <option value="">Año</option>
-                  <option *ngFor="let anio of anio" [value]="anio.value">{{anio.label}}</option>
-                  <!-- Otras opciones de año -->
-                </select>
-                <span *ngIf="isControlInvalid('anio')" class="text-danger" >Seleccione el año</span>
-
-              </div>
-            </div>
-
-
-
+           
 
             <div class="form-group pt-3">
-              <!-- <label for="email">Numero de Identificación</label> -->
-
-              <!-- class="custom-select custom-select-lg mb-3" -->
               <select  class="form-select"  formControlName="genero"  [class.is-invalid]="isControlInvalid('genero')"
               [class.is-valid]="isControlValid('genero')">
                   <option value="">Genero</option>
@@ -133,10 +100,7 @@
 
             </div>
 
-
-
             <div class="form-group pt-3">
-              <!-- <label for="email">CSegundo apellido</label> -->
               <input type="number" class="form-control" id="email" placeholder="Ingrese se celular | telefono"  formControlName="telefono" [class.is-invalid]="isControlInvalid('telefono')"
               [class.is-valid]="isControlValid('telefono')">
               <span *ngIf="isControlInvalid('telefono')" class="text-danger" >Ingrese su telefono</span>
@@ -145,29 +109,9 @@
 
 
         <div class="form-group pt-3">
-          <!-- <label for="email">Correo electrónico</label> -->
           <input type="email" class="form-control" id="email" placeholder="Ingrese su correo electrónico"  formControlName="email" [class.is-invalid]="isControlInvalid('email')"
-          [class.is-valid]="isControlValid('email')">
+          [class.is-valid]="isControlValid('email')" [disabled]="true">
           <span *ngIf="isControlInvalid('email')" class="text-danger" >Ingrese su email</span>
-
-        </div>
-
-   
-
-
-        <div class="form-group pt-3">
-          <!-- <label for="password">Contraseña</label> -->
-          <input type="password" class="form-control" id="password" placeholder="Ingrese su contraseña"  formControlName="password" [class.is-invalid]="isControlInvalid('password')"
-          [class.is-valid]="isControlValid('password')">
-          <span *ngIf="isControlInvalid('password')" class="text-danger" >Ingrese su contraseña</span>
-
-        </div>
-
-        <div class="form-group pt-3">
-          <!-- <label for="password">Contraseña</label> -->
-          <input type="password" class="form-control" id="password" placeholder="Repita su contraseña"  formControlName="passwordConfirmation" [class.is-invalid]="isControlInvalid('passwordConfirmation')"
-          [class.is-valid]="isControlValid('passwordConfirmation')">
-          <span *ngIf="isControlInvalid('passwordConfirmation')" class="text-danger" >Ingrese la confirmacion de contraseña</span>
 
         </div>
 
@@ -192,7 +136,7 @@
 
         <div class="form-group pt-3">
           <select  class="form-select"  formControlName="posicion" [class.is-invalid]="isControlInvalid('posicion')"
-          [class.is-valid]="isControlValid('posicion')">
+          [class.is-valid]="isControlValid('posicion')" >
               <option value="">Posición</option>
               <option value="Derecha">Derecha</option>
               <option value="Indiferente">Indiferente</option>
@@ -203,26 +147,77 @@
         </div>
 
 
-        <div class="col-12 pt-3 text-center">
-          <button type="submit" class="btn btn-warning ">ENVIAR SOLICITUD</button>
-        </div>
-
-        <!-- <div class="col-12 pt-4 text-center">
-          <p class="fw-bold" style="color: #545252">¿Ya tienes una cuenta?</p>
-        </div>
-
-        <div class="col-12 pt-3 text-center">
-          <button type="submit" class="btn btn-outline-warning" [routerLink]="['/reserve/login']" routerLinkActive="router-link-active" >INGRESAR AHORA</button>
+        <!-- <div class="col-12 pt-3 text-center">
+          <button type="submit" class="btn btn-warning ">ACTUALIZAR INFORMACION</button>
         </div> -->
-        
+        <br><br>
+
       </form>
 
-  </div>
-</div>
+
+
+            </div>
+
+
+
+
+
+
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                
+                <div class="responsive pt-4">
+
+                <table class="table table-striped table-responsive">
+                    <thead class="pt-3">
+                      <tr>
+                        <th>Codigo</th>
+                        <th>Cancha</th>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Duración</th>
+                        <th>Estado</th>
+                        <th>Fecha registro</th>
+                        <th>Ver Ticket</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr  *ngFor="let data of reservas">
+                        <td>{{data.codRegistro}}</td>
+                        <td>{{data.nomLocalidad}}</td>
+                        <td>{{data.horainicio}}</td>
+                        <td>{{data.horafinal}}</td>
+                        <td>{{data.duracion}}</td>
+                        <td>{{data.estadoRegistro}}</td>
+                        <td>{{data.fechRegistro}}</td>
+                        <td><button class="btn btn-success"><i class="fa fa-ticket" aria-hidden="true"></i>
+                        </button></td>
+                      </tr>
+
+                      <!-- <td>{{data.fechRegistro | date: 'medium' }}</td> -->
+
+                    </tbody>
+                  </table>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                <div class="row pt-5">
+                    <div class="col-12">
+                        <p>¿Esta seguro de cerrar sesión?</p>
+                        <button class="btn btn-danger btn-block" (click)="logout()">Cerrar sesión</button>
+                    </div>
+                </div>
+            </div>
+          </div>
 
 
     </div>
-  </div>
 </div>
-
-<br><br>

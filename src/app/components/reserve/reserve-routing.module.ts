@@ -5,6 +5,7 @@ import { CalendarFullComponent } from './calendar-full/calendar-full.component';
 import { HeaderComponent } from '../header/header.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 const routes: Routes = [
@@ -12,6 +13,7 @@ const routes: Routes = [
     {path: '', component: CalendarFullComponent},
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
+    {path: 'profile', component: ProfileComponent},
     { path: '', component: HeaderComponent, outlet: 'header' },
   ]}
 ];

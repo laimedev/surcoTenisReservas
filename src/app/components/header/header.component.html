@@ -41,7 +41,8 @@
       </ul>
     </div>
     <div class="ml-auto">
-      <button class="btn btn-warning" > <small style="color: #fff"> RESERVAR AQUI </small></button>
+      <button class="btn btn-success btn-outline"[routerLink]="['/reserve/register']" > <small style="color: #fff"  routerLinkActive="router-link-active" > REGISTRARSE </small></button>&nbsp;
+      <button class="btn btn-warning" [routerLink]="['/reserve/login']" > <small style="color: #fff"> ACCEDER USUARIO </small></button>
     </div>
   </div>
 </nav>
@@ -51,6 +52,6 @@
 <div class="cover-container">
     <img src="assets/images/tennis-5782695_1280.jpg" alt="Portada" class="cover-image">
     <div class="cover-caption">
-      <h3 class="animated fadeInDown">RESERVAS - SURCO TENIS</h3>
+      <h1 class="fw-bold animated fadeInDown">RESERVAS - SURCO TENIS</h1>
     </div>
   </div>

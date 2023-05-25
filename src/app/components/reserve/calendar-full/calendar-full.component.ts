@@ -22,13 +22,7 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class CalendarFullComponent implements OnInit {
   @ViewChild('reservationModal') reservationModal: any;
-  // settings: any = {
-  //   title: '',
-  //   currency: '',
-  //   description: '',
-  //   amount: 0
-  // };
-
+ 
   showReservationForm = false;
   reservationForm: any = {
     clientId: null,
@@ -79,7 +73,7 @@ export class CalendarFullComponent implements OnInit {
 
 
   public localidad: any = [];
-  localidadSelect: any 
+  localidadSelect = 2; 
   userDataJson: string | null | undefined;
   isLoading: boolean | undefined;
   spinner: any;
@@ -97,8 +91,6 @@ export class CalendarFullComponent implements OnInit {
 
   }
 
-
-
   ngOnInit(): void {
 
     this.clqSrv.initCulqi();
@@ -108,24 +100,21 @@ export class CalendarFullComponent implements OnInit {
   }
 
 
-
-
-
   payment(){
     this.clqSrv.payorder(this.product[0]["description"],this.product[0]["amount"]);
   }
 
-
   updateLocalidad(event: any){
-    this.loadEvents(event.target.value)
+    this.localidadSelect = event.target.value;
+    this.loadEvents();
   }
 
   irLogin(){
     this.router.navigate(["reserve/login"])
   }
-  loadEvents(id?: any) {
-    this.localidadSelect = id
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${id}`;
+  loadEvents() {
+    // this.localidadSelect = id
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${this.localidadSelect}`;
 
     this.http.get<any[]>(url).subscribe(
       (data: any[]) => {
@@ -216,7 +205,7 @@ console.log(this.localidadSelect)
        (response) => {
          this.toastr.success('Reservation saved successfully:', 'Éxito');
          this.activeModal.close();
-         this.loadEvents(this.localidadSelect)
+        //  this.loadEvents(this.localidadSelect)
        },
        (error) => {
          this.toastr.error('Error saving reservation:', error.error);

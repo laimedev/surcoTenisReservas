@@ -10,6 +10,7 @@ import { RegisterComponent } from './register/register.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { ProfileComponent } from './profile/profile.component';
 //import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -17,6 +18,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
   declarations: [
     LoginComponent,
     RegisterComponent,
+    ProfileComponent,
   ],
   imports: [
     CommonModule,

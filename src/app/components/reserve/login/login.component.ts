@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit{
 
     this.formLogin = new FormGroup(
       {
-        email: new FormControl('charly4@gmail.com', [
+        email: new FormControl('jose4@gmail.com', [
           Validators.required,
         ]),
         password: new FormControl('123456',
@@ -56,8 +56,10 @@ export class LoginComponent implements OnInit{
           };
           const userDataJson = JSON.stringify(userData);
           localStorage.setItem('userData', userDataJson);
+          localStorage.setItem('token', resp.token);
+
           this.toastr.success('Credenciales exitosas', 'Éxito');
-          this.router.navigate(['/reserve']); // Cambiar la ruta a la del login
+          this.router.navigate(['/reserve/profile']); // Cambiar la ruta a la del login
         },
           err => {
             this.errorSession = true

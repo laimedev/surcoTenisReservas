@@ -68,7 +68,7 @@ export class CalendarFullComponent implements OnInit {
       };
     },
     locale: esLocale
-    
+
   };
   currentEvents: EventApi[] = [];
 

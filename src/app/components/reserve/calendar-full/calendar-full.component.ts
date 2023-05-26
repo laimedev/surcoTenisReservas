@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ReserveService } from '../services/reserve.service';
 import { Router } from '@angular/router';
@@ -30,6 +30,7 @@ export class CalendarFullComponent implements OnInit {
     locationId: null,
     startDateTime: null,
     endDateTime: null,
+    price:null,
     comment: ''
     }
 
@@ -115,7 +116,7 @@ export class CalendarFullComponent implements OnInit {
     this.router.navigate(["reserve/login"])
   }
   loadEvents() {
-    // this.localidadSelect = id
+    this.isLoading = true;
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${this.localidadSelect}`;
 
     this.http.get<any[]>(url).subscribe(
@@ -128,15 +129,17 @@ export class CalendarFullComponent implements OnInit {
           backgroundColor: item.backgroundColor,
           textColor: item.textColor,
           extendedProps: item.extendedProps
+        
         }));
-
+        this.isLoading = false;
         this.calendarOptions.events = events;
         this.changeDetector.detectChanges();
 
-        console.log('Events:', events);
+        
       },
       (error: any) => {
         console.log('Error fetching events:', error);
+        this.isLoading = false;
       }
     );
 
@@ -154,7 +157,7 @@ export class CalendarFullComponent implements OnInit {
 
   handleEventClick(clickInfo: EventClickArg) {
     Swal.fire({
-      icon: 'error',
+      //icon: 'error',
       title: 'Fecha no válida',
       text: 'La fecha ya fue seleccionada.',
     });
@@ -166,19 +169,19 @@ export class CalendarFullComponent implements OnInit {
   }
 
 handleEventsDate(clickDate: DateSelectArg) {
+  
   const selectedDateTime = moment(clickDate.start.toISOString());
 
   if (selectedDateTime.isSameOrAfter(moment(), 'minute')) {
-    console.log(this.userDataJson)
     if (this.userDataJson) {
       this.showReservationForm = true;
       this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
       this.reservationForm.endDateTime = this.formatDateTime(clickDate.end.toISOString());
-      this.openReservationModal();
+      this.validatePrice(this.formatTime(this.reservationForm.startDateTime),this.formatDate(this.reservationForm.startDateTime), this.formatTime(this.reservationForm.endDateTime))
+      console.log(this.reservationForm.price)
     } else {
       // Mostrar el mensaje de iniciar sesión con SweetAlert2
       Swal.fire({
-        icon: 'info',
         title: 'Es necesario iniciar sesión o registrarse',
         text: 'Para poder reservar una cancha, por favor inicie sesión o registre una cuenta.',
         showCancelButton: true,
@@ -192,12 +195,51 @@ handleEventsDate(clickDate: DateSelectArg) {
     }
   } else {
     Swal.fire({
-      icon: 'error',
       title: 'Fecha no válida',
       text: 'No se puede seleccionar una fecha anterior a la fecha actual.',
     });
   }
 }
+
+validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
+  this.isLoading = true
+  const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+  const priceEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/precio';
+  const pricePayload = {
+    fechRegistro: fechRegistro,
+    horainicio: horainicio,
+    horafinal: horafinal,
+    codCliente: userData.codCliente,
+    codLocalidad: this.localidadSelect
+  };
+
+  const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${userData.token}`
+    })
+  };
+
+  this.http.post(priceEndpoint, pricePayload, httpOptions).subscribe(
+    (response: any) => {
+      const precio = response.precio;
+      // Aquí puedes usar el precio obtenido para realizar cualquier acción necesaria antes de guardar la reserva
+      this.reservationForm.price=precio
+
+      console.log(this.reservationForm.price)
+      this.showReservationForm = true; // Mostrar el formulario de reserva
+      this.openReservationModal();
+      // Continuar con el proceso de guardar la reserva...
+      this.isLoading = false
+    },
+    (error: any) => {
+      console.log('Error obteniendo el precio:', error);
+      // Manejar el error si es necesario
+      this.isLoading = false
+    }
+  );
+}
+
 
   submitReservationForm() {
     this.isLoading2 = true;
@@ -208,7 +250,6 @@ handleEventsDate(clickDate: DateSelectArg) {
 
     const startDateTime = new Date(this.reservationForm.startDateTime);
     const endDateTime = new Date(this.reservationForm.endDateTime);
-console.log(this.localidadSelect)
     const payload = {
       ddUsuario: 1,
       ddlClientes: userData.codCliente,
@@ -220,7 +261,8 @@ console.log(this.localidadSelect)
       txtTiempo: this.calculateTimeDuration(startDateTime, endDateTime),
       estado: 'SIN CONFIRMAR',
       pago: 0,
-      txtComentario: this.reservationForm.comment
+      txtComentario: this.reservationForm.comment,
+      costoTarifa:this.reservationForm.price
     };
 
     console.log({payload})

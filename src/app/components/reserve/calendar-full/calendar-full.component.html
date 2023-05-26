@@ -4,7 +4,7 @@
     <div class="spinner"></div>
     <div class="row">
       <div class="col-12">
-        <p style="font-weight: bold; color: #fff; padding: 10px;"> Cargando localidades...</p>
+        <p style="font-weight: bold; color: #fff; padding: 10px;"> Cargando ...</p>
       </div>
     </div> 
   </div>
@@ -107,7 +107,12 @@
                         <label for="endDateTime">Fecha y Hora de Fin:</label>
                         <input type="datetime-local" id="endDateTime" class="form-control" [(ngModel)]="reservationForm.endDateTime" name="endDateTime" readonly>
                       </div>
-            
+
+                      <div class="form-group">
+                        <label for="price">Precio:</label>
+                        <input type="text" id="price" class="form-control" [(ngModel)]="reservationForm.price" name="price"readonly>
+                      </div>
+
                       <div class="form-group">
                         <label for="name">Nombre de la persona con quien jugará:</label>
                         <input type="text" id="name" class="form-control" [(ngModel)]="reservationForm.name" name="name" required>

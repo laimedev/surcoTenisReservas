@@ -36,6 +36,7 @@ export class CalendarFullComponent implements OnInit {
 
     calendarVisible = true;
   calendarOptions: CalendarOptions = {
+    
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
       left: 'prev,next today',
@@ -45,7 +46,7 @@ export class CalendarFullComponent implements OnInit {
     initialView: 'timeGridDay',
     events: [],
     weekends: true,
-    editable: true,
+    editable: false,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
@@ -53,17 +54,32 @@ export class CalendarFullComponent implements OnInit {
     eventsSet: this.handleEvents.bind(this),
     select: this.handleEventsDate.bind(this),
     slotMinTime: '06:00:00',
-    slotMaxTime: '21:50:00',
-    slotDuration: '00:50:00',
+    slotMaxTime: '22:00:00',
+    slotDuration: '00:60:00',
     contentHeight: 'auto',
-    slotMinWidth:100,
+    //slotMinWidth:100,
+    longPressDelay:0, // Tiempo de espera para arrastrar eventos
+    eventLongPressDelay: 0, // Tiempo de espera para arrastrar eventos
+    selectLongPressDelay: 0,
     validRange: () => {
       return {
         start: moment().toDate(),
         end: moment().add(7, 'days').toDate()
       };
     },
-    locale: esLocale
+    locale: esLocale,
+    selectAllow: function(selectInfo) {
+      // Obtener la duración de la selección en minutos
+      const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / 60000;
+  
+      // Permitir solo selecciones de una hora (60 minutos)
+      return duration === 60;
+    },
+    slotLabelFormat: [
+      { hour: 'numeric', minute: '2-digit' },
+      { month: 'short', day: 'numeric', weekday: 'short' }
+    ],
+    //nowIndicator: true,
 
   };
   currentEvents: EventApi[] = [];
@@ -129,7 +145,6 @@ export class CalendarFullComponent implements OnInit {
           backgroundColor: item.backgroundColor,
           textColor: item.textColor,
           extendedProps: item.extendedProps
-        
         }));
         this.isLoading = false;
         this.calendarOptions.events = events;
@@ -187,6 +202,7 @@ handleEventsDate(clickDate: DateSelectArg) {
         showCancelButton: true,
         confirmButtonText: 'Iniciar sesión',
         cancelButtonText: 'Cancelar',
+        
       }).then((result) => {
         if (result.isConfirmed) {
           this.router.navigate(['reserve/login']); // Redireccionar al inicio de sesión

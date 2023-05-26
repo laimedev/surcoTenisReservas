@@ -31,7 +31,8 @@ export class CalendarFullComponent implements OnInit {
     startDateTime: null,
     endDateTime: null,
     price:null,
-    comment: ''
+    comment: '',
+    timeGame:null,
     }
 
     calendarVisible = true;
@@ -58,8 +59,8 @@ export class CalendarFullComponent implements OnInit {
     slotDuration: '00:60:00',
     contentHeight: 'auto',
     //slotMinWidth:100,
-    longPressDelay:0, // Tiempo de espera para arrastrar eventos
-    eventLongPressDelay: 0, // Tiempo de espera para arrastrar eventos
+    //longPressDelay:0, // Tiempo de espera para arrastrar eventos
+    //eventLongPressDelay: 0, // Tiempo de espera para arrastrar eventos
     selectLongPressDelay: 0,
     validRange: () => {
       return {
@@ -70,9 +71,9 @@ export class CalendarFullComponent implements OnInit {
     locale: esLocale,
     selectAllow: function(selectInfo) {
       // Obtener la duración de la selección en minutos
-      const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / 60000;
-  
-      // Permitir solo selecciones de una hora (60 minutos)
+      const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / (1000 * 60);
+      
+      // Permitir solo selecciones de 50 minutos
       return duration === 60;
     },
     slotLabelFormat: [
@@ -192,8 +193,8 @@ handleEventsDate(clickDate: DateSelectArg) {
       this.showReservationForm = true;
       this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
       this.reservationForm.endDateTime = this.formatDateTime(clickDate.end.toISOString());
+      this.reservationForm.timeGame = this.calculateTimeDuration(new Date(this.reservationForm.startDateTime), new Date(this.reservationForm.endDateTime)),
       this.validatePrice(this.formatTime(this.reservationForm.startDateTime),this.formatDate(this.reservationForm.startDateTime), this.formatTime(this.reservationForm.endDateTime))
-      console.log(this.reservationForm.price)
     } else {
       // Mostrar el mensaje de iniciar sesión con SweetAlert2
       Swal.fire({
@@ -261,11 +262,7 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-
     const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
-
-    const startDateTime = new Date(this.reservationForm.startDateTime);
-    const endDateTime = new Date(this.reservationForm.endDateTime);
     const payload = {
       ddUsuario: 1,
       ddlClientes: userData.codCliente,
@@ -274,7 +271,7 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
       txtFecha: this.formatDate(this.reservationForm.startDateTime),
       txtHoraInicial: this.formatTime(this.reservationForm.startDateTime),
       txtHoraFinal: this.formatTime(this.reservationForm.endDateTime),
-      txtTiempo: this.calculateTimeDuration(startDateTime, endDateTime),
+      txtTiempo: this.reservationForm.timeGame,
       estado: 'SIN CONFIRMAR',
       pago: 0,
       txtComentario: this.reservationForm.comment,
@@ -315,7 +312,7 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
 
   calculateTimeDuration(startDateTime: Date, endDateTime: Date): string {
     const durationMs = endDateTime.getTime() - startDateTime.getTime();
-    const durationMinutes = Math.floor(durationMs / (1000 * 60));
+    const durationMinutes = Math.floor(durationMs / (1000 * 60) - 10); // - 10 de mantenimiento
     return `${durationMinutes} minuto(s)`;
   }
   

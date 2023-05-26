@@ -36,7 +36,8 @@
             <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
               <ng-template #eventContent let-arg>
                 <b> {{ arg.timeText }} </b>
-                <i class="event-title">{{ arg.event.title }}</i>
+                <b>- 10 min de mantenimiento</b>
+                <i class="event-title"> {{ arg.event.title }} </i>
               </ng-template>
             </full-calendar>
 
@@ -111,6 +112,11 @@
                       <div class="form-group">
                         <label for="price">Precio:</label>
                         <input type="text" id="price" class="form-control" [(ngModel)]="reservationForm.price" name="price"readonly>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="price">Tiempo de juego:</label>
+                        <input type="text" id="timeGame" class="form-control" [(ngModel)]="reservationForm.timeGame" name="timeGame"readonly>
                       </div>
 
                       <div class="form-group">

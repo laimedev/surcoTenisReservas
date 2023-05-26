@@ -44,7 +44,7 @@
               <div class="col-6">
                   <!-- <label for="email">Numero de Identificación</label> -->
                   <input type="number" class="form-control" id="email" placeholder="Numero de Identificación"  formControlName="numDocumento" [class.is-invalid]="isControlInvalid('numDocumento')"
-                  [class.is-valid]="isControlValid('numDocumento')">
+                  [class.is-valid]="isControlValid('numDocumento')" (keyup)="buscarDNI(event)" #event>
                 <span *ngIf="isControlInvalid('numDocumento')" class="text-danger" >Ingrese en numero de identificación</span>
 
                 </div>
@@ -204,7 +204,7 @@
 
 
         <div class="col-12 pt-3 text-center">
-          <button type="submit" class="btn btn-warning ">ENVIAR SOLICITUD</button>
+          <button type="submit" class="btn btn-warning "> <b style="color: #fff"> ENVIAR SOLICITUD </b> </button>
         </div>
 
         <!-- <div class="col-12 pt-4 text-center">

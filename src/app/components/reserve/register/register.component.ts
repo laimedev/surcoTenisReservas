@@ -6,6 +6,7 @@ import { AuthService } from '../services/auth.service';
 
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
+import { HttpClient } from '@angular/common/http';
 
 
 
@@ -154,6 +155,7 @@ export class RegisterComponent implements OnInit{
   
   constructor(private cookie: CookieService,
     private toastr: ToastrService,
+    public http: HttpClient,
     public router: Router,
     public authService: AuthService){
     this.formRegister = new FormGroup({
@@ -261,7 +263,28 @@ export class RegisterComponent implements OnInit{
   }
 
 
+  buscarDNI(event: any){
+    console.log(event);
+    const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYWltZXM2NEBnbWFpbC5jb20ifQ.s88mOb0ySUxMhX3yLVWQrCgBLpXpndMxw-WLfCzlS3I';
+    console.log(event.value)
+    if(event.value.length == 8){
+      console.log('OCHOOOOOOOOOOO')
+      this.http.get(`https://dniruc.apisperu.com/api/v1/dni/${event.value}?token=${token}`).subscribe( (resp: any) => {
+        console.log(resp);
+        if(resp['success'] == false) {
+          console.log('No Existe persona asociada al DNI')
+        } else {
+          
+          this.formRegister.get('nombres')?.setValue(resp.nombres);
+          this.formRegister.get('primer_apellido')?.setValue(resp.apellidoPaterno);
+          this.formRegister.get('segundo_apellido')?.setValue(resp.apellidoMaterno);
 
+          // this.registerForm.get('nombre')?.setValue(resp['nombres']+ ' ' + resp['apellidoPaterno'] + ' ' + resp['apellidoMaterno'])
+        }
+      })
+      
+    }
+  }
 
 
   isControlValid(controlName: string): boolean {

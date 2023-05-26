@@ -41,8 +41,15 @@
       </ul>
     </div>
     <div class="ml-auto">
-      <button class="btn btn-success btn-outline"[routerLink]="['/reserve/register']" > <small style="color: #fff"  routerLinkActive="router-link-active" > REGISTRARSE </small></button>&nbsp;
-      <button class="btn btn-warning" [routerLink]="['/reserve/login']" > <small style="color: #fff"> ACCEDER USUARIO </small></button>
+      <div *ngIf="!userData"> 
+        <button class="btn btn-success btn-outline"[routerLink]="['/reserve/register']" > <small style="color: #fff"  routerLinkActive="router-link-active" > REGISTRARSE </small></button>&nbsp;
+        <button class="btn btn-warning" [routerLink]="['/reserve/login']" > <small style="color: #fff"> ACCEDER USUARIO </small></button>
+      </div>
+     
+      <div *ngIf="userData">
+        <button class="btn btn-success" [routerLink]="['/reserve/profile']" > <small style="color: #fff"> <i class="fa fa-user" aria-hidden="true" ></i>
+          &nbsp; IR A MI CUENTA </small></button>
+      </div>
     </div>
   </div>
 </nav>

@@ -13,6 +13,7 @@ import { StorageService } from 'ngx-webstorage-service';
 })
 export class LoginComponent implements OnInit{
 
+  isLoading: boolean | undefined;
 
   errorSession: boolean = false
   formLogin: FormGroup = new FormGroup({});
@@ -46,9 +47,17 @@ export class LoginComponent implements OnInit{
 
 
   sendLogin(): void {
+
+    this.isLoading = true; // Mostrar el spinner de carga
+
+
       if(this.formLogin.valid) {
         this.authService.sendCredentials(this.formLogin.value)
         .subscribe(resp => {
+
+          this.isLoading = false; 
+
+
           const userData = {
             nombre: resp.nombre,
             token: resp.token,
@@ -59,16 +68,27 @@ export class LoginComponent implements OnInit{
           localStorage.setItem('token', resp.token);
 
           this.toastr.success('Credenciales exitosas', 'Éxito');
-          this.router.navigate(['/reserve/profile']); // Cambiar la ruta a la del login
+
+          this.router.navigate(["/reserve/profile"])
+
+          setTimeout(() => {
+            this.router.navigate(['/reserve/profile']);
+            location.reload();
+          }, 1000);
+
+
+
         },
           err => {
             this.errorSession = true
+            this.isLoading = false; 
+
             //console.log('Ocurrio error con tu email o password');
             this.toastr.error('Ocurrio error con tu email o password:', err);
             console.error('Ocurrio error con tu email o password:', err);
           })
     } else {
-
+      this.toastr.error('Todos los datos son importantes');
       
     }
   }

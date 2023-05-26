@@ -232,7 +232,7 @@ console.log(this.localidadSelect)
        (response) => {
          this.toastr.success('Reservation saved successfully:', 'Éxito');
          this.activeModal.close();
-        //  this.loadEvents(this.localidadSelect)
+        this.loadEvents()
        },
        (error) => {
          this.toastr.error('Error saving reservation:', error.error);

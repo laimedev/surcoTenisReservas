@@ -13,6 +13,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import esLocale from '@fullcalendar/core/locales/es';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-calendar-full',
@@ -62,7 +63,7 @@ export class CalendarFullComponent implements OnInit {
       };
     },
     locale: esLocale
-    
+
   };
   currentEvents: EventApi[] = [];
 
@@ -70,7 +71,7 @@ export class CalendarFullComponent implements OnInit {
     description : "Polo Culqi Lover",
     amount: 100
   }];
-
+  currentDate: Date = new Date();
 
   public localidad: any = [];
   localidadSelect = 2; 
@@ -96,7 +97,7 @@ export class CalendarFullComponent implements OnInit {
     this.clqSrv.initCulqi();
     this.loadEvents();
     this.obetenerLocalidades();
-    
+    this.userDataJson = localStorage.getItem('userData');
   }
 
 
@@ -161,13 +162,39 @@ export class CalendarFullComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  handleEventsDate(clickDate: DateSelectArg) {
-    this.showReservationForm = true;
-    this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
-    this.reservationForm.endDateTime = this.formatDateTime(clickDate.end.toISOString());
-    console.log(this.reservationForm.startDateTime);
-    this.openReservationModal()
+handleEventsDate(clickDate: DateSelectArg) {
+  const selectedDateTime = moment(clickDate.start.toISOString());
+
+  if (selectedDateTime.isSameOrAfter(moment(), 'minute')) {
+    console.log(this.userDataJson)
+    if (this.userDataJson) {
+      this.showReservationForm = true;
+      this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
+      this.reservationForm.endDateTime = this.formatDateTime(clickDate.end.toISOString());
+      this.openReservationModal();
+    } else {
+      // Mostrar el mensaje de iniciar sesión con SweetAlert2
+      Swal.fire({
+        icon: 'info',
+        title: 'Es necesario iniciar sesión o registrarse',
+        text: 'Para poder reservar una cancha, por favor inicie sesión o registre una cuenta.',
+        showCancelButton: true,
+        confirmButtonText: 'Iniciar sesión',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['reserve/login']); // Redireccionar al inicio de sesión
+        }
+      });
+    }
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Fecha no válida',
+      text: 'No se puede seleccionar una fecha anterior a la fecha actual.',
+    });
   }
+}
 
   submitReservationForm() {
 
@@ -205,7 +232,7 @@ console.log(this.localidadSelect)
        (response) => {
          this.toastr.success('Reservation saved successfully:', 'Éxito');
          this.activeModal.close();
-        //  this.loadEvents(this.localidadSelect)
+        this.loadEvents()
        },
        (error) => {
          this.toastr.error('Error saving reservation:', error.error);
@@ -241,7 +268,6 @@ console.log(this.localidadSelect)
   
     this.reserveServices.getLocalidad().subscribe(
       (resp) => {
-        console.log(resp);
         this.localidad = resp;
         this.isLoading = false; // Ocultar el spinner de carga
       },

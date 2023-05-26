@@ -324,16 +324,16 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
 
 
   obetenerLocalidades() {
-    this.isLoading = true; // Mostrar el spinner de carga
+     // Mostrar el spinner de carga
   
     this.reserveServices.getLocalidad().subscribe(
       (resp) => {
         this.localidad = resp;
-        this.isLoading = false; // Ocultar el spinner de carga
+         // Ocultar el spinner de carga
       },
       (error) => {
         console.log(error);
-        this.isLoading = false; // Ocultar el spinner de carga
+        // Ocultar el spinner de carga
       }
     );
   }

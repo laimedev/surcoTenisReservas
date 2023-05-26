@@ -77,6 +77,7 @@ export class CalendarFullComponent implements OnInit {
   localidadSelect = 2; 
   userDataJson: string | null | undefined;
   isLoading: boolean | undefined;
+  isLoading2: boolean | undefined;
   spinner: any;
 
 
@@ -152,9 +153,11 @@ export class CalendarFullComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`Esta fecha ya fue seleccionada`)) {
-    
-    }
+    Swal.fire({
+      icon: 'error',
+      title: 'Fecha no válida',
+      text: 'La fecha ya fue seleccionada.',
+    });
   }
 
   handleEvents(events: EventApi[]) {
@@ -197,7 +200,7 @@ handleEventsDate(clickDate: DateSelectArg) {
 }
 
   submitReservationForm() {
-
+    this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
 
@@ -231,12 +234,14 @@ console.log(this.localidadSelect)
     this.http.post(url, payload, httpOptions).subscribe(
        (response) => {
          this.toastr.success('Reservation saved successfully:', 'Éxito');
-         this.activeModal.close();
+         this.modalService.dismissAll();
         this.loadEvents()
+        this.isLoading2 = false; 
        },
        (error) => {
          this.toastr.error('Error saving reservation:', error.error);
          // Manejar el error de guardado de reserva si es necesario
+         this.isLoading2 = false; 
        }
      );
   }

@@ -43,10 +43,10 @@
             
           
             
-            <ng-template #reservationModal let-modal>
+           <!-- <ng-template #reservationModal let-modal>
               <div class="modal-header">
                 <h4 class="modal-title">Crear Reserva</h4>
-                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss()">
+                <button type="button" class="btn btn-danger" aria-label="Close" (click)="modal.dismiss()">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -66,13 +66,73 @@
                 
                   <label for="comment">Comentario:</label>
                   <textarea id="comment" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
-                
-                  <button type="submit">Guardar Reserva</button>
+                <div>
+                  <button type="submit" class=".submit-button.center">Guardar Reserva</button>
+                </div>
+                  
                 </form>
                 
               </div>
-            </ng-template>
+            </ng-template>-->
 
+            <div class="container pt-5">
+
+    
+              <div *ngIf="isLoading2" class="loading-overlay">
+                <div class="spinner"></div>
+                <div class="row">
+                  <div class="col-12">
+                    <p style="font-weight: bold; color: #fff; padding: 10px;"> Espere un momento porfavor...</p>
+                  </div>
+                </div>   
+              </div>
+            
+            <ng-template #reservationModal let-modal>
+              <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Crear Reserva</h4>
+                    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form (submit)="submitReservationForm()">
+                      <div >
+                        <label for="startDateTime">Fecha y Hora de Inicio:</label>
+                        <input type="datetime-local" id="startDateTime" class="form-control" [(ngModel)]="reservationForm.startDateTime" name="startDateTime" readonly>
+                      </div>
+            
+                      <div class="form-group">
+                        <label for="endDateTime">Fecha y Hora de Fin:</label>
+                        <input type="datetime-local" id="endDateTime" class="form-control" [(ngModel)]="reservationForm.endDateTime" name="endDateTime" readonly>
+                      </div>
+            
+                      <div class="form-group">
+                        <label for="name">Nombre de la persona con quien jugará:</label>
+                        <input type="text" id="name" class="form-control" [(ngModel)]="reservationForm.name" name="name" required>
+                      </div>
+            
+                      <div class="form-group">
+                        <label for="dni">DNI de la persona con quien jugará:</label>
+                        <input type="text" id="dni" class="form-control" [(ngModel)]="reservationForm.dni" name="dni" required>
+                      </div>
+            
+                      <div class="form-group">
+                        <label for="comment">Comentario:</label>
+                        <textarea id="comment" class="form-control" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
+                      </div>
+            
+                      <div class="text-center mt-2">
+                        <button type="submit" class="btn btn-success">Guardar Reserva</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            
+            
             
             
           </div>

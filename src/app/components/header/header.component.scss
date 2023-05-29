@@ -3,6 +3,14 @@
     padding: 10px 20px;
   }
   
+
+  .btn-warning {
+    color: white;
+    background-color: #BCCD1E;
+    border-color: #BCCD1E
+}
+
+
   .navbar-brand {
     font-weight: bold;
     color: #333;
@@ -92,17 +100,31 @@
     overflow: hidden;
   }
   
+
   .cover-image {
+    display: block;
     width: 100%;
     height: auto;
-    object-fit: cover;
   }
   
   .cover-caption {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
   }
   
+  .cover-caption h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+

@@ -207,16 +207,17 @@ export class RegisterComponent implements OnInit{
 
 
 
-  sendRegister(){
-    this.isLoading = true; // Mostrar el spinner de carga
+  sendRegister(): void {
 
     const fechaNac = `${this.dateDay}/${this.dateMonth}/${this.dateYear} `;
     this.formRegister.get('fechNac')?.setValue(fechaNac)
 
     console.log(this.formRegister.value);
+    this.isLoading = true; // Mostrar el spinner de carga
 
 
     if(this.formRegister.valid) {
+
       console.log(this.formRegister.value);
       this.authService.registerCLient(this.formRegister.value).subscribe( (resp: any) => {
         console.log(resp);
@@ -255,6 +256,8 @@ export class RegisterComponent implements OnInit{
         this.toastr.error('Ocurrio un error:', error);
       })
     } else {
+      this.isLoading = false; // Mostrar el spinner de carga
+
       console.log('complete todo');
       this.toastr.error('Todos los datos son importantes');
     }

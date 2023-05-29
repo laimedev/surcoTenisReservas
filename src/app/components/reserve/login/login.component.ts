@@ -18,6 +18,13 @@ export class LoginComponent implements OnInit{
   errorSession: boolean = false
   formLogin: FormGroup = new FormGroup({});
 
+  hidePassword: boolean = true;
+
+
+  showPassword = false;
+  passwordToggleIcon = "fa fa-eye-slash";
+
+  
   constructor(
     private cookie: CookieService,
     public authService: AuthService,
@@ -32,10 +39,10 @@ export class LoginComponent implements OnInit{
 
     this.formLogin = new FormGroup(
       {
-        email: new FormControl('jose4@gmail.com', [
+        email: new FormControl('', [
           Validators.required,
         ]),
-        password: new FormControl('123456',
+        password: new FormControl('',
           [
             Validators.required,
           ])
@@ -48,10 +55,11 @@ export class LoginComponent implements OnInit{
 
   sendLogin(): void {
 
-    this.isLoading = true; // Mostrar el spinner de carga
 
 
       if(this.formLogin.valid) {
+        this.isLoading = true; // Mostrar el spinner de carga
+
         this.authService.sendCredentials(this.formLogin.value)
         .subscribe(resp => {
 
@@ -88,12 +96,27 @@ export class LoginComponent implements OnInit{
             console.error('Ocurrio error con tu email o password:', err);
           })
     } else {
+      this.isLoading = false; 
+
       this.toastr.error('Todos los datos son importantes');
       
     }
   }
 
 
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+    if (this.passwordToggleIcon == 'fa fa-eye-slash'){
+      this.passwordToggleIcon = 'fa fa-eye'
+    } else {
+      this.passwordToggleIcon = 'fa fa-eye-slash';
+    }
+  }
 
 
  

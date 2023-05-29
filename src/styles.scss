@@ -29,3 +29,53 @@
 .swal2-popup .swal2-actions:not(.swal2-loading) .swal2-styled:hover {
 	background-color: #aaa !important;
 }
+
+
+.fc .fc-timegrid-axis-cushion {
+    visibility: hidden;
+}
+
+.fc .fc-timegrid-axis-cushion:before {
+    content:  "Hora";
+    visibility: visible;
+    font-size: 16px;
+}
+
+.fc .fc-col-header-cell-cushion {
+    text-transform: uppercase;
+    color: #198754;
+    text-align: right;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.fc .fc-timegrid-axis-cushion, .fc .fc-timegrid-slot-label-cushion { 
+    padding: 5px
+}
+
+.fc-timegrid-event .fc-event-main {
+    text-align: center;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
+
+    background-color: #198754;
+    border-color: #198754;
+    color: #ffff;
+}
+
+
+.fc .fc-button-primary:disabled { 
+    background-color: #198754;
+    border-color: #198754;
+    color: #ffff;
+}
+
+.fc .fc-button-primary {
+    background-color: #198754;
+    border-color: #198754;
+    color: #ffff;
+}

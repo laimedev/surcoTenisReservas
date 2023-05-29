@@ -10,14 +10,14 @@
   </div>
   <div class="row">
 
-    <div class="form-group col-4 pt-3">
-      <h4>Seleccione la cancha de preferencia: </h4>
+    <div class="form-group col-4 pt-2">
+      <h5>Seleccione la cancha: </h5>
     </div>
    
 
  
-    <div class="form-group col-8 pt-3 pb-5">
-      <select  class="form-select" data-style="btn-primary" (change)="updateLocalidad($event)">
+    <div class="form-group col-8 pt-2 pb-5">
+      <select  class="selectpicker form-select " data-style="btn-info"   (change)="updateLocalidad($event)" >
         <option [value]="data.codLocalidad" *ngFor="let data of localidad" >{{data.nomLocalidad}}</option>
       </select>
     </div>
@@ -32,7 +32,7 @@
         
         <div class='demo-app'>
 
-          <div class='demo-app-main'>
+          <div class='demo-app-main animated fadeIn'>
             <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
               <ng-template #eventContent let-arg>
                 <b> {{ arg.timeText }} </b>
@@ -76,7 +76,7 @@
               </div>
             </ng-template>-->
 
-            <div class="container pt-5">
+            <div class="container pt-4 animated fadeIn">
 
     
               <div *ngIf="isLoading2" class="loading-overlay">
@@ -89,7 +89,8 @@
               </div>
             
             <ng-template #reservationModal let-modal>
-              <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-dialog-centered modal-lg">
+              <!-- <div class="modal-dialog modal-dialog-centered modal-lg"> -->
                 <div class="modal-content">
                   <div class="modal-header">
                     <h4 class="modal-title">Crear Reserva</h4>
@@ -99,20 +100,34 @@
                   </div>
                   <div class="modal-body">
                     <form (submit)="submitReservationForm()">
-                      <div >
-                        <label for="startDateTime">Fecha y Hora de Inicio:</label>
-                        <input type="datetime-local" id="startDateTime" class="form-control" [(ngModel)]="reservationForm.startDateTime" name="startDateTime" readonly>
-                      </div>
-            
-                      <div class="form-group">
-                        <label for="endDateTime">Fecha y Hora de Fin:</label>
-                        <input type="datetime-local" id="endDateTime" class="form-control" [(ngModel)]="reservationForm.endDateTime" name="endDateTime" readonly>
+
+                      <div class="row">
+                        <div class="col-6">
+                          <label for="startDateTime">Fecha y Hr - Inicio:</label>
+                          <input type="datetime-local" id="startDateTime" class="form-control" [(ngModel)]="reservationForm.startDateTime" name="startDateTime" readonly>
+                        </div>
+              
+                        <div  class="col-6">
+                          <label for="endDateTime">Fecha y Hr - Fin:</label>
+                          <input type="datetime-local" id="endDateTime" class="form-control" [(ngModel)]="reservationForm.endDateTime" name="endDateTime" readonly>
+                        </div>
                       </div>
 
-                      <div class="form-group">
+                      
+
+                      <div class="form-group mt-1">
                         <label for="price">Precio:</label>
+                      </div>
+
+                      <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1">S/ </span>
+                        </div>
                         <input type="text" id="price" class="form-control" [(ngModel)]="reservationForm.price" name="price"readonly>
                       </div>
+
+
+
 
                       <div class="form-group">
                         <label for="price">Tiempo de juego:</label>
@@ -135,7 +150,8 @@
                       </div>
             
                       <div class="text-center mt-2">
-                        <button type="submit" class="btn btn-success">Guardar Reserva</button>
+                        <button type="submit" class="btn btn-success"><i class="fa fa-ticket" aria-hidden="true"></i>&nbsp;
+                          Reserva cancha</button>
                       </div>
                     </form>
                   </div>

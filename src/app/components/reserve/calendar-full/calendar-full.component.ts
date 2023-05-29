@@ -77,7 +77,7 @@ export class CalendarFullComponent implements OnInit {
       return duration === 60;
     },
     slotLabelFormat: [
-      { hour: 'numeric', minute: '2-digit' },
+      { hour: 'numeric', minute: '2-digit', hour12: true, meridiem: 'short'},
       { month: 'short', day: 'numeric', weekday: 'short' }
     ],
     //nowIndicator: true,

@@ -282,6 +282,8 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
     this.isLoading2 = false; 
     this.modalService.dismissAll();
 
+    this.payment();
+
   }
 
 

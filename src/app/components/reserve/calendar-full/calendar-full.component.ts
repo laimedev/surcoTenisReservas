@@ -258,6 +258,34 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
 }
 
 
+
+
+  submitReservationForm2() { 
+    this.isLoading2 = true;
+    this.userDataJson = localStorage.getItem('userData');
+    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+    const payload = {
+      ddUsuario: 1,
+      ddlClientes: userData.codCliente,
+      ddlLocalidad: this.localidadSelect,
+      ddCaja: 7,
+      txtFecha: this.formatDate(this.reservationForm.startDateTime),
+      txtHoraInicial: this.formatTime(this.reservationForm.startDateTime),
+      txtHoraFinal: this.formatTime(this.reservationForm.endDateTime),
+      txtTiempo: this.reservationForm.timeGame,
+      estado: 'SIN CONFIRMAR',
+      pago: 0,
+      txtComentario: this.reservationForm.comment,
+      costoTarifa:this.reservationForm.price
+    };
+    console.log({payload})
+    this.isLoading2 = false; 
+    this.modalService.dismissAll();
+
+  }
+
+
+  
   submitReservationForm() {
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');

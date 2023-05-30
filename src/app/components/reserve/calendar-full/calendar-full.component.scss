@@ -35,3 +35,54 @@
     color: whitesmoke !important;
     background: #bf5279 !important;
 }
+
+
+
+
+
+.floating-bar {
+  position: fixed;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9999;
+  background-color: #e9e2e2;
+  border: 1px solid #e9e2e2;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Agrega el box-shadow */
+}
+
+.floating-bar a {
+  display: block;
+  margin-bottom: 10px;
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  line-height: 45px;
+  color: #333;
+  
+}
+
+
+
+.floating-bar i {
+  font-size: 20px;
+  background-color: transparent; /* Quita el fondo de los íconos */
+}
+
+
+
+.floating-bar a {
+  animation: vibration 0.3s infinite linear;
+  font-size: 30px;
+}
+
+@keyframes vibration {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}

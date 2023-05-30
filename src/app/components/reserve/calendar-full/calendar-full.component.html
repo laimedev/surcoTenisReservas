@@ -36,8 +36,8 @@
             <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
               <ng-template #eventContent let-arg>
                 <b> {{ arg.timeText }} </b>
-                <b>- 10 min de mantenimiento</b>
-                <i class="event-title"> {{ arg.event.title }} </i>
+                <!-- <b>- 10 min de mantenimiento</b>
+                <i class="event-title"> {{ arg.event.title }} </i> -->
               </ng-template>
             </full-calendar>
 
@@ -99,7 +99,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form (submit)="submitReservationForm()">
+                    <form (submit)="submitReservationForm2()">
 
                       <div class="row">
                         <div class="col-6">
@@ -176,6 +176,11 @@
 
   <br><br>
   <br><br>
+
+
+  <div class="floating-bar">
+    <a href="#"> <i class="fa fa-shopping-cart" aria-hidden="true" style="color: #157347; font-size: 25px; padding-top: 17px;" ></i></a>
+  </div>
 
 
 

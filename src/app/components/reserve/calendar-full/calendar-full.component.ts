@@ -86,8 +86,8 @@ export class CalendarFullComponent implements OnInit {
   currentEvents: EventApi[] = [];
 
   product = [{
-    description : "Polo Culqi Lover",
-    amount: 100
+    description : "Reserva de Cancha Tenis",
+    amount: 0
   }];
   currentDate: Date = new Date();
 
@@ -282,7 +282,12 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
     this.isLoading2 = false; 
     this.modalService.dismissAll();
 
+
+    this.product[0].amount = this.reservationForm.price
+
     this.payment();
+
+    
 
   }
 

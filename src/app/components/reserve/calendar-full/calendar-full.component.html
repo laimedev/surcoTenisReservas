@@ -1,13 +1,28 @@
 <div class="container pt-5">
 
-  <div *ngIf="isLoading" class="loading-overlay">
+  <!-- <div *ngIf="isLoading" class="loading-overlay">
     <div class="spinner"></div>
     <div class="row">
       <div class="col-12">
         <p style="font-weight: bold; color: #fff; padding: 10px;"> Cargando ...</p>
       </div>
     </div> 
+  </div> -->
+
+
+  <div *ngIf="isLoading" class="loading-overlay">
+    <!-- <div class="spinner"></div> -->
+    <div class="row">
+      <div class="col-12">
+        <div class="loading-content">
+          <div class="spinner"></div>
+          <p style="font-weight: bold; color: #fff; padding-top: 10px;">Cargando</p>
+        </div>
+      </div>
+    </div> 
   </div>
+
+
   <div class="row">
 
     <div class="form-group col-4 pt-2">
@@ -83,7 +98,10 @@
                 <div class="spinner"></div>
                 <div class="row">
                   <div class="col-12">
-                    <p style="font-weight: bold; color: #fff; padding: 10px;"> Espere un momento porfavor...</p>
+                    <div style="display: flex; align-items: center;">
+                      <div class="spinner"></div>
+                      <p style="font-weight: bold; color: #fff; padding: 10px; margin-left: 10px;">Espere un momento por favor...</p>
+                    </div>
                   </div>
                 </div>   
               </div>
@@ -99,7 +117,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form (submit)="submitReservationForm()">
+                    <form (submit)="submitReservationForm2()">
 
                       <div class="row">
                         <div class="col-6">

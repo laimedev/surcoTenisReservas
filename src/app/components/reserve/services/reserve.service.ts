@@ -25,12 +25,15 @@ export class ReserveService {
 
 
    initCulqi () {
-    Culqi.publicKey  = "pk_test_94tTaKyy2oea3bQf"
+    // Culqi.publicKey  = "pk_test_94tTaKyy2oea3bQf"
+    Culqi.publicKey  = "pk_live_ea1621fef7a79560"
+    // pk_live_ea1621fef7a79560   public
+    // sk_live_5a6b4703c558ce41  privada
   }
 
   payorder(description: string, amount: number) {
     Culqi.settings ({
-      title: 'Culqi Store',
+      title: 'Surco Tenis',
       currency: 'PEN',
       description: description,
       amount: amount*100

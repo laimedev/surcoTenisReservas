@@ -16,7 +16,7 @@
           <div class="card-content">
 
               <div class="text-center">
-                  <h5 class="fw-bold" style="color: #545252">FORMULARIO DE INSCRIPCIÓN</h5>
+                  <h5 class="fw-bold" style="color: #545252">FORMULARIO DE REGISTRO</h5>
                   <img src="assets/logo.png" alt="Logo" width="130" class="pt-2" >
 
               </div>
@@ -31,7 +31,7 @@
                   <!-- class="custom-select custom-select-lg mb-3" -->
                   <select  class="form-select"  formControlName="tipo_documento" [class.is-invalid]="isControlInvalid('tipo_documento')"
                   [class.is-valid]="isControlValid('tipo_documento')">
-                      <option value="">DNI/Nie/Pasaporte</option>
+                      <option value="">Seleccione tipo</option>
                       <option value="DNI">DNI</option>
                       <option value="Nie">Nie</option>
                       <option value="Pasaporte">Pasaporte</option>
@@ -80,6 +80,10 @@
             </div>
             
 
+            <div class="pt-3">
+              <small > &nbsp; Seleccione su feha de nacimiento</small>
+            </div>
+
 
             <div class="row pt-3">
               <div class="col-4">
@@ -125,7 +129,7 @@
               <!-- class="custom-select custom-select-lg mb-3" -->
               <select  class="form-select"  formControlName="genero"  [class.is-invalid]="isControlInvalid('genero')"
               [class.is-valid]="isControlValid('genero')">
-                  <option value="">Genero</option>
+                  <option value="">Seleccione Genero</option>
                   <option value="M">Masculino</option>
                   <option value="F">Femenino</option>
               </select>
@@ -157,7 +161,7 @@
 
         <div class="form-group pt-3">
           <!-- <label for="password">Contraseña</label> -->
-          <input type="password" class="form-control" id="password" placeholder="Ingrese su contraseña"  formControlName="password" [class.is-invalid]="isControlInvalid('password')"
+          <input type="text" class="form-control" id="password" placeholder="Ingrese su contraseña"  formControlName="password" [class.is-invalid]="isControlInvalid('password')"
           [class.is-valid]="isControlValid('password')">
           <span *ngIf="isControlInvalid('password')" class="text-danger" >Ingrese su contraseña</span>
 
@@ -165,16 +169,18 @@
 
         <div class="form-group pt-3">
           <!-- <label for="password">Contraseña</label> -->
-          <input type="password" class="form-control" id="password" placeholder="Repita su contraseña"  formControlName="passwordConfirmation" [class.is-invalid]="isControlInvalid('passwordConfirmation')"
+          <input type="text" class="form-control" id="password" placeholder="Repita su contraseña"  formControlName="passwordConfirmation" [class.is-invalid]="isControlInvalid('passwordConfirmation')"
           [class.is-valid]="isControlValid('passwordConfirmation')">
           <span *ngIf="isControlInvalid('passwordConfirmation')" class="text-danger" >Ingrese la confirmacion de contraseña</span>
 
         </div>
 
-        <br>
-        <hr>
+        <div class="alert alert-danger mt-3" role="alert">
+          * Todos los campos son importantes, las contraseña minimo 8 caracteres.
+        </div>
 
-        <div class="form-group pt-3">
+
+        <!-- <div class="form-group pt-3">
           <select  class="form-select"  formControlName="nivel" [class.is-invalid]="isControlInvalid('nivel')"
           [class.is-valid]="isControlValid('nivel')">
               <option value="">Nivel</option>
@@ -200,7 +206,7 @@
           </select>
           <span *ngIf="isControlInvalid('posicion')" class="text-danger" >Seleccione la posicion</span>
 
-        </div>
+        </div> -->
 
 
         <div class="col-12 pt-3 text-center">

@@ -1,242 +1,83 @@
 <div class="container">
-    <div class="row pt-4">
-        <div class="col-12 text-center">
-            <h3 style="color: #036476" class="animated fadeIn">Hola, {{userData.nombre}} </h3>
-            <p>Bienvenido a la seccion donde tendras el registro de tus reservas e información personal.</p>
-        </div>
-    </div>
+  <div class="row pt-4">
+      <div class="col-12 text-center">
+          <h3 style="color: #036476" class="animated fadeIn">Hola, {{userData.nombre}} </h3>
+          <p>Bienvenido a la sección donde tendrás el registro de tus reservas e información personal.</p>
+      </div>
+  </div>
 
-
-
-    <div class="row text-center pt-3">
-
-        <ul class="nav nav-tabs text-center" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">
-                Mis reservas
+  <div class="row text-center pt-3">
+      <ul class="nav nav-tabs text-center" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+                  role="tab" aria-controls="home" aria-selected="true">
+                  Mis reservas
               </button>
-            </li>
-            <!-- <li class="nav-item" role="presentation">
-              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">
-                Mi información personal
+          </li>
+          <li class="nav-item" role="presentation">
+              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
+                  role="tab" aria-controls="contact" aria-selected="false">
+                  Salir
               </button>
-            </li> -->
-            <li class="nav-item" role="presentation">
-              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">
-                Salir
-              </button>
-            </li>
-          </ul>
-          <div class="tab-content" id="myTabContent">
-
-
-
-
-
-
-
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <div class="responsive pt-4">
-
-                <div class="row pb-3" style="text-align: start;">
-                    <div class="col-12">
-                        <button class="btn btn-success" [routerLink]="['/reserve']" routerLinkActive="router-link-active" ><i class="fa fa-plus" aria-hidden="true"></i>
-                             Reservar una cancha</button>
-                    </div>
-                </div>
-
-                <div style="overflow-x:auto;">
-                <table class="table table-striped table-responsive pt-3">
-                    <thead class="pt-3">
-                      <tr>
-                        <th>Codigo</th>
-                        <th>Cancha</th>
-                        <th>Hora Inicio</th>
-                        <th>Hora Fin</th>
-                        <th>Duración</th>
-                        <th>Estado</th>
-                        <th>Fecha registro</th>
-                        <th>Ver Ticket</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr  *ngFor="let data of reservas">
-                        <td>{{data.codRegistro}}</td>
-                        <td>{{data.nomLocalidad}}</td>
-                        <td>{{data.horainicio}}</td>
-                        <td>{{data.horafinal}}</td>
-                        <td>{{data.duracion}}</td>
-                        <td>{{data.estadoRegistro}}</td>
-                        <td>{{data.fechRegistro  | date: 'dd/MM/yyyy   HH:mm:ss'}}</td>
-                        <td><button class="btn btn-success" (click)="imprimir(data)"><i class="fa fa-ticket" aria-hidden="true"></i>
-                        </button></td>
-                      </tr>
-
-                      <!-- <td>{{data.fechRegistro | date: 'medium' }}</td> -->
-
-                    </tbody>
-                  </table>
-
-                </div>
-
-
-
-                </div>
-
-
-            </div>
-
-
-
-
-
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
-
-                
-                <form class="pt-3" (ngSubmit)="sendRegister()" [formGroup]="formRegister">
-
-          <div class="row pt-3">
-
-              <div class="col-6">
-                  <select  class="form-select"  formControlName="tipo_documento" [class.is-invalid]="isControlInvalid('tipo_documento')"
-                  [class.is-valid]="isControlValid('tipo_documento')">
-                      <option value="">DNI/Nie/Pasaporte</option>
-                      <option value="DNI">DNI</option>
-                      <option value="Nie">Nie</option>
-                      <option value="Pasaporte">Pasaporte</option>
-                      <option value="Licencia">Licencia de conducir</option>
-                  </select>
-                <span *ngIf="isControlInvalid('tipo_documento')" class="text-danger" >Seleccione el tipo</span>
-
-                </div>
-
-              <div class="col-6">
-                  <input type="text" class="form-control" id="email" placeholder="Numero de Identificación"   formControlName="numDocumento" [class.is-invalid]="isControlInvalid('numDocumento')"
-                  [class.is-valid]="isControlValid('numDocumento')" >
-                <span *ngIf="isControlInvalid('numDocumento')" class="text-danger" >Ingrese en numero de identificación</span>
-
-                </div>
-          </div>
-          
-
-            <div class="form-group pt-3">
-              <input type="text" class="form-control" id="email" placeholder="Ingrese su nombre"  formControlName="nombres" [class.is-invalid]="isControlInvalid('nombres')"
-              [class.is-valid]="isControlValid('nombres')">
-              <span *ngIf="isControlInvalid('nombres')" class="text-danger" >Ingrese su nombre</span>
-            </div>
-
-
-            <div class="row pt-3">
-              <div class="col-6">
-                  <input type="text" class="form-control" id="email" placeholder="Primer apellido"  formControlName="primer_apellido" [class.is-invalid]="isControlInvalid('primer_apellido')"
-                  [class.is-valid]="isControlValid('primer_apellido')">
-                <span *ngIf="isControlInvalid('primer_apellido')" class="text-danger" >Ingrese su apellido</span>
-                </div>
-  
-                <div class="col-6">
-                  <input type="text" class="form-control" id="email" placeholder="Segundo apellido"  formControlName="segundo_apellido" [class.is-invalid]="isControlInvalid('segundo_apellido')"
-                  [class.is-valid]="isControlValid('segundo_apellido')">
-                <span *ngIf="isControlInvalid('segundo_apellido')" class="text-danger" >Ingrese su apellido</span>
-
-                </div>
-            </div>
-            
-           
-
-            <div class="form-group pt-3">
-              <select  class="form-select"  formControlName="genero"  [class.is-invalid]="isControlInvalid('genero')"
-              [class.is-valid]="isControlValid('genero')">
-                  <option value="">Genero</option>
-                  <option value="M">Masculino</option>
-                  <option value="F">Femenino</option>
-              </select>
-              <span *ngIf="isControlInvalid('genero')" class="text-danger" >Seleccione su genero</span>
-
-            </div>
-
-            <div class="form-group pt-3">
-              <input type="number" class="form-control" id="email" placeholder="Ingrese se celular | telefono"  formControlName="telefono" [class.is-invalid]="isControlInvalid('telefono')"
-              [class.is-valid]="isControlValid('telefono')">
-              <span *ngIf="isControlInvalid('telefono')" class="text-danger" >Ingrese su telefono</span>
-
-            </div>
-
-
-        <div class="form-group pt-3">
-          <input type="email" class="form-control" id="email" placeholder="Ingrese su correo electrónico"  formControlName="email" [class.is-invalid]="isControlInvalid('email')"
-          [class.is-valid]="isControlValid('email')" [disabled]="true">
-          <span *ngIf="isControlInvalid('email')" class="text-danger" >Ingrese su email</span>
-
-        </div>
-
-        <br>
-        <hr>
-
-        <div class="form-group pt-3">
-          <select  class="form-select"  formControlName="nivel" [class.is-invalid]="isControlInvalid('nivel')"
-          [class.is-valid]="isControlValid('nivel')">
-              <option value="">Nivel</option>
-              <option value="No Juega">No Juega</option>
-              <option value="Quinta">Quinta</option>
-              <option value="Cuarta">Cuarta</option>
-              <option value="Tercera">Tercera</option>
-              <option value="Segunda">Segunda</option>
-              <option value="Primera">Primera</option>
-          </select>
-          <span *ngIf="isControlInvalid('nivel')" class="text-danger" >Seleccione el nivel</span>
-
-        </div>
-
-
-        <div class="form-group pt-3">
-          <select  class="form-select"  formControlName="posicion" [class.is-invalid]="isControlInvalid('posicion')"
-          [class.is-valid]="isControlValid('posicion')" >
-              <option value="">Posición</option>
-              <option value="Derecha">Derecha</option>
-              <option value="Indiferente">Indiferente</option>
-              <option value="Revés">Revés</option>
-          </select>
-          <span *ngIf="isControlInvalid('posicion')" class="text-danger" >Seleccione la posicion</span>
-
-        </div>
-
-
-        <!-- <div class="col-12 pt-3 text-center">
-          <button type="submit" class="btn btn-warning ">ACTUALIZAR INFORMACION</button>
-        </div> -->
-        <br><br>
-
-      </form>
-
-
-
-            </div>
-
-
-            <!-- FIN DE INFORMACION PERSONAL  -->
-
-
-
-           
-
-
-
-
-
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                <div class="row pt-5">
-                    <div class="col-12">
-                        <p>¿Esta seguro de cerrar sesión?</p>
-                        <button class="btn btn-danger btn-block" (click)="logout()">Cerrar sesión</button>
-                    </div>
-
-                </div>
-            </div>
-          <br><br>
-
+          </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div class="responsive pt-4">
+                  <div class="row pb-3" style="text-align: start;">
+                      <div class="col-12">
+                          <button class="btn btn-success" [routerLink]="['/reserve']" routerLinkActive="router-link-active">
+                              <i class="fa fa-plus" aria-hidden="true"></i>
+                              Reservar una cancha
+                          </button>
+                      </div>
+                  </div>
+
+                  <div class="table-responsive">
+                      <table class="table table-striped pt-3">
+                          <thead class="pt-3">
+                              <tr>
+                                  <th>Codigo</th>
+                                  <th>Cancha</th>
+                                  <th>Hora Inicio</th>
+                                  <th>Hora Fin</th>
+                                  <th>Duración</th>
+                                  <th>Estado</th>
+                                  <th>Fecha registro</th>
+                                  <th>Ver Ticket</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let data of reservas">
+                                  <td>{{data.codRegistro}}</td>
+                                  <td>{{data.nomLocalidad}}</td>
+                                  <td>{{data.horainicio}}</td>
+                                  <td>{{restarMinutos(data.horafinal,10)}}</td>
+                                  <td>{{data.duracion}}</td>
+                                  <td>{{data.estadoRegistro}}</td>
+                                  <!--<td>{{data.fechRegistro | date: 'dd/MM/yyyy '}}</td>-->
+                                  <td>{{ data.fechRegistro.slice(0, 10) | date: 'dd/MM/yyyy' }}</td>
+                                  <td>
+                                      <button class="btn btn-success" (click)="imprimir(data)">
+                                          <i class="fa fa-ticket" aria-hidden="true"></i>
+                                      </button>
+                                  </td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
           </div>
 
-
-    </div>
+          <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+              <div class="row pt-5">
+                  <div class="col-12">
+                      <p>¿Estás seguro de cerrar sesión?</p>
+                      <button class="btn btn-danger btn-block" (click)="logout()">Cerrar sesión</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
 </div>

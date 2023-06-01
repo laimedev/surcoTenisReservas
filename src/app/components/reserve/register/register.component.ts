@@ -211,16 +211,11 @@ export class RegisterComponent implements OnInit{
 
     const fechaNac = `${this.dateDay}/${this.dateMonth}/${this.dateYear} `;
     this.formRegister.get('fechNac')?.setValue(fechaNac)
-
-    console.log(this.formRegister.value);
     this.isLoading = true; // Mostrar el spinner de carga
 
 
     if(this.formRegister.valid) {
-
-      console.log(this.formRegister.value);
       this.authService.registerCLient(this.formRegister.value).subscribe( (resp: any) => {
-        console.log(resp);
         this.isLoading = false; 
 
 
@@ -251,14 +246,12 @@ export class RegisterComponent implements OnInit{
         this.router.navigateByUrl("/reserve/profile")
 
       }, error => {
-        console.log(error);
+        console.log(error.error);
         this.isLoading = false; 
-        this.toastr.error('Ocurrio un error:', error);
+        this.toastr.error('Ocurrio un error:', error.error);
       })
     } else {
       this.isLoading = false; // Mostrar el spinner de carga
-
-      console.log('complete todo');
       this.toastr.error('Todos los datos son importantes');
     }
 

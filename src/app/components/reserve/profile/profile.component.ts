@@ -195,7 +195,7 @@ export class ProfileComponent implements OnInit {
 		'Authorization': authToken
 		});
 
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar-cliente/${this.userData.codCliente}`;
+    const url = `https://api-rest-tennis-joseyzambranov.replit.app/api/registro-cliente/listar-cliente/${this.userData.codCliente}`;
 
     this.http.get<any[]>(url, {headers}).subscribe(
       (data: any) => {
@@ -221,7 +221,7 @@ export class ProfileComponent implements OnInit {
 		'Authorization': authToken
 		});
 
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/cliente/perfil/${this.userData.codCliente}`;
+    const url = `https://api-rest-tennis-joseyzambranov.replit.app/api/cliente/perfil/${this.userData.codCliente}`;
     this.http.get<any[]>(url, {headers}).subscribe(
       (data: any) => {
         

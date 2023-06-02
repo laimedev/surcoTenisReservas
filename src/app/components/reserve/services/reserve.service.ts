@@ -149,10 +149,16 @@ export class ReserveService {
             this.toastr.success('Reserva guardada con éxito:', 'Éxito');
 
 
-
             // this.modalService.dismissAll();
             // this.calendarFull.loadEvents()
             // this.calendarFull.isLoading2 = false; 
+            this.router.navigate(['/reserve/profile']);
+            setTimeout(() => {
+              this.router.navigate(['/reserve/profile']);
+              location.reload();
+            }, 1000);
+
+
           },
           (error) => {
             this.toastr.error('Error al guardar la reserva:', error.error);

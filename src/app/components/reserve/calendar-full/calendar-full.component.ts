@@ -134,7 +134,7 @@ export class CalendarFullComponent implements OnInit {
   }
   loadEvents() {
     this.isLoading = true;
-    const url = `https://api-rest-tennis-joseyzambranov.replit.app/api/registro-cliente/listar/?id=${this.localidadSelect}`;
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${this.localidadSelect}`;
 
     this.http.get<any[]>(url).subscribe(
       (data: any[]) => {
@@ -221,7 +221,7 @@ handleEventsDate(clickDate: DateSelectArg) {
 validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
   this.isLoading = true
   const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-  const priceEndpoint = 'https://api-rest-tennis-joseyzambranov.replit.app/api/registro-cliente/precio';
+  const priceEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/precio';
   const pricePayload = {
     fechRegistro: fechRegistro,
     horainicio: horainicio,
@@ -302,7 +302,7 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-    const url = 'https://api-rest-tennis-joseyzambranov.replit.app/api/registro-cliente/guardar';
+    const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
     const payload = {
       ddUsuario: 1,
       ddlClientes: userData.codCliente,

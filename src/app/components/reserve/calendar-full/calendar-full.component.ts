@@ -279,11 +279,15 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
       costoTarifa:this.reservationForm.price
     };
     console.log({payload})
+
+
+
     this.isLoading2 = false; 
     this.modalService.dismissAll();
 
 
     this.product[0].amount = this.reservationForm.price
+    localStorage.setItem('paymentPrice', this.reservationForm.price)
 
     this.payment();
 
@@ -323,13 +327,13 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
   
     this.http.post(url, payload, httpOptions).subscribe(
        (response) => {
-         this.toastr.success('Reservation saved successfully:', 'Éxito');
+         this.toastr.success('Reserva guardada con éxito:', 'Éxito');
          this.modalService.dismissAll();
         this.loadEvents()
         this.isLoading2 = false; 
        },
        (error) => {
-         this.toastr.error('Error saving reservation:', error.error);
+         this.toastr.error('Error al guardar la reserva:', error.error);
          // Manejar el error de guardado de reserva si es necesario
          this.isLoading2 = false; 
        }

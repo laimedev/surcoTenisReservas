@@ -19,8 +19,8 @@
   <script src='build/pdfmake.min.js'></script>
   <script src='build/vfs_fonts.js'></script>
 
-  <script src="https://checkout.culqi.com/js/v3"></script>
-  <script>
+  <script src="https://checkout.culqi.com/js/v4"></script>
+  <!-- <script>
     function culqi(){
       if(Culqi.token) {
         var token = Culqi.token.id;
@@ -28,7 +28,44 @@
         document.dispatchEvent (payment_event);
       }
     };
-      </script>
+      </script> -->
+
+
+
+      <script>
+        function culqi () {
+          if (Culqi.token) { 
+            // Get the token ID:
+            console.log('culqi token', Culqi.token)
+    
+            var token = Culqi.token.id;
+            var correo = Culqi.token.email;
+    
+            localStorage.setItem('correo_usuario_pago', correo);
+            
+            console.log('token-a',token);
+            console.log('correo-a',correo);
+    
+            var payment_event = new CustomEvent ('payment_event', {detail: token});
+            document.dispatchEvent (payment_event);
+    
+          } else { // ¡Hubo algún problema!
+            // Mostramos JSON de objeto error en consola
+            console.log(Culqi.error);
+            alert(Culqi.error.user_message);
+          }
+        };
+    </script>
+
+    
+
+  <script>
+    Culqi.publicKey = 'pk_live_ea1621fef7a79560';
+  </script>
+
+
+
+
 
   
 </body>

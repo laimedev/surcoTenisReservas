@@ -110,23 +110,33 @@
               <div class="modal-dialog-centered modal-lg">
               <!-- <div class="modal-dialog modal-dialog-centered modal-lg"> -->
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Crear Reserva</h4>
+
+
+
+                  <div class="modal-header bg-success">
+                    <div class="card-centered">
+                      <div class="card card-image" >
+                        <img src="assets/logo.png" alt="Logo" width="70">
+                      </div>
+                    </div>
+                    <h5 class="modal-title" style="color: #fff; margin-left: -70px;">Detalle de reserva</h5>
                     <button type="button" class="btn btn-danger" (click)="modal.dismiss()">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
+
+                  
                   <div class="modal-body">
                     <form (submit)="submitReservationForm2()">
 
                       <div class="row">
                         <div class="col-6">
-                          <label for="startDateTime">Fecha y Hr - Inicio:</label>
+                          <label for="startDateTime">Fecha - Hr Inicio:</label>
                           <input type="datetime-local" id="startDateTime" class="form-control" [(ngModel)]="reservationForm.startDateTime" name="startDateTime" readonly>
                         </div>
               
                         <div  class="col-6">
-                          <label for="endDateTime">Fecha y Hr - Fin:</label>
+                          <label for="endDateTime">Fecha - Hr Fin:</label>
                           <input type="datetime-local" id="endDateTime" class="form-control" [(ngModel)]="reservationForm.endDateTime" name="endDateTime" readonly>
                         </div>
                       </div>
@@ -152,7 +162,7 @@
                         <input type="text" id="timeGame" class="form-control" [(ngModel)]="reservationForm.timeGame" name="timeGame"readonly>
                       </div>
 
-                      <div class="form-group">
+                      <!-- <div class="form-group">
                         <label for="name">Nombre de la persona con quien jugará:</label>
                         <input type="text" id="name" class="form-control" [(ngModel)]="reservationForm.name" name="name" required>
                       </div>
@@ -165,10 +175,10 @@
                       <div class="form-group">
                         <label for="comment">Comentario:</label>
                         <textarea id="comment" class="form-control" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
-                      </div>
+                      </div> -->
             
                       <div class="text-center mt-2">
-                        <button type="submit" class="btn btn-success"><i class="fa fa-ticket" aria-hidden="true"></i>&nbsp;
+                        <button type="submit" class="btn btn-success">
                           Reserva cancha</button>
                       </div>
                     </form>

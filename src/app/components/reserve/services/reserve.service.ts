@@ -27,13 +27,13 @@ export class ReserveService {
   userDataJson: string | null | undefined;
 
   // DESARROLLO
-  culqiKeyPublic = 'pk_test_3d5b167a050827d7';
-  culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
+  // culqiKeyPublic = 'pk_test_3d5b167a050827d7';
+  // culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
 
 
   // PRODUCCION 
-  // culqiKeyPublic = 'pk_live_ea1621fef7a79560';
-  // culqiKeyPrivate = 'sk_live_5a6b4703c558ce41';
+  culqiKeyPublic = 'pk_live_ea1621fef7a79560';
+  culqiKeyPrivate = 'sk_live_5a6b4703c558ce41';
 
   private readonly URL = environment.urlBase
   constructor(private http: HttpClient,

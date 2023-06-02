@@ -386,7 +386,7 @@ export class ProfileComponent implements OnInit {
       [ 'HORA INI', 'HORA FIN' ,'DURACIÓN' ,'TARIFA'],
       [ 
         data.horainicio , 
-        this.restarMinutos(data.horaFinal,10) ,
+        this.restarMinutos(data.horafinal,10) ,
         data.duracion, 
         data.costoTarifa, 
       ],
@@ -401,7 +401,8 @@ export class ProfileComponent implements OnInit {
   pdf.add( new Txt(espacio).end);
     
 
-    pdf.add( new Txt('Su reservación se encuentra en estado ' + data.estadoRegistro  + ' cominiquese al siguiente numero (51)935-826-680, ó acerquese al centro para realizar el pago y disfrutar del juego.').alignment('center').italics().end);
+    pdf.add( new Txt('Para consultas o mayor información cominiquese al siguiente número (51)935-826-680, disfrute del juego de tenis con nosotros.').alignment('center').italics().end);
+    // pdf.add( new Txt('Su reservación se encuentra en estado ' + data.estadoRegistro  + ' cominiquese al siguiente numero (51)935-826-680, ó acerquese al centro para realizar el pago y disfrutar del juego.').alignment('center').italics().end);
     pdf.add( new Txt(espacio).end);
     pdf.add( new Txt('MUCHAS GRACIAS POR SU PREFERENCIA').alignment('center').bold().italics().end);
     pdf.add( new Txt(espacio).end);

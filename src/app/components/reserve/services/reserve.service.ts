@@ -7,6 +7,8 @@ import { Component, HostListener } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { CalendarFullComponent } from '../calendar-full/calendar-full.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -22,6 +24,7 @@ export class ReserveService {
 
   TOKEN_CULQI = '';
 
+  userDataJson: string | null | undefined;
 
   // DESARROLLO
   culqiKeyPublic = 'pk_test_3d5b167a050827d7';
@@ -35,7 +38,10 @@ export class ReserveService {
   private readonly URL = environment.urlBase
   constructor(private http: HttpClient,
     public router: Router,
-    private toastr: ToastrService) {
+    private modalService: NgbModal,
+    private toastr: ToastrService,
+    // public calendarFull: CalendarFullComponent
+    ) {
     document.addEventListener ('payment_event', (token: any) => {
       this.token_id = token.detail;
       console.log(this.token_id)
@@ -122,22 +128,41 @@ export class ReserveService {
 
   sendDataToCulqi(data: any){
     let headers = new HttpHeaders({"Authorization": `Bearer ${this.culqiKeyPrivate}`});
-    // return  this.http.post("https://api.culqi.com/v2/charges", data, { headers: headers}).subscribe((resp: any) => {
-    //   console.log(resp);
-      
-    //    this.toastr.success(resp['outcome'].user_message , 'exito', {
-    //     positionClass: 'toast-bottom-left' // Cambia aquí la posición a 'toast-bottom-center' o 'toast-bottom-right' según tus necesidades
-    //   });
-
-    //    console.log(resp.outcome.user_message);
-
-    //    Culqi.dismiss();
-    // });
-
-
     return this.http.post("https://api.culqi.com/v2/charges", data, { headers: headers}).subscribe(
       (resp: any) => {
-        console.log(resp);
+
+
+
+        
+
+        this.userDataJson = localStorage.getItem('userData');
+        const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+        const url = 'https://api-rest-tennis-joseyzambranov.replit.app/api/registro-cliente/guardar';
+        const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
+         const httpOptions = {
+          headers: {
+            Authorization: `Bearer ${userData.token}`
+          }
+        };
+        this.http.post(url, dataPayment, httpOptions).subscribe(
+          (response) => {
+            this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+
+
+
+            // this.modalService.dismissAll();
+            // this.calendarFull.loadEvents()
+            // this.calendarFull.isLoading2 = false; 
+          },
+          (error) => {
+            this.toastr.error('Error al guardar la reserva:', error.error);
+            // this.calendarFull.isLoading2 = false; 
+          }
+        );
+
+
+
+
 
         Swal.fire({
           icon: 'success',
@@ -145,35 +170,20 @@ export class ReserveService {
           text:  `${resp['outcome'].merchant_message}`,
           confirmButtonText: 'Ok, muchas gracias!!',
         })
-
-
-        // this.router.navigate(['reserve/profile']);
          Culqi.close();
-
-
-
-
       },
       (error) => {
-        // console.log("Error en la petición:", error.error.merchant_message);
-        console.log(error);
-
         Swal.fire({
           icon: 'warning',
           text: `${error.error.user_message}`,
           confirmButtonText: 'Ok, entendido',
         })
         Culqi.close();
-
-
-       
       },
       () => {
         console.log("La petición se completó correctamente.");
       }
     );
-
-
   }
 
 

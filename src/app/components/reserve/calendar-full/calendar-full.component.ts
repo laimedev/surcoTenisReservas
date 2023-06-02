@@ -287,7 +287,8 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
 
 
     this.product[0].amount = this.reservationForm.price
-    localStorage.setItem('paymentPrice', this.reservationForm.price)
+    localStorage.setItem('paymentPrice', this.reservationForm.price);
+    localStorage.setItem('dataPayment',  JSON.stringify(payload));
 
     this.payment();
 
@@ -334,7 +335,6 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
        },
        (error) => {
          this.toastr.error('Error al guardar la reserva:', error.error);
-         // Manejar el error de guardado de reserva si es necesario
          this.isLoading2 = false; 
        }
      );

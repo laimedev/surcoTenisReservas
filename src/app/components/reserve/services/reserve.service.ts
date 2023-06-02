@@ -137,7 +137,7 @@ export class ReserveService {
 
         this.userDataJson = localStorage.getItem('userData');
         const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-        const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
+        const url = 'https://api-rest-tennis-joseyzambranov.replit.app/api/registro-cliente/guardar';
         const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
          const httpOptions = {
           headers: {

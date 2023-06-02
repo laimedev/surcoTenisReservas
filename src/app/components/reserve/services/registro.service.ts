@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class RegistroService {
-  apiUrl = 'https://api-rest-tennis.joseyzambranov.repl.co/api/register';
+  apiUrl = 'https://api-rest-tennis-joseyzambranov.replit.app/api/register';
 
   constructor(private http: HttpClient) {}
 

@@ -49,7 +49,7 @@ export class ReserveService {
 
       let  dataPago = {
         source_id: this.token_id,
-        email: 'alaimes64@gmail.com',
+        email: localStorage.getItem('correo_usuario_pago'),
         currency_code: 'PEN',
         amount: JSON.parse(localStorage.getItem('paymentPrice')!) + '00'
       } 

@@ -177,6 +177,8 @@ export class RegisterComponent implements OnInit{
       telefono: new FormControl('', [ Validators.required]),
       // nivel: new FormControl('', [ Validators.required]),
       // posicion: new FormControl('', [ Validators.required]),
+      tipo: new FormControl('', [ Validators.required]),
+
     }
   )
 

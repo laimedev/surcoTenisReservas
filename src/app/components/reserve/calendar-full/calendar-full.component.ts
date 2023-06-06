@@ -382,4 +382,13 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
     this.modalService.open(this.reservationModal, { centered: true }); // Abre el modal utilizando la referencia
   }
   
+
+
+  restarMinutos(horaFinal: string, minutos: number): string {
+    const horaFinMoment = moment(horaFinal, 'HH:mm:ss');
+    const nuevaHoraFinMoment = horaFinMoment.subtract(minutos, 'minutes');
+    return nuevaHoraFinMoment.format('HH:mm:ss');
+  }
+
+  
 }

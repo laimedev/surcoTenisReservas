@@ -192,7 +192,10 @@ handleEventsDate(clickDate: DateSelectArg) {
     if (this.userDataJson) {
       this.showReservationForm = true;
       this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
-      this.reservationForm.endDateTime = this.formatDateTime(clickDate.end.toISOString());
+      // Restar 10 minutos a la hora final
+      const endDateTime = moment(clickDate.end.toISOString()).subtract(10, 'minutes').toISOString();
+
+      this.reservationForm.endDateTime = this.formatDateTime(endDateTime),//this.formatDateTime(clickDate.end.toISOString());
       this.reservationForm.timeGame = this.calculateTimeDuration(new Date(this.reservationForm.startDateTime), new Date(this.reservationForm.endDateTime)),
       this.validatePrice(this.formatTime(this.reservationForm.startDateTime),this.formatDate(this.reservationForm.startDateTime), this.formatTime(this.reservationForm.endDateTime))
     } else {
@@ -351,7 +354,7 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
 
   calculateTimeDuration(startDateTime: Date, endDateTime: Date): string {
     const durationMs = endDateTime.getTime() - startDateTime.getTime();
-    const durationMinutes = Math.floor(durationMs / (1000 * 60) - 10); // - 10 de mantenimiento
+    const durationMinutes = Math.floor(durationMs / (1000 * 60) ); // - 10 de mantenimiento
     return `${durationMinutes} minuto(s)`;
   }
   

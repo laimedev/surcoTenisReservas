@@ -386,7 +386,7 @@ export class ProfileComponent implements OnInit {
       [ 'HORA INI', 'HORA FIN' ,'DURACIÓN' ,'TARIFA'],
       [ 
         data.horainicio , 
-        this.restarMinutos(data.horafinal,10) ,
+        data.horafinal ,
         data.duracion, 
         data.costoTarifa, 
       ],

@@ -184,42 +184,84 @@ export class CalendarFullComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-handleEventsDate(clickDate: DateSelectArg) {
+  handleEventsDate(clickDate: DateSelectArg) {
+    const selectedDateTime = moment(clickDate.start.toISOString());
   
-  const selectedDateTime = moment(clickDate.start.toISOString());
-
-  if (selectedDateTime.isSameOrAfter(moment(), 'minute')) {
-    if (this.userDataJson) {
-      this.showReservationForm = true;
-      this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
-      // Restar 10 minutos a la hora final
-      const endDateTime = moment(clickDate.end.toISOString()).subtract(10, 'minutes').toISOString();
-
-      this.reservationForm.endDateTime = this.formatDateTime(endDateTime),//this.formatDateTime(clickDate.end.toISOString());
-      this.reservationForm.timeGame = this.calculateTimeDuration(new Date(this.reservationForm.startDateTime), new Date(this.reservationForm.endDateTime)),
-      this.validatePrice(this.formatTime(this.reservationForm.startDateTime),this.formatDate(this.reservationForm.startDateTime), this.formatTime(this.reservationForm.endDateTime))
-    } else {
-      // Mostrar el mensaje de iniciar sesión con SweetAlert2
-      Swal.fire({
-        title: 'Es necesario iniciar sesión o registrarse',
-        text: 'Para poder reservar una cancha, por favor inicie sesión o registre una cuenta.',
-        showCancelButton: true,
-        confirmButtonText: 'Iniciar sesión',
-        cancelButtonText: 'Cancelar',
-        
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(['reserve/login']); // Redireccionar al inicio de sesión
+    if (selectedDateTime.isSameOrAfter(moment(), 'minute')) {
+      if (this.userDataJson) {
+        const dayOfWeek = selectedDateTime.day();
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+        const isSaturday = dayOfWeek === 6;
+        const isSunday = dayOfWeek === 0;
+  
+        let isWithinValidTimeRange = false;
+        if (isWeekday) {
+          isWithinValidTimeRange = selectedDateTime.isBetween(
+            selectedDateTime.clone().set('hour', 6).set('minute', 0),
+            selectedDateTime.clone().set('hour', 22).set('minute', 0),
+            'minute',
+            '[)'
+          );
+        } else if (isSaturday) {
+          isWithinValidTimeRange = selectedDateTime.isBetween(
+            selectedDateTime.clone().set('hour', 6).set('minute', 0),
+            selectedDateTime.clone().set('hour', 20).set('minute', 0),
+            'minute',
+            '[)'
+          );
+        } else if (isSunday) {
+          isWithinValidTimeRange = selectedDateTime.isBetween(
+            selectedDateTime.clone().set('hour', 6).set('minute', 0),
+            selectedDateTime.clone().set('hour', 18).set('minute', 0),
+            'minute',
+            '[)'
+          );
         }
+  
+        if (isWithinValidTimeRange) {
+          this.showReservationForm = true;
+          this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
+          const endDateTime = moment(clickDate.end.toISOString()).subtract(10, 'minutes').toISOString();
+          this.reservationForm.endDateTime = this.formatDateTime(endDateTime);
+          this.reservationForm.timeGame = this.calculateTimeDuration(
+            new Date(this.reservationForm.startDateTime),
+            new Date(this.reservationForm.endDateTime)
+          );
+          this.validatePrice(
+            this.formatTime(this.reservationForm.startDateTime),
+            this.formatDate(this.reservationForm.startDateTime),
+            this.formatTime(this.reservationForm.endDateTime)
+          );
+        } else {
+          Swal.fire({
+            title: 'Horario no válido',
+            text: 'Las reservas están permitidas de lunes a viernes de 6 am a 10 pm, los sábados de 6 am a 8 pm y los domingos de 6 am a 6 pm.',
+          });
+        }
+      } else {
+        // Mostrar el mensaje de iniciar sesión con SweetAlert2
+        Swal.fire({
+          title: 'Es necesario iniciar sesión o registrarse',
+          text: 'Para poder reservar una cancha, por favor inicie sesión o registre una cuenta.',
+          showCancelButton: true,
+          confirmButtonText: 'Iniciar sesión',
+          cancelButtonText: 'Cancelar',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['reserve/login']); // Redireccionar al inicio de sesión
+          }
+        });
+      }
+    } else {
+      Swal.fire({
+        title: 'Fecha no válida',
+        text: 'No se puede seleccionar una fecha anterior a la fecha actual.',
       });
     }
-  } else {
-    Swal.fire({
-      title: 'Fecha no válida',
-      text: 'No se puede seleccionar una fecha anterior a la fecha actual.',
-    });
   }
-}
+  
+  
+  
 
 validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
   this.isLoading = true

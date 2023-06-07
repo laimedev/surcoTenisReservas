@@ -227,11 +227,19 @@ export class CalendarFullComponent implements OnInit {
             new Date(this.reservationForm.startDateTime),
             new Date(this.reservationForm.endDateTime)
           );
-          this.validatePrice(
+          this.validateDateReserve(
             this.formatTime(this.reservationForm.startDateTime),
             this.formatDate(this.reservationForm.startDateTime),
             this.formatTime(this.reservationForm.endDateTime)
           );
+      
+          //  this.validatePrice(
+          //    this.formatTime(this.reservationForm.startDateTime),
+          //    this.formatDate(this.reservationForm.startDateTime),
+          //    this.formatTime(this.reservationForm.endDateTime)
+          //  );
+          //
+          
         } else {
           Swal.fire({
             title: 'Horario no válido',
@@ -434,6 +442,93 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
     const nuevaHoraFinMoment = horaFinMoment.subtract(minutos, 'minutes');
     return nuevaHoraFinMoment.format('HH:mm:ss');
   }
-
+/*
+  validateDateReserve(horainicio: any, fechRegistro: any, horafinal: any) {
+    this.isLoading = true;
+    const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
+    const validationEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/validar-Fecha-reserva';
+    const validationPayload = {
+      txtFecha: fechRegistro,
+      txtHoraInicial: horainicio,
+      txtHoraFinal: horafinal,
+      ddlLocalidad: this.localidadSelect
+    };
+  console.log({validationPayload})
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userData.token}`
+      })
+    };
   
+    this.http.post(validationEndpoint, validationPayload, httpOptions).subscribe(
+      (response: any) => {
+        if (response.ok) {
+          // Si la reserva es válida, puedes continuar con el resto del flujo
+          console.log('Reserva válida');
+          this.isLoading = false;
+          // ... continuar con el flujo de reserva
+        }
+      },
+      (error: any) => {
+        console.log('Error en la validación de reserva:', error);
+        Swal.fire({
+          title: 'Error en la reserva',
+          text: error.error,
+        });
+        // Manejar el error si es necesario
+        this.isLoading = false;
+        
+        return false
+      }
+    );
+  }*/
+
+  validateDateReserve(horainicio: any, fechRegistro: any, horafinal: any) {
+    this.isLoading = true;
+    const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
+    const validationEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/validar-Fecha-reserva';
+    const validationPayload = {
+      txtFecha: fechRegistro,
+      txtHoraInicial: horainicio,
+      txtHoraFinal: horafinal,
+      ddlLocalidad: this.localidadSelect
+    };
+    console.log({ validationPayload })
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userData.token}`
+      })
+    };
+  
+    this.http.post(validationEndpoint, validationPayload, httpOptions).subscribe(
+      (response: any) => {
+        if (response.ok) {
+          // Si la reserva es válida, puedes continuar con el resto del flujo
+          console.log('Reserva válida');
+          this.isLoading = false;
+          this.validatePrice(
+            this.formatTime(this.reservationForm.startDateTime),
+            this.formatDate(this.reservationForm.startDateTime),
+            this.formatTime(this.reservationForm.endDateTime)
+          );
+        } else {
+          Swal.fire({
+            title: 'Reserva no válida',
+            text: response.error,
+          });
+          this.isLoading = false;
+        }
+      },
+      (error: any) => {
+        console.log('Error en la validación de reserva:', error.error);
+        Swal.fire({
+          title: 'Error en la reserva',
+          text: "Ya hay una reserva que comienza en la misma hora y localidad.",
+        });
+        this.isLoading = false;
+      }
+    );
+  }
 }

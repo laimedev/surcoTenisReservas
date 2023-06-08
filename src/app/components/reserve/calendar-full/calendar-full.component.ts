@@ -492,7 +492,8 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
       txtFecha: fechRegistro,
       txtHoraInicial: horainicio,
       txtHoraFinal: horafinal,
-      ddlLocalidad: this.localidadSelect
+      ddlLocalidad: this.localidadSelect,
+      
     };
     console.log({ validationPayload })
     const httpOptions = {
@@ -506,12 +507,9 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
       (response: any) => {
         if (response.ok) {
           // Si la reserva es válida, puedes continuar con el resto del flujo
-          console.log('Reserva válida');
           this.isLoading = false;
-          this.validatePrice(
-            this.formatTime(this.reservationForm.startDateTime),
-            this.formatDate(this.reservationForm.startDateTime),
-            this.formatTime(this.reservationForm.endDateTime)
+          this.validateCountReserve(
+            this.formatDate(this.reservationForm.startDateTime)
           );
         } else {
           Swal.fire({
@@ -522,12 +520,54 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
         }
       },
       (error: any) => {
-        console.log('Error en la validación de reserva:', error.error);
         Swal.fire({
           title: 'Error en la reserva',
-          text: "Ya hay una reserva que comienza en la misma hora y localidad.",
+          text: error.error.error,
         });
         this.isLoading = false;
+      }
+    );
+  }
+
+  validateCountReserve(fechRegistro: any) {
+    this.isLoading = true;
+    const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
+    const validationEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/validar-cantidad-reserva';
+    const validationPayload = {
+      txtFecha: fechRegistro,
+      ddlLocalidad: this.localidadSelect,
+      ddlClientes: userData.codCliente,
+    };
+  console.log({validationPayload})
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userData.token}`
+      })
+    };
+  
+    this.http.post(validationEndpoint, validationPayload, httpOptions).subscribe(
+      (response: any) => {
+        if (response.ok) {
+          // Si la reserva es válida, puedes continuar con el resto del flujo
+          this.isLoading = false;
+          // ... continuar con el flujo de reserva
+          this.validatePrice(
+            this.formatTime(this.reservationForm.startDateTime),
+            this.formatDate(this.reservationForm.startDateTime),
+            this.formatTime(this.reservationForm.endDateTime)
+          );
+        }
+      },
+      (error: any) => {
+        Swal.fire({
+          title: 'Error en la reserva',
+          text: error.error.error,
+        });
+        // Manejar el error si es necesario
+        this.isLoading = false;
+        
+        return false
       }
     );
   }

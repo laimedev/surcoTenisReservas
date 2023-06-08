@@ -36,7 +36,8 @@ export class CalendarFullComponent implements OnInit {
     }
 
     calendarVisible = true;
-  calendarOptions: CalendarOptions = {
+  /*
+    calendarOptions: CalendarOptions = {
     
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
@@ -62,12 +63,79 @@ export class CalendarFullComponent implements OnInit {
     //longPressDelay:0, // Tiempo de espera para arrastrar eventos
     //eventLongPressDelay: 0, // Tiempo de espera para arrastrar eventos
     selectLongPressDelay: 0,
+    //validRange: () => {
+    //  return {
+    //    start: moment().toDate(),
+    //    end: moment().add(7, 'days').toDate()
+    //  };
+    //},
+
+    //validRange: () => {
+    //  const today = moment("2023-06-09").utc().startOf('day');
+    //  const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes,2 martes,3 miercoles , 4 jueves , 5 viernes,  6: sábado)
+    //  let start, end;
+    //console.log({today})
+    //console.log({dayOfWeek})
+    //  if (dayOfWeek <= 3) { // Si es domingo, lunes, martes o miércoles
+    //    start = today.toDate(); // Inicio: hoy
+    //    end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta miércoles)
+    //  } else if (dayOfWeek <= 4) { // Si es miércoles o jueves
+    //    start = today.clone().add(1, 'days').toDate(); // Inicio: mañana (jueves)
+    //    end = today.clone().add(2, 'days').toDate(); // Fin: mañana + 2 días (hasta viernes)
+    //  } else { // Si es viernes
+    //    start = today.clone().toDate(); // Inicio: hoy (viernes)
+    //    console.log({start})
+    //    end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta domingo)
+    //  }
+    //
+    //  return {
+    //    start: start,
+    //    end: end
+    //  };
+    //},
     validRange: () => {
+      const today = moment("2023-06-10").startOf('day');
+      const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes, 2: martes, 3: miércoles, 4: jueves, 5: viernes, 6: sábado)
+      let start, end;
+      console.log({today})
+      console.log({dayOfWeek})
+      if (dayOfWeek == 0) { // Si es lunes
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().toDate();
+      } 
+      if (dayOfWeek == 1) { // Si es lunes
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().add(3, 'days').toDate();
+      } 
+      if (dayOfWeek == 2) { // Si es martes
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().add(2, 'days').toDate();
+      } 
+      if (dayOfWeek == 3) { // Si es miercoles
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().add(3, 'days').toDate(); // Fin: mañana + 3 días (hasta viernes)
+      } 
+      if (dayOfWeek == 4) { // Si es jueves
+        start = today.clone().toDate(); // Inicio: mañana (jueves)
+        end = today.clone().add(2, 'days').toDate(); // Fin: mañana + 2 días (hasta viernes)
+      } 
+      if (dayOfWeek == 5) {// Si es viernes
+        start = today.clone().toDate(); // Inicio: hoy (viernes)
+        end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta domingo)
+      }
+      if (dayOfWeek == 6) {// Si es sabado
+        start = today.clone().toDate(); // Inicio: sábado
+        end = today.clone().add(3, 'days').toDate();
+      }
+    
       return {
-        start: moment().toDate(),
-        end: moment().add(7, 'days').toDate()
+        start: start,
+        end: end
       };
     },
+    
+      
+    
     locale: esLocale,
     selectAllow: function(selectInfo) {
       // Obtener la duración de la selección en minutos
@@ -83,7 +151,89 @@ export class CalendarFullComponent implements OnInit {
     //nowIndicator: true,
 
   };
+  */
+ 
+  calendarOptions: CalendarOptions = {
+    
+    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'timeGridDay'
+    },
+    initialView: 'timeGridDay',
+    events: [],
+    hiddenDays: this.getHiddenDays(),
+    weekends: true,
+    editable: false,
+    selectable: true,
+    selectMirror: true,
+    dayMaxEvents: true,
+    eventClick: this.handleEventClick.bind(this),
+    eventsSet: this.handleEvents.bind(this),
+    select: this.handleEventsDate.bind(this),
+    slotMinTime: '06:00:00',
+    slotMaxTime: '22:00:00',
+    slotDuration: '00:60:00',
+    contentHeight: 'auto',
+    selectLongPressDelay: 0,
+    validRange: () => {
+      const today = moment().startOf('day');
+      const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes, 2: martes, 3: miércoles, 4: jueves, 5: viernes, 6: sábado)
+      let start, end;
+      if (dayOfWeek == 0) { // Si es lunes
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().add(4, 'days').toDate();
+      } 
+      if (dayOfWeek == 1) { // Si es lunes
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().add(3, 'days').toDate();
+      } 
+      if (dayOfWeek == 2) { // Si es martes
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().add(2, 'days').toDate();
+      } 
+      if (dayOfWeek == 3) { // Si es miercoles
+        start = today.clone().toDate(); // Inicio: mañana (miercoles)
+        end = today.clone().add(3, 'days').toDate(); // Fin: mañana + 3 días (hasta viernes)
+      } 
+      if (dayOfWeek == 4) { // Si es jueves
+        start = today.clone().toDate(); // Inicio: mañana (jueves)
+        end = today.clone().add(2, 'days').toDate(); // Fin: mañana + 2 días (hasta viernes)
+      } 
+      if (dayOfWeek == 5) {// Si es viernes
+        start = today.clone().toDate(); // Inicio: hoy (viernes)
+        end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta domingo)
+      }
+      if (dayOfWeek == 6) {// Si es sabado
+        start = today.clone().toDate(); // Inicio: sábado
+        end = today.clone().add(5, 'days').toDate();
+        
+      }
+    
+      return {
+        start: start,
+        end: end
+      };
+    },
+    locale: esLocale,
+    selectAllow: function(selectInfo) {
+      // Obtener la duración de la selección en minutos
+      const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / (1000 * 60);
+      
+      // Permitir solo selecciones de 50 minutos
+      return duration === 60;
+    },
+    
+    slotLabelFormat: [
+      { hour: 'numeric', minute: '2-digit', hour12: true, meridiem: 'short'},
+      { month: 'short', day: 'numeric', weekday: 'short' }
+    ],
+    //nowIndicator: true,
+
+  };
   currentEvents: EventApi[] = [];
+  
 
   product = [{
     description : "Reserva de Cancha Tenis",
@@ -267,51 +417,6 @@ export class CalendarFullComponent implements OnInit {
       });
     }
   }
-  
-  
-  
-
-validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
-  this.isLoading = true
-  const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-  const priceEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/precio';
-  const pricePayload = {
-    fechRegistro: fechRegistro,
-    horainicio: horainicio,
-    horafinal: horafinal,
-    codCliente: userData.codCliente,
-    codLocalidad: this.localidadSelect
-  };
-
-  const httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${userData.token}`
-    })
-  };
-
-  this.http.post(priceEndpoint, pricePayload, httpOptions).subscribe(
-    (response: any) => {
-      const precio = response.precio;
-      // Aquí puedes usar el precio obtenido para realizar cualquier acción necesaria antes de guardar la reserva
-      this.reservationForm.price=precio
-
-      console.log(this.reservationForm.price)
-      this.showReservationForm = true; // Mostrar el formulario de reserva
-      this.openReservationModal();
-      // Continuar con el proceso de guardar la reserva...
-      this.isLoading = false
-    },
-    (error: any) => {
-      console.log('Error obteniendo el precio:', error);
-      // Manejar el error si es necesario
-      this.isLoading = false
-    }
-  );
-}
-
-
-
 
   submitReservationForm2() { 
     this.isLoading2 = true;
@@ -348,8 +453,6 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
     
 
   }
-
-
   
   submitReservationForm() {
     this.isLoading2 = true;
@@ -571,4 +674,52 @@ validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
       }
     );
   }
+  validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
+    this.isLoading = true
+    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+    const priceEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/precio';
+    const pricePayload = {
+      fechRegistro: fechRegistro,
+      horainicio: horainicio,
+      horafinal: horafinal,
+      codCliente: userData.codCliente,
+      codLocalidad: this.localidadSelect
+    };
+  
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userData.token}`
+      })
+    };
+  
+    this.http.post(priceEndpoint, pricePayload, httpOptions).subscribe(
+      (response: any) => {
+        const precio = response.precio;
+        // Aquí puedes usar el precio obtenido para realizar cualquier acción necesaria antes de guardar la reserva
+        this.reservationForm.price=precio
+  
+        console.log(this.reservationForm.price)
+        this.showReservationForm = true; // Mostrar el formulario de reserva
+        this.openReservationModal();
+        // Continuar con el proceso de guardar la reserva...
+        this.isLoading = false
+      },
+      (error: any) => {
+        console.log('Error obteniendo el precio:', error);
+        // Manejar el error si es necesario
+        this.isLoading = false
+      }
+    );
+  }
+  getHiddenDays() {
+    const today = moment().startOf('day');
+    const dayOfWeek = today.day();
+    if (dayOfWeek === 6) { // Si el día actual es sábado
+      return [0]; // Ocultar el domingo
+    } else {
+      return []; // No ocultar ningún día
+    }
+  }
+
 }

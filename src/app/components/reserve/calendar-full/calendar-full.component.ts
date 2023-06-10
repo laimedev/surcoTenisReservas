@@ -208,9 +208,7 @@ export class CalendarFullComponent implements OnInit {
       if (dayOfWeek == 6) {// Si es sabado
         start = today.clone().toDate(); // Inicio: sábado
         end = today.clone().add(5, 'days').toDate();
-        
       }
-    
       return {
         start: start,
         end: end
@@ -220,7 +218,6 @@ export class CalendarFullComponent implements OnInit {
     selectAllow: function(selectInfo) {
       // Obtener la duración de la selección en minutos
       const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / (1000 * 60);
-      
       // Permitir solo selecciones de 50 minutos
       return duration === 60;
     },
@@ -233,7 +230,6 @@ export class CalendarFullComponent implements OnInit {
 
   };
   currentEvents: EventApi[] = [];
-  
 
   product = [{
     description : "Reserva de Cancha Tenis",
@@ -247,6 +243,14 @@ export class CalendarFullComponent implements OnInit {
   isLoading: boolean | undefined;
   isLoading2: boolean | undefined;
   spinner: any;
+
+
+
+
+  public valor: number = 50; // Inicializamos el valor en 50
+  isSumaDisabled: boolean = false; // Indica si el botón de suma está deshabilitado
+  isRestaDisabled: boolean = true; // Indica si el botón de resta está deshabilitado
+
 
 
   constructor(public http: HttpClient,
@@ -721,5 +725,27 @@ export class CalendarFullComponent implements OnInit {
       return []; // No ocultar ningún día
     }
   }
+
+
+
+
+  sumar() {
+    this.valor += 50;
+    if (this.valor === 100) {
+      this.isSumaDisabled = true;
+      this.isRestaDisabled = false;
+    }
+  }
+
+  restar() {
+    this.valor -= 50;
+    if (this.valor === 50) {
+      this.isSumaDisabled = false;
+      this.isRestaDisabled = true;
+    }
+  }
+
+
+
 
 }

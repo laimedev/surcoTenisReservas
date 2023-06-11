@@ -152,7 +152,7 @@ export class CalendarFullComponent implements OnInit {
 
   };
   */
- 
+ /***********************************CALENDARIO******************************************* */
   calendarOptions: CalendarOptions = {
     
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -244,14 +244,9 @@ export class CalendarFullComponent implements OnInit {
   isLoading2: boolean | undefined;
   spinner: any;
 
-
-
-
   public valor: number = 50; // Inicializamos el valor en 50
   isSumaDisabled: boolean = false; // Indica si el botón de suma está deshabilitado
   isRestaDisabled: boolean = true; // Indica si el botón de resta está deshabilitado
-
-
 
   constructor(public http: HttpClient,
     private clqSrv : ReserveService,
@@ -272,8 +267,7 @@ export class CalendarFullComponent implements OnInit {
     this.obetenerLocalidades();
     this.userDataJson = localStorage.getItem('userData');
   }
-
-
+/*****************************************\PAGO********************************************* */
   payment(){
     this.clqSrv.payorder(this.product[0]["description"],this.product[0]["amount"]);
   }
@@ -286,6 +280,7 @@ export class CalendarFullComponent implements OnInit {
   irLogin(){
     this.router.navigate(["reserve/login"])
   }
+  /********************************LISTAR PEGISTROS************************************ */
   loadEvents() {
     this.isLoading = true;
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${this.localidadSelect}`;
@@ -421,7 +416,7 @@ export class CalendarFullComponent implements OnInit {
       });
     }
   }
-
+/*******************REVERVAR ************************************************** */
   submitReservationForm2() { 
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
@@ -452,9 +447,7 @@ export class CalendarFullComponent implements OnInit {
     localStorage.setItem('paymentPrice', this.reservationForm.price);
     localStorage.setItem('dataPayment',  JSON.stringify(payload));
 
-    this.payment();
-
-    
+   this.payment();
 
   }
   
@@ -488,9 +481,13 @@ export class CalendarFullComponent implements OnInit {
   
     this.http.post(url, payload, httpOptions).subscribe(
        (response) => {
+        console.log({response})
+        localStorage.setItem('codRegistro',  JSON.stringify(response));
          this.toastr.success('Reserva guardada con éxito:', 'Éxito');
-         this.modalService.dismissAll();
+         
+        // this.modalService.dismissAll();
         this.loadEvents()
+        this.payment();
         this.isLoading2 = false; 
        },
        (error) => {
@@ -542,8 +539,6 @@ export class CalendarFullComponent implements OnInit {
     this.modalService.open(this.reservationModal, { centered: true }); // Abre el modal utilizando la referencia
   }
   
-
-
   restarMinutos(horaFinal: string, minutos: number): string {
     const horaFinMoment = moment(horaFinal, 'HH:mm:ss');
     const nuevaHoraFinMoment = horaFinMoment.subtract(minutos, 'minutes');
@@ -632,6 +627,7 @@ export class CalendarFullComponent implements OnInit {
           text: error.error.error,
         });
         this.isLoading = false;
+        this.loadEvents()
       }
     );
   }
@@ -725,9 +721,6 @@ export class CalendarFullComponent implements OnInit {
       return []; // No ocultar ningún día
     }
   }
-
-
-
 
   sumar() {
     this.valor += 50;

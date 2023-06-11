@@ -2,19 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/app/environments/environment';
 import { Observable } from 'rxjs';
-
 import { Component, HostListener } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CalendarFullComponent } from '../calendar-full/calendar-full.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-
-
-
 export declare let Culqi: any;
-
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +21,8 @@ export class ReserveService {
   userDataJson: string | null | undefined;
 
   // DESARROLLO
-  // culqiKeyPublic = 'pk_test_3d5b167a050827d7';
-  // culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
+  //culqiKeyPublic = 'pk_test_3d5b167a050827d7';
+  //culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
 
 
   // PRODUCCION 
@@ -42,11 +36,12 @@ export class ReserveService {
     private toastr: ToastrService,
     // public calendarFull: CalendarFullComponent
     ) {
+
     document.addEventListener ('payment_event', (token: any) => {
+      
       this.token_id = token.detail;
       console.log(this.token_id)
       console.log(token.email)
-
       let  dataPago = {
         source_id: this.token_id,
         email: localStorage.getItem('correo_usuario_pago'),
@@ -54,12 +49,11 @@ export class ReserveService {
         amount: JSON.parse(localStorage.getItem('paymentPrice')!) + '00'
       } 
 
-      this.sendDataToCulqi(dataPago);
+      this.crearRegistro(dataPago);
 
     });
 
    }
-
 
    @HostListener('document:payment_event', ['$event'])
    onPaymentEventCustom($event: CustomEvent) {
@@ -82,6 +76,7 @@ export class ReserveService {
     });
 
     Culqi.options({
+      
       lang: "auto",
       installments: false, // Habilitar o deshabilitar el campo de cuotas
       paymentMethods: {
@@ -107,102 +102,141 @@ export class ReserveService {
         priceColor: '' // hexadecimal
       }
   });
-
-
   Culqi.open ();
-
   }
-
-  open () {
-    Culqi.open ();
-  }
-
-
-
-
-
   getTokenCulqi(data: any) {
     let headers = new HttpHeaders({"Authorization": "Bearer pk_live_ea1621fef7a79560"});
     return this.http.post("https://secure.culqi.com/v2/tokens", data, { headers: headers});
   }
 
   sendDataToCulqi(data: any){
+    const codRegistro =  JSON.parse(localStorage.getItem('codRegistro')!);
     let headers = new HttpHeaders({"Authorization": `Bearer ${this.culqiKeyPrivate}`});
+
     return this.http.post("https://api.culqi.com/v2/charges", data, { headers: headers}).subscribe(
       (resp: any) => {
 
-
-
+        //this.userDataJson = localStorage.getItem('userData');
+        //const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+        /*
+        //const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
+        //const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
         
-
-        this.userDataJson = localStorage.getItem('userData');
-        const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-        const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
-        const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
-         const httpOptions = {
-          headers: {
-            Authorization: `Bearer ${userData.token}`
-          }
-        };
-        this.http.post(url, dataPayment, httpOptions).subscribe(
-          (response) => {
-            this.toastr.success('Reserva guardada con éxito:', 'Éxito');
-
-
-            // this.modalService.dismissAll();
-            // this.calendarFull.loadEvents()
-            // this.calendarFull.isLoading2 = false; 
-            this.router.navigate(['/reserve/profile']);
-            setTimeout(() => {
-              this.router.navigate(['/reserve/profile']);
-              location.reload();
-            }, 1000);
-
-
-          },
-          (error) => {
-            this.toastr.error('Error al guardar la reserva:', error.error);
-            // this.calendarFull.isLoading2 = false; 
-          }
-        );
-
-
-
-
-
+        //console.log({codRegistro})
+        //console.log(codRegistro.codRegistro)
+        //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${codRegistro.codRegistro}`;
+        // const httpOptions = {
+        //  headers: {
+        //    Authorization: `Bearer ${userData.token}`
+        //  }
+        //};
+        
+        //this.http.put(url, null,httpOptions).subscribe(
+        //  (response) => {
+        //    this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+        //    // this.modalService.dismissAll();
+        //    // this.calendarFull.loadEvents()
+        //    // this.calendarFull.isLoading2 = false; 
+        //    this.router.navigate(['/reserve/profile']);
+        //    setTimeout(() => {
+        //      this.router.navigate(['/reserve/profile']);
+        //      location.reload();
+        //    }, 1000);
+        //  },
+        //  (error) => {
+        //    this.toastr.error('Error al guardar la reserva:', error.error);
+        //    // this.calendarFull.isLoading2 = false; 
+        //  }
+        //);
+        */
+        //this.crearRegistro()
         Swal.fire({
           icon: 'success',
           title: `${resp['outcome'].user_message}`,
           text:  `${resp['outcome'].merchant_message}`,
           confirmButtonText: 'Ok, muchas gracias!!',
+        }).then(()=>{
+          this.router.navigate(['/reserve/profile']);
+            setTimeout(() => {
+              this.router.navigate(['/reserve/profile']);
+              location.reload();
+            }, 1000);
         })
-         Culqi.close();
+        Culqi.close();
       },
       (error) => {
         Swal.fire({
           icon: 'warning',
           text: `${error.error.user_message}`,
           confirmButtonText: 'Ok, entendido',
-        })
+        }).then(() => {
+          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+        });
+        this.eliminarRegistro(codRegistro.codRegistro);
         Culqi.close();
+        
       },
       () => {
         console.log("La petición se completó correctamente.");
       }
     );
   }
-
-
-
-
   
-
-
 
   getLocalidad(): Observable<any> {
     return this.http.get(`${this.URL}localidad/listar`)
   }
 
+  eliminarRegistro(id: string) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/eliminar/${id}`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+  
+    this.http.delete(url, httpOptions).subscribe(
+      (response) => {
+        console.log("borrado correctamente")
+      },
+      (error) => {
+        console.error('Error al eliminar el registro:', error);
+      }
+    );
+  }
 
+
+  crearRegistro(data: any) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;  
+    //const url = `http://localhost:5000/api/registro-cliente/guardar`;
+    const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+
+    this.http.post(url, dataPayment ,httpOptions).subscribe(
+      (response) => {
+        this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+        localStorage.setItem('codRegistro',  JSON.stringify(response));
+        this.sendDataToCulqi(data);
+      },
+      (error) => {
+        this.toastr.error('Error al guardar la reserva:', error.error);
+        Swal.fire({
+          icon: 'warning',
+          text: `${error.error.error}`,
+          confirmButtonText: 'Ok, entendido',
+        }).then(() => {
+          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+        });
+        Culqi.close();
+      }
+    );
+  
+  }
 
 }

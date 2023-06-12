@@ -115,7 +115,6 @@ export class ReserveService {
 
     return this.http.post("https://api.culqi.com/v2/charges", data, { headers: headers}).subscribe(
       (resp: any) => {
-
         //this.userDataJson = localStorage.getItem('userData');
         //const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
         /*
@@ -130,7 +129,7 @@ export class ReserveService {
         //    Authorization: `Bearer ${userData.token}`
         //  }
         //};
-        
+      
         //this.http.put(url, null,httpOptions).subscribe(
         //  (response) => {
         //    this.toastr.success('Reserva guardada con éxito:', 'Éxito');

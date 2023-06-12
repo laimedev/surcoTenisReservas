@@ -219,7 +219,7 @@ export class CalendarFullComponent implements OnInit {
       // Obtener la duración de la selección en minutos
       const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / (1000 * 60);
       // Permitir solo selecciones de 50 minutos
-      return duration === 60;
+      return duration === 60 || duration === 120 ;
     },
     
     slotLabelFormat: [
@@ -611,7 +611,9 @@ export class CalendarFullComponent implements OnInit {
           // Si la reserva es válida, puedes continuar con el resto del flujo
           this.isLoading = false;
           this.validateCountReserve(
-            this.formatDate(this.reservationForm.startDateTime)
+            this.formatDate(this.reservationForm.startDateTime),
+            this.formatTime(this.reservationForm.startDateTime),
+            this.formatTime(this.reservationForm.endDateTime)
           );
         } else {
           Swal.fire({
@@ -632,7 +634,7 @@ export class CalendarFullComponent implements OnInit {
     );
   }
 
-  validateCountReserve(fechRegistro: any) {
+  validateCountReserve(fechRegistro: any,horainicio: any,  horafinal: any) {
     this.isLoading = true;
     const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
     const validationEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/validar-cantidad-reserva';
@@ -640,6 +642,8 @@ export class CalendarFullComponent implements OnInit {
       txtFecha: fechRegistro,
       ddlLocalidad: this.localidadSelect,
       ddlClientes: userData.codCliente,
+      txtHoraInicial: horainicio,
+      txtHoraFinal: horafinal,
     };
   console.log({validationPayload})
     const httpOptions = {
@@ -697,7 +701,8 @@ export class CalendarFullComponent implements OnInit {
       (response: any) => {
         const precio = response.precio;
         // Aquí puedes usar el precio obtenido para realizar cualquier acción necesaria antes de guardar la reserva
-        this.reservationForm.price=precio
+        let priceTime = this.calPriceTime(this.reservationForm.startDateTime,this.reservationForm.endDateTime,precio)
+        this.reservationForm.price=priceTime
   
         console.log(this.reservationForm.price)
         this.showReservationForm = true; // Mostrar el formulario de reserva
@@ -738,7 +743,22 @@ export class CalendarFullComponent implements OnInit {
     }
   }
 
-
-
-
+  calPriceTime(horaInicio: any, horaFin: any, precioBase: any) {
+    var fechaInicio = new Date(horaInicio);
+    var fechaFin = new Date(horaFin);
+    var duracion = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60); // Duración en minutos
+    if (
+      fechaInicio.getHours() === 17 && fechaInicio.getMinutes() === 0 &&
+      fechaFin.getHours() === 18 && fechaFin.getMinutes() === 50
+    ) {
+      var resultado = parseFloat(precioBase) + 28; // Sumar 28 al precio base
+      return resultado.toFixed(2);
+    }
+    var multiplicador = 1;
+    if (duracion > 50) {
+      multiplicador = 2;
+    }
+    var resultado = multiplicador * parseFloat(precioBase); // Multiplicar por el precio base
+    return resultado.toFixed(2);
+  } 
 }

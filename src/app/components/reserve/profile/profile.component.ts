@@ -331,6 +331,7 @@ export class ProfileComponent implements OnInit {
 
 
   async imprimir(data: any){
+    console.log(data);
     // this.compras.serSel = compras;
     // console.log(this.compras.serSel._id);
 
@@ -381,12 +382,14 @@ export class ProfileComponent implements OnInit {
     pdf.add( new Txt('---------------------------------------------------------------------------------------------------').alignment('center').italics().end);
     pdf.add( new Txt( 'CLiente: ' + data.nomCliente + ' ' + data.primer_apellido + ' Nº documento: ' +  data.numDocumento ).alignment('center').italics().end);
     pdf.add( new Txt('---------------------------------------------------------------------------------------------------').alignment('center').italics().end);
-   
+    pdf.add( new Txt( 'Fecha de reserva: ' + data.fechRegistro.slice(0,10) ).alignment('center').italics().end);
+    pdf.add( new Txt('---------------------------------------------------------------------------------------------------').alignment('center').italics().end);
+    
     pdf.add (new Table([
       [ 'HORA INI', 'HORA FIN' ,'DURACIÓN' ,'TARIFA'],
       [ 
         data.horainicio , 
-        data.horafinal ,
+        this.restarMinutos(data.horafinal, 10) ,
         data.duracion, 
         data.costoTarifa, 
       ],
@@ -396,7 +399,7 @@ export class ProfileComponent implements OnInit {
 
   pdf.add( new Txt(espacio).end);
   
-    pdf.add(new QR(data.codRegistro+'0000').fit(60).alignment('center').end);
+    pdf.add(new QR(data.codRegistro+'0000').fit(50).alignment('center').end);
     
   pdf.add( new Txt(espacio).end);
     
@@ -405,11 +408,10 @@ export class ProfileComponent implements OnInit {
     // pdf.add( new Txt('Su reservación se encuentra en estado ' + data.estadoRegistro  + ' cominiquese al siguiente numero (51)935-826-680, ó acerquese al centro para realizar el pago y disfrutar del juego.').alignment('center').italics().end);
     pdf.add( new Txt(espacio).end);
     pdf.add( new Txt('MUCHAS GRACIAS POR SU PREFERENCIA').alignment('center').bold().italics().end);
-    pdf.add( new Txt(espacio).end);
 
     pdf.add( new Txt('www.surcotenis.pe').alignment('center').italics().end);
     pdf.add( new Txt(espacio).end);
-    pdf.add( new Date().toLocaleString());
+    // pdf.add( new Date().toLocaleString());
     pdf.add( new Txt(espacio).end);
     pdf.create().open();
   }

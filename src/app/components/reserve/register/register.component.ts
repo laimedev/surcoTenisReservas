@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../services/auth.service';
@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -177,6 +178,7 @@ export class RegisterComponent implements OnInit{
   errorSession: boolean = false
   formRegister: FormGroup = new FormGroup({});
 
+  @ViewChild('reservationModal') reservationModal: any;
 
   dateDay: any = '';
   dateMonth: any = '';
@@ -185,6 +187,7 @@ export class RegisterComponent implements OnInit{
   
   constructor(private cookie: CookieService,
     private toastr: ToastrService,
+    private modalService: NgbModal,
     public http: HttpClient,
     public router: Router,
     public authService: AuthService){
@@ -284,7 +287,9 @@ export class RegisterComponent implements OnInit{
       })
     } else {
       this.isLoading = false; // Mostrar el spinner de carga
-      this.toastr.error('Todos los datos son importantes');
+      this.toastr.error('Todos los datos son importantes', '', {
+        positionClass: 'toast-bottom-right'
+      });
     }
 
     
@@ -336,7 +341,9 @@ export class RegisterComponent implements OnInit{
 	}
 
 
-
+  openPoliticasModal() {
+    // this.modalService.open(this.reservationModal, { centered: true, size: 'xl' }); // Abre el modal utilizando la referencia
+  }
 
 
 }

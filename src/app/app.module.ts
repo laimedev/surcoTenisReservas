@@ -17,7 +17,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 import { PdfMakeWrapper } from 'pdfmake-wrapper';
-import * as pdfFonts from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
+import { FooterComponent } from './components/footer/footer.component'; // fonts provided for pdfmake
 
 // Set the fonts to use
 PdfMakeWrapper.setFonts(pdfFonts);
@@ -31,7 +32,8 @@ PdfMakeWrapper.setFonts(pdfFonts);
   declarations: [
     AppComponent,
     HeaderComponent,
-    CalendarFullComponent
+    CalendarFullComponent,
+    FooterComponent
     
   ],
   imports: [

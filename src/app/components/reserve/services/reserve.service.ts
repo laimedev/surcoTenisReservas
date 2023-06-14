@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CalendarFullComponent } from '../calendar-full/calendar-full.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import * as moment from 'moment';
 export declare let Culqi: any;
 
 @Injectable({
@@ -22,13 +23,13 @@ export class ReserveService {
   userDataJson: string | null | undefined;
 
   // DESARROLLO
-  culqiKeyPublic = 'pk_test_3d5b167a050827d7';
-  culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
+  //culqiKeyPublic = 'pk_test_3d5b167a050827d7';
+  //culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
 
 
   // PRODUCCION 
-  //culqiKeyPublic = 'pk_live_ea1621fef7a79560';
-  //culqiKeyPrivate = 'sk_live_5a6b4703c558ce41';
+  culqiKeyPublic = 'pk_live_ea1621fef7a79560';
+  culqiKeyPrivate = 'sk_live_5a6b4703c558ce41';
 
   private readonly URL = environment.urlBase
   constructor(private http: HttpClient,
@@ -41,8 +42,8 @@ export class ReserveService {
     document.addEventListener ('payment_event', (token: any) => {
       
       this.token_id = token.detail;
-      console.log(this.token_id)
-      console.log(token.email)
+      //console.log(this.token_id)
+      //console.log(token.email)
       let  dataPago = {
         source_id: this.token_id,
         email: localStorage.getItem('correo_usuario_pago'),
@@ -161,10 +162,11 @@ export class ReserveService {
         );
         this.crearRegistro()
         */
-       console.log({resp})
-       console.log(resp.id)
+       let importePago = JSON.parse(localStorage.getItem('paymentPrice')!)
+       let date = moment().format('YYYY-MM-DD HH:mm:ss')
 
        this.updateRegistro(codRegistro.codRegistro,resp.id)
+       this.registrarPago( date,importePago,codRegistro.codRegistro)
 
         Swal.fire({
           icon: 'success',
@@ -181,6 +183,7 @@ export class ReserveService {
         Culqi.close();
       },
       (error) => {
+        this.eliminarRegistro(codRegistro.codRegistro);
         Swal.fire({
           icon: 'warning',
           text: `${error.error.user_message}`,
@@ -188,7 +191,7 @@ export class ReserveService {
         }).then(() => {
           location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
         });
-        this.eliminarRegistro(codRegistro.codRegistro);
+        
         Culqi.close();
         
       },
@@ -206,6 +209,7 @@ export class ReserveService {
   eliminarRegistro(id: string) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/eliminar/${id}`;
+    //const url = `http://localhost:5000/api/registro-cliente/eliminar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -226,8 +230,8 @@ export class ReserveService {
   crearRegistro(data: any) {
 
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;  
-    const url = `http://localhost:5000/api/registro-cliente/guardar`;
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;  
+    //const url = `http://localhost:5000/api/registro-cliente/guardar`;
     const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
     const httpOptions = {
       headers: {
@@ -257,8 +261,8 @@ export class ReserveService {
 
   updateRegistro( id : string , ventaId : string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
-    const url = `http://localhost:5000/api/registro-cliente/confirmar/${id}`;
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
+    //const url = `http://localhost:5000/api/registro-cliente/confirmar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -273,6 +277,32 @@ export class ReserveService {
       },
       (error) => {
         console.error('Error al Actualizar el registro:', error);
+      }
+    );
+  }
+
+  registrarPago( fechaPago : string , importePago : string ,codRegistro: string ) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/registrar-pago`;
+    //const url = `http://localhost:5000/api/registro-cliente/registrar-pago`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+    const requestBody = {
+      
+        fechaPago:fechaPago,
+        importePago:importePago,
+        codRegistro:codRegistro
+    
+    };
+    this.http.post(url,requestBody, httpOptions).subscribe(
+      (response) => {
+        console.log("pago registrado  correctamente")
+      },
+      (error) => {
+        console.error('Error al pagar registrado:', error);
       }
     );
   }

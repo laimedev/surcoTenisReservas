@@ -21,13 +21,13 @@ export class ReserveService {
   userDataJson: string | null | undefined;
 
   // DESARROLLO
-  //culqiKeyPublic = 'pk_test_3d5b167a050827d7';
-  //culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
+  culqiKeyPublic = 'pk_test_3d5b167a050827d7';
+  culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
 
 
   // PRODUCCION 
-  culqiKeyPublic = 'pk_live_ea1621fef7a79560';
-  culqiKeyPrivate = 'sk_live_5a6b4703c558ce41';
+  //culqiKeyPublic = 'pk_live_ea1621fef7a79560';
+  //culqiKeyPrivate = 'sk_live_5a6b4703c558ce41';
 
   private readonly URL = environment.urlBase
   constructor(private http: HttpClient,
@@ -149,6 +149,7 @@ export class ReserveService {
         //);
         */
         //this.crearRegistro()
+        console.log({resp})
         Swal.fire({
           icon: 'success',
           title: `${resp['outcome'].user_message}`,
@@ -207,9 +208,10 @@ export class ReserveService {
 
 
   crearRegistro(data: any) {
+    let id 
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;  
-    //const url = `http://localhost:5000/api/registro-cliente/guardar`;
+    //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;  
+    const url = `http://localhost:5000/api/registro-cliente/guardar`;
     const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
     const httpOptions = {
       headers: {
@@ -221,6 +223,7 @@ export class ReserveService {
       (response) => {
         this.toastr.success('Reserva guardada con éxito:', 'Éxito');
         localStorage.setItem('codRegistro',  JSON.stringify(response));
+        localStorage.setItem('codRegistro', JSON.stringify(response));
         this.sendDataToCulqi(data);
       },
       (error) => {

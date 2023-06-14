@@ -178,7 +178,7 @@ export class CalendarFullComponent implements OnInit {
     contentHeight: 'auto',
     selectLongPressDelay: 0,
     validRange: () => {
-      const today = moment().startOf('day');
+      const today = moment("2023-06-30").startOf('day');
       const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes, 2: martes, 3: miércoles, 4: jueves, 5: viernes, 6: sábado)
       let start, end;
       if (dayOfWeek == 0) { // Si es lunes
@@ -433,7 +433,9 @@ export class CalendarFullComponent implements OnInit {
       estado: 'SIN CONFIRMAR',
       pago: 0,
       txtComentario: this.reservationForm.comment,
-      costoTarifa:this.reservationForm.price
+      costoTarifa:this.reservationForm.price,
+      created_at: moment(),
+      updated_at: moment()
     };
     console.log({payload})
 

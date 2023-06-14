@@ -15,6 +15,7 @@ export declare let Culqi: any;
 })
 export class ReserveService {
   public token_id?: string;
+  
 
   TOKEN_CULQI = '';
 
@@ -46,7 +47,8 @@ export class ReserveService {
         source_id: this.token_id,
         email: localStorage.getItem('correo_usuario_pago'),
         currency_code: 'PEN',
-        amount: JSON.parse(localStorage.getItem('paymentPrice')!) + '00'
+        amount: JSON.parse(localStorage.getItem('paymentPrice')!) + '00',
+        
       } 
 
       this.crearRegistro(dataPago);
@@ -72,7 +74,8 @@ export class ReserveService {
       title: 'Surco Tenis',
       currency: 'PEN',
       description: description,
-      amount: amount*100
+      amount: amount*100,
+      
     });
 
     Culqi.options({
@@ -111,45 +114,58 @@ export class ReserveService {
 
   sendDataToCulqi(data: any){
     const codRegistro =  JSON.parse(localStorage.getItem('codRegistro')!);
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const newData = Object.assign({}, data, {metadata:{
+      order_id: codRegistro.codRegistro,
+      user_id: userData.codCliente,
+    }
+      
+    });
+
+    
+    console.log(newData);
+
     let headers = new HttpHeaders({"Authorization": `Bearer ${this.culqiKeyPrivate}`});
 
-    return this.http.post("https://api.culqi.com/v2/charges", data, { headers: headers}).subscribe(
+    return this.http.post("https://api.culqi.com/v2/charges", newData, { headers: headers}).subscribe(
       (resp: any) => {
-        //this.userDataJson = localStorage.getItem('userData');
-        //const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-        /*
-        //const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
-        //const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
-        
-        //console.log({codRegistro})
-        //console.log(codRegistro.codRegistro)
-        //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${codRegistro.codRegistro}`;
-        // const httpOptions = {
-        //  headers: {
-        //    Authorization: `Bearer ${userData.token}`
-        //  }
-        //};
-      
-        //this.http.put(url, null,httpOptions).subscribe(
-        //  (response) => {
-        //    this.toastr.success('Reserva guardada con éxito:', 'Éxito');
-        //    // this.modalService.dismissAll();
-        //    // this.calendarFull.loadEvents()
-        //    // this.calendarFull.isLoading2 = false; 
-        //    this.router.navigate(['/reserve/profile']);
-        //    setTimeout(() => {
-        //      this.router.navigate(['/reserve/profile']);
-        //      location.reload();
-        //    }, 1000);
-        //  },
-        //  (error) => {
-        //    this.toastr.error('Error al guardar la reserva:', error.error);
-        //    // this.calendarFull.isLoading2 = false; 
-        //  }
-        //);
+       /*
+        this.userDataJson = localStorage.getItem('userData');
+        const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+        const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
+        const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
+        console.log({codRegistro})
+        console.log(codRegistro.codRegistro)
+        const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${codRegistro.codRegistro}`;
+         const httpOptions = {
+          headers: {
+            Authorization: `Bearer ${userData.token}`
+          }
+        };
+        this.http.put(url, null,httpOptions).subscribe(
+          (response) => {
+            this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+            // this.modalService.dismissAll();
+            // this.calendarFull.loadEvents()
+            // this.calendarFull.isLoading2 = false; 
+            this.router.navigate(['/reserve/profile']);
+            setTimeout(() => {
+              this.router.navigate(['/reserve/profile']);
+              location.reload();
+            }, 1000);
+          },
+          (error) => {
+            this.toastr.error('Error al guardar la reserva:', error.error);
+            // this.calendarFull.isLoading2 = false; 
+          }
+        );
+        this.crearRegistro()
         */
-        //this.crearRegistro()
-        console.log({resp})
+       console.log({resp})
+       console.log(resp.id)
+
+       this.updateRegistro(codRegistro.codRegistro,resp.id)
+
         Swal.fire({
           icon: 'success',
           title: `${resp['outcome'].user_message}`,
@@ -208,7 +224,7 @@ export class ReserveService {
 
 
   crearRegistro(data: any) {
-    let id 
+
     const userData = JSON.parse(localStorage.getItem('userData')!);
     //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;  
     const url = `http://localhost:5000/api/registro-cliente/guardar`;
@@ -223,7 +239,6 @@ export class ReserveService {
       (response) => {
         this.toastr.success('Reserva guardada con éxito:', 'Éxito');
         localStorage.setItem('codRegistro',  JSON.stringify(response));
-        localStorage.setItem('codRegistro', JSON.stringify(response));
         this.sendDataToCulqi(data);
       },
       (error) => {
@@ -238,7 +253,27 @@ export class ReserveService {
         Culqi.close();
       }
     );
-  
   }
 
+  updateRegistro( id : string , ventaId : string ) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
+    const url = `http://localhost:5000/api/registro-cliente/confirmar/${id}`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+    const requestBody = {
+      venta_id: ventaId // Agrega el campo venda_id al cuerpo de la solicitud
+    };
+    this.http.put(url,requestBody, httpOptions).subscribe(
+      (response) => {
+        console.log("Actualizado  correctamente")
+      },
+      (error) => {
+        console.error('Error al Actualizar el registro:', error);
+      }
+    );
+  }
 }

@@ -434,8 +434,8 @@ export class CalendarFullComponent implements OnInit {
       pago: 0,
       txtComentario: this.reservationForm.comment,
       costoTarifa:this.reservationForm.price,
-      created_at: moment(),
-      updated_at: moment()
+      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     };
     console.log({payload})
 

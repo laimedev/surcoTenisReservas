@@ -23,7 +23,8 @@ import Swal from 'sweetalert2';
 
 export class CalendarFullComponent implements OnInit {
   @ViewChild('reservationModal') reservationModal: any;
- 
+  @ViewChild('paymentModal') paymentModal: any;
+
   showReservationForm = false;
   reservationForm: any = {
     clientId: null,
@@ -38,7 +39,7 @@ export class CalendarFullComponent implements OnInit {
     calendarVisible = true;
   /*
     calendarOptions: CalendarOptions = {
-    
+
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
       left: 'prev,next today',
@@ -102,23 +103,23 @@ export class CalendarFullComponent implements OnInit {
       if (dayOfWeek == 0) { // Si es lunes
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().toDate();
-      } 
+      }
       if (dayOfWeek == 1) { // Si es lunes
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().add(3, 'days').toDate();
-      } 
+      }
       if (dayOfWeek == 2) { // Si es martes
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().add(2, 'days').toDate();
-      } 
+      }
       if (dayOfWeek == 3) { // Si es miercoles
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().add(3, 'days').toDate(); // Fin: mañana + 3 días (hasta viernes)
-      } 
+      }
       if (dayOfWeek == 4) { // Si es jueves
         start = today.clone().toDate(); // Inicio: mañana (jueves)
         end = today.clone().add(2, 'days').toDate(); // Fin: mañana + 2 días (hasta viernes)
-      } 
+      }
       if (dayOfWeek == 5) {// Si es viernes
         start = today.clone().toDate(); // Inicio: hoy (viernes)
         end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta domingo)
@@ -127,20 +128,20 @@ export class CalendarFullComponent implements OnInit {
         start = today.clone().toDate(); // Inicio: sábado
         end = today.clone().add(3, 'days').toDate();
       }
-    
+
       return {
         start: start,
         end: end
       };
     },
-    
-      
-    
+
+
+
     locale: esLocale,
     selectAllow: function(selectInfo) {
       // Obtener la duración de la selección en minutos
       const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / (1000 * 60);
-      
+
       // Permitir solo selecciones de 50 minutos
       return duration === 60;
     },
@@ -154,7 +155,7 @@ export class CalendarFullComponent implements OnInit {
   */
  /***********************************CALENDARIO******************************************* */
   calendarOptions: CalendarOptions = {
-    
+
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
       left: 'prev,next today',
@@ -184,23 +185,23 @@ export class CalendarFullComponent implements OnInit {
       if (dayOfWeek == 0) { // Si es lunes
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().add(4, 'days').toDate();
-      } 
+      }
       if (dayOfWeek == 1) { // Si es lunes
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().add(3, 'days').toDate();
-      } 
+      }
       if (dayOfWeek == 2) { // Si es martes
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().add(2, 'days').toDate();
-      } 
+      }
       if (dayOfWeek == 3) { // Si es miercoles
         start = today.clone().toDate(); // Inicio: mañana (miercoles)
         end = today.clone().add(3, 'days').toDate(); // Fin: mañana + 3 días (hasta viernes)
-      } 
+      }
       if (dayOfWeek == 4) { // Si es jueves
         start = today.clone().toDate(); // Inicio: mañana (jueves)
         end = today.clone().add(2, 'days').toDate(); // Fin: mañana + 2 días (hasta viernes)
-      } 
+      }
       if (dayOfWeek == 5) {// Si es viernes
         start = today.clone().toDate(); // Inicio: hoy (viernes)
         end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta domingo)
@@ -221,7 +222,7 @@ export class CalendarFullComponent implements OnInit {
       // Permitir solo selecciones de 50 minutos
       return duration === 60 || duration === 120 ;
     },
-    
+
     slotLabelFormat: [
       { hour: 'numeric', minute: '2-digit', hour12: true, meridiem: 'short'},
       { month: 'short', day: 'numeric', weekday: 'short' }
@@ -238,7 +239,7 @@ export class CalendarFullComponent implements OnInit {
   currentDate: Date = new Date();
 
   public localidad: any = [];
-  localidadSelect = 2; 
+  localidadSelect = 2;
   userDataJson: string | null | undefined;
   isLoading: boolean | undefined;
   isLoading2: boolean | undefined;
@@ -300,7 +301,7 @@ export class CalendarFullComponent implements OnInit {
         this.calendarOptions.events = events;
         this.changeDetector.detectChanges();
 
-        
+
       },
       (error: any) => {
         console.log('Error fetching events:', error);
@@ -335,14 +336,14 @@ export class CalendarFullComponent implements OnInit {
 
   handleEventsDate(clickDate: DateSelectArg) {
     const selectedDateTime = moment(clickDate.start.toISOString());
-  
+
     if (selectedDateTime.isSameOrAfter(moment(), 'minute')) {
       if (this.userDataJson) {
         const dayOfWeek = selectedDateTime.day();
         const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
         const isSaturday = dayOfWeek === 6;
         const isSunday = dayOfWeek === 0;
-  
+
         let isWithinValidTimeRange = false;
         if (isWeekday) {
           isWithinValidTimeRange = selectedDateTime.isBetween(
@@ -366,7 +367,7 @@ export class CalendarFullComponent implements OnInit {
             '[)'
           );
         }
-  
+
         if (isWithinValidTimeRange) {
           this.showReservationForm = true;
           this.reservationForm.startDateTime = this.formatDateTime(clickDate.start.toISOString());
@@ -381,14 +382,14 @@ export class CalendarFullComponent implements OnInit {
             this.formatDate(this.reservationForm.startDateTime),
             this.formatTime(this.reservationForm.endDateTime)
           );
-      
+
           //  this.validatePrice(
           //    this.formatTime(this.reservationForm.startDateTime),
           //    this.formatDate(this.reservationForm.startDateTime),
           //    this.formatTime(this.reservationForm.endDateTime)
           //  );
           //
-          
+
         } else {
           Swal.fire({
             title: 'Horario no válido',
@@ -417,7 +418,7 @@ export class CalendarFullComponent implements OnInit {
     }
   }
 /*******************REVERVAR ************************************************** */
-  submitReservationForm2() { 
+  submitReservationForm2() {
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
@@ -441,7 +442,7 @@ export class CalendarFullComponent implements OnInit {
 
 
 
-    this.isLoading2 = false; 
+    this.isLoading2 = false;
     this.modalService.dismissAll();
 
 
@@ -452,8 +453,9 @@ export class CalendarFullComponent implements OnInit {
    this.payment();
 
   }
-  
+
   submitReservationForm() {
+
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
@@ -470,7 +472,9 @@ export class CalendarFullComponent implements OnInit {
       estado: 'SIN CONFIRMAR',
       pago: 0,
       txtComentario: this.reservationForm.comment,
-      costoTarifa:this.reservationForm.price
+      costoTarifa:this.reservationForm.price,
+      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     };
 
     console.log({payload})
@@ -480,21 +484,41 @@ export class CalendarFullComponent implements OnInit {
         Authorization: `Bearer ${userData.token}`
       }
     };
-  
+
     this.http.post(url, payload, httpOptions).subscribe(
        (response) => {
         console.log({response})
         localStorage.setItem('codRegistro',  JSON.stringify(response));
          this.toastr.success('Reserva guardada con éxito:', 'Éxito');
-         
-        // this.modalService.dismissAll();
+
+        this.modalService.dismissAll();
         this.loadEvents()
-        this.payment();
-        this.isLoading2 = false; 
+        //this.payment();
+        Swal.fire({
+          icon: 'success',
+          title: '¡Tu reserva ha sido registrada exitosamente!',
+          text:  "Ahora puede realizar el pago en caja",
+          confirmButtonText: 'Ok, muchas gracias!!',
+        }).then(()=>{
+          this.router.navigate(['/reserve/profile']);
+            setTimeout(() => {
+              this.router.navigate(['/reserve/profile']);
+              location.reload();
+            }, 1000);
+        })
+        this.isLoading2 = false;
        },
        (error) => {
          this.toastr.error('Error al guardar la reserva:', error.error);
-         this.isLoading2 = false; 
+        Swal.fire({
+          icon: 'warning',
+          text: `${error.error.error}`,
+          confirmButtonText: 'Ok, entendido',
+        }).then(() => {
+          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+        });
+
+         this.isLoading2 = false;
        }
      );
   }
@@ -513,7 +537,7 @@ export class CalendarFullComponent implements OnInit {
     const durationMinutes = Math.floor(durationMs / (1000 * 60) ); // - 10 de mantenimiento
     return `${durationMinutes} minuto(s)`;
   }
-  
+
 
   formatDateTime(dateTimeString: string): string {
     return moment(dateTimeString).format('YYYY-MM-DDTHH:mm');
@@ -523,7 +547,7 @@ export class CalendarFullComponent implements OnInit {
 
   obetenerLocalidades() {
      // Mostrar el spinner de carga
-  
+
     this.reserveServices.getLocalidad().subscribe(
       (resp) => {
         this.localidad = resp;
@@ -535,12 +559,12 @@ export class CalendarFullComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
   openReservationModal() {
     this.modalService.open(this.reservationModal, { centered: true }); // Abre el modal utilizando la referencia
   }
-  
+
   restarMinutos(horaFinal: string, minutos: number): string {
     const horaFinMoment = moment(horaFinal, 'HH:mm:ss');
     const nuevaHoraFinMoment = horaFinMoment.subtract(minutos, 'minutes');
@@ -564,7 +588,7 @@ export class CalendarFullComponent implements OnInit {
         'Authorization': `Bearer ${userData.token}`
       })
     };
-  
+
     this.http.post(validationEndpoint, validationPayload, httpOptions).subscribe(
       (response: any) => {
         if (response.ok) {
@@ -582,7 +606,7 @@ export class CalendarFullComponent implements OnInit {
         });
         // Manejar el error si es necesario
         this.isLoading = false;
-        
+
         return false
       }
     );
@@ -597,7 +621,7 @@ export class CalendarFullComponent implements OnInit {
       txtHoraInicial: horainicio,
       txtHoraFinal: horafinal,
       ddlLocalidad: this.localidadSelect,
-      
+
     };
     console.log({ validationPayload })
     const httpOptions = {
@@ -606,7 +630,7 @@ export class CalendarFullComponent implements OnInit {
         'Authorization': `Bearer ${userData.token}`
       })
     };
-  
+
     this.http.post(validationEndpoint, validationPayload, httpOptions).subscribe(
       (response: any) => {
         if (response.ok) {
@@ -654,7 +678,7 @@ export class CalendarFullComponent implements OnInit {
         'Authorization': `Bearer ${userData.token}`
       })
     };
-  
+
     this.http.post(validationEndpoint, validationPayload, httpOptions).subscribe(
       (response: any) => {
         if (response.ok) {
@@ -675,12 +699,13 @@ export class CalendarFullComponent implements OnInit {
         });
         // Manejar el error si es necesario
         this.isLoading = false;
-        
+
         return false
       }
     );
   }
   validatePrice(horainicio: any, fechRegistro: any, horafinal: any) {
+
     this.isLoading = true
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
     const priceEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/precio';
@@ -691,24 +716,25 @@ export class CalendarFullComponent implements OnInit {
       codCliente: userData.codCliente,
       codLocalidad: this.localidadSelect
     };
-  
+
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userData.token}`
       })
     };
-  
+
     this.http.post(priceEndpoint, pricePayload, httpOptions).subscribe(
       (response: any) => {
         const precio = response.precio;
         // Aquí puedes usar el precio obtenido para realizar cualquier acción necesaria antes de guardar la reserva
         let priceTime = this.calPriceTime(this.reservationForm.startDateTime,this.reservationForm.endDateTime,precio)
         this.reservationForm.price=priceTime
-  
+
         console.log(this.reservationForm.price)
         this.showReservationForm = true; // Mostrar el formulario de reserva
-        this.openReservationModal();
+        //this.openReservationModal();
+      this.openPaymentModal()
         // Continuar con el proceso de guardar la reserva...
         this.isLoading = false
       },
@@ -762,5 +788,8 @@ export class CalendarFullComponent implements OnInit {
     }
     var resultado = multiplicador * parseFloat(precioBase); // Multiplicar por el precio base
     return resultado.toFixed(2);
-  } 
+  }
+  openPaymentModal() {
+    this.modalService.open(this.paymentModal, { centered: true }); // Abre el modal utilizando la referencia
+  }
 }

@@ -37,122 +37,7 @@ export class CalendarFullComponent implements OnInit {
     }
 
     calendarVisible = true;
-  /*
-    calendarOptions: CalendarOptions = {
 
-    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'timeGridDay'
-    },
-    initialView: 'timeGridDay',
-    events: [],
-    weekends: true,
-    editable: false,
-    selectable: true,
-    selectMirror: true,
-    dayMaxEvents: true,
-    eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
-    select: this.handleEventsDate.bind(this),
-    slotMinTime: '06:00:00',
-    slotMaxTime: '22:00:00',
-    slotDuration: '00:60:00',
-    contentHeight: 'auto',
-    //slotMinWidth:100,
-    //longPressDelay:0, // Tiempo de espera para arrastrar eventos
-    //eventLongPressDelay: 0, // Tiempo de espera para arrastrar eventos
-    selectLongPressDelay: 0,
-    //validRange: () => {
-    //  return {
-    //    start: moment().toDate(),
-    //    end: moment().add(7, 'days').toDate()
-    //  };
-    //},
-
-    //validRange: () => {
-    //  const today = moment("2023-06-09").utc().startOf('day');
-    //  const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes,2 martes,3 miercoles , 4 jueves , 5 viernes,  6: sábado)
-    //  let start, end;
-    //console.log({today})
-    //console.log({dayOfWeek})
-    //  if (dayOfWeek <= 3) { // Si es domingo, lunes, martes o miércoles
-    //    start = today.toDate(); // Inicio: hoy
-    //    end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta miércoles)
-    //  } else if (dayOfWeek <= 4) { // Si es miércoles o jueves
-    //    start = today.clone().add(1, 'days').toDate(); // Inicio: mañana (jueves)
-    //    end = today.clone().add(2, 'days').toDate(); // Fin: mañana + 2 días (hasta viernes)
-    //  } else { // Si es viernes
-    //    start = today.clone().toDate(); // Inicio: hoy (viernes)
-    //    console.log({start})
-    //    end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta domingo)
-    //  }
-    //
-    //  return {
-    //    start: start,
-    //    end: end
-    //  };
-    //},
-    validRange: () => {
-      const today = moment("2023-06-10").startOf('day');
-      const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes, 2: martes, 3: miércoles, 4: jueves, 5: viernes, 6: sábado)
-      let start, end;
-      console.log({today})
-      console.log({dayOfWeek})
-      if (dayOfWeek == 0) { // Si es lunes
-        start = today.clone().toDate(); // Inicio: mañana (miercoles)
-        end = today.clone().toDate();
-      }
-      if (dayOfWeek == 1) { // Si es lunes
-        start = today.clone().toDate(); // Inicio: mañana (miercoles)
-        end = today.clone().add(3, 'days').toDate();
-      }
-      if (dayOfWeek == 2) { // Si es martes
-        start = today.clone().toDate(); // Inicio: mañana (miercoles)
-        end = today.clone().add(2, 'days').toDate();
-      }
-      if (dayOfWeek == 3) { // Si es miercoles
-        start = today.clone().toDate(); // Inicio: mañana (miercoles)
-        end = today.clone().add(3, 'days').toDate(); // Fin: mañana + 3 días (hasta viernes)
-      }
-      if (dayOfWeek == 4) { // Si es jueves
-        start = today.clone().toDate(); // Inicio: mañana (jueves)
-        end = today.clone().add(2, 'days').toDate(); // Fin: mañana + 2 días (hasta viernes)
-      }
-      if (dayOfWeek == 5) {// Si es viernes
-        start = today.clone().toDate(); // Inicio: hoy (viernes)
-        end = today.clone().add(3, 'days').toDate(); // Fin: hoy + 3 días (hasta domingo)
-      }
-      if (dayOfWeek == 6) {// Si es sabado
-        start = today.clone().toDate(); // Inicio: sábado
-        end = today.clone().add(3, 'days').toDate();
-      }
-
-      return {
-        start: start,
-        end: end
-      };
-    },
-
-
-
-    locale: esLocale,
-    selectAllow: function(selectInfo) {
-      // Obtener la duración de la selección en minutos
-      const duration = (selectInfo.end.getTime() - selectInfo.start.getTime()) / (1000 * 60);
-
-      // Permitir solo selecciones de 50 minutos
-      return duration === 60;
-    },
-    slotLabelFormat: [
-      { hour: 'numeric', minute: '2-digit', hour12: true, meridiem: 'short'},
-      { month: 'short', day: 'numeric', weekday: 'short' }
-    ],
-    //nowIndicator: true,
-
-  };
-  */
  /***********************************CALENDARIO******************************************* */
   calendarOptions: CalendarOptions = {
 
@@ -383,13 +268,6 @@ export class CalendarFullComponent implements OnInit {
             this.formatTime(this.reservationForm.endDateTime)
           );
 
-          //  this.validatePrice(
-          //    this.formatTime(this.reservationForm.startDateTime),
-          //    this.formatDate(this.reservationForm.startDateTime),
-          //    this.formatTime(this.reservationForm.endDateTime)
-          //  );
-          //
-
         } else {
           Swal.fire({
             title: 'Horario no válido',
@@ -570,47 +448,6 @@ export class CalendarFullComponent implements OnInit {
     const nuevaHoraFinMoment = horaFinMoment.subtract(minutos, 'minutes');
     return nuevaHoraFinMoment.format('HH:mm:ss');
   }
-/*
-  validateDateReserve(horainicio: any, fechRegistro: any, horafinal: any) {
-    this.isLoading = true;
-    const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
-    const validationEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/validar-Fecha-reserva';
-    const validationPayload = {
-      txtFecha: fechRegistro,
-      txtHoraInicial: horainicio,
-      txtHoraFinal: horafinal,
-      ddlLocalidad: this.localidadSelect
-    };
-  console.log({validationPayload})
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userData.token}`
-      })
-    };
-
-    this.http.post(validationEndpoint, validationPayload, httpOptions).subscribe(
-      (response: any) => {
-        if (response.ok) {
-          // Si la reserva es válida, puedes continuar con el resto del flujo
-          console.log('Reserva válida');
-          this.isLoading = false;
-          // ... continuar con el flujo de reserva
-        }
-      },
-      (error: any) => {
-        console.log('Error en la validación de reserva:', error);
-        Swal.fire({
-          title: 'Error en la reserva',
-          text: error.error,
-        });
-        // Manejar el error si es necesario
-        this.isLoading = false;
-
-        return false
-      }
-    );
-  }*/
 
   validateDateReserve(horainicio: any, fechRegistro: any, horafinal: any) {
     this.isLoading = true;

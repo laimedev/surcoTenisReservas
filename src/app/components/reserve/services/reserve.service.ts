@@ -16,7 +16,7 @@ export declare let Culqi: any;
 })
 export class ReserveService {
   public token_id?: string;
-  
+
 
   TOKEN_CULQI = '';
 
@@ -27,7 +27,7 @@ export class ReserveService {
   //culqiKeyPrivate = 'sk_test_ea5045ad1a6bbb69';
 
 
-  // PRODUCCION 
+  // PRODUCCION
   culqiKeyPublic = 'pk_live_ea1621fef7a79560';
   culqiKeyPrivate = 'sk_live_5a6b4703c558ce41';
 
@@ -40,7 +40,7 @@ export class ReserveService {
     ) {
 
     document.addEventListener ('payment_event', (token: any) => {
-      
+
       this.token_id = token.detail;
       //console.log(this.token_id)
       //console.log(token.email)
@@ -49,8 +49,8 @@ export class ReserveService {
         email: localStorage.getItem('correo_usuario_pago'),
         currency_code: 'PEN',
         amount: JSON.parse(localStorage.getItem('paymentPrice')!) + '00',
-        
-      } 
+
+      }
 
       this.crearRegistro(dataPago);
 
@@ -76,16 +76,16 @@ export class ReserveService {
       currency: 'PEN',
       description: description,
       amount: amount*100,
-      
+
     });
 
     Culqi.options({
-      
+
       lang: "auto",
       installments: false, // Habilitar o deshabilitar el campo de cuotas
       paymentMethods: {
         tarjeta: true,
-        yape: false, 
+        yape: false,
         bancaMovil: true,
         agente: true,
         billetera: true,
@@ -120,48 +120,16 @@ export class ReserveService {
       order_id: codRegistro.codRegistro,
       user_id: userData.codCliente,
     }
-      
+
     });
 
-    
+
     console.log(newData);
 
     let headers = new HttpHeaders({"Authorization": `Bearer ${this.culqiKeyPrivate}`});
 
     return this.http.post("https://api.culqi.com/v2/charges", newData, { headers: headers}).subscribe(
       (resp: any) => {
-       /*
-        this.userDataJson = localStorage.getItem('userData');
-        const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-        const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
-        const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
-        console.log({codRegistro})
-        console.log(codRegistro.codRegistro)
-        const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${codRegistro.codRegistro}`;
-         const httpOptions = {
-          headers: {
-            Authorization: `Bearer ${userData.token}`
-          }
-        };
-        this.http.put(url, null,httpOptions).subscribe(
-          (response) => {
-            this.toastr.success('Reserva guardada con éxito:', 'Éxito');
-            // this.modalService.dismissAll();
-            // this.calendarFull.loadEvents()
-            // this.calendarFull.isLoading2 = false; 
-            this.router.navigate(['/reserve/profile']);
-            setTimeout(() => {
-              this.router.navigate(['/reserve/profile']);
-              location.reload();
-            }, 1000);
-          },
-          (error) => {
-            this.toastr.error('Error al guardar la reserva:', error.error);
-            // this.calendarFull.isLoading2 = false; 
-          }
-        );
-        this.crearRegistro()
-        */
        let importePago = JSON.parse(localStorage.getItem('paymentPrice')!)
        let date = moment().format('YYYY-MM-DD HH:mm:ss')
 
@@ -191,16 +159,16 @@ export class ReserveService {
         }).then(() => {
           location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
         });
-        
+
         Culqi.close();
-        
+
       },
       () => {
         console.log("La petición se completó correctamente.");
       }
     );
   }
-  
+
 
   getLocalidad(): Observable<any> {
     return this.http.get(`${this.URL}localidad/listar`)
@@ -209,13 +177,12 @@ export class ReserveService {
   eliminarRegistro(id: string) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/eliminar/${id}`;
-    //const url = `http://localhost:5000/api/registro-cliente/eliminar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
       }
     };
-  
+
     this.http.delete(url, httpOptions).subscribe(
       (response) => {
         console.log("borrado correctamente")
@@ -230,8 +197,7 @@ export class ReserveService {
   crearRegistro(data: any) {
 
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;  
-    //const url = `http://localhost:5000/api/registro-cliente/guardar`;
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
     const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
     const httpOptions = {
       headers: {
@@ -262,7 +228,6 @@ export class ReserveService {
   updateRegistro( id : string , ventaId : string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
-    //const url = `http://localhost:5000/api/registro-cliente/confirmar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -284,18 +249,17 @@ export class ReserveService {
   registrarPago( fechaPago : string , importePago : string ,codRegistro: string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/registrar-pago`;
-    //const url = `http://localhost:5000/api/registro-cliente/registrar-pago`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
       }
     };
     const requestBody = {
-      
+
         fechaPago:fechaPago,
         importePago:importePago,
         codRegistro:codRegistro
-    
+
     };
     this.http.post(url,requestBody, httpOptions).subscribe(
       (response) => {

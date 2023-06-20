@@ -1,14 +1,5 @@
 <div class="container pt-4">
 
-  <!-- <div *ngIf="isLoading" class="loading-overlay">
-    <div class="spinner"></div>
-    <div class="row">
-      <div class="col-12">
-        <p style="font-weight: bold; color: #fff; padding: 10px;"> Cargando ...</p>
-      </div>
-    </div>
-  </div> -->
-
 
   <div *ngIf="isLoading" class="loading-overlay">
     <!-- <div class="spinner"></div> -->
@@ -73,40 +64,6 @@
               </ng-template>
             </full-calendar>
 
-
-
-
-           <!-- <ng-template #reservationModal let-modal>
-              <div class="modal-header">
-                <h4 class="modal-title">Crear Reserva</h4>
-                <button type="button" class="btn btn-danger" aria-label="Close" (click)="modal.dismiss()">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form (submit)="submitReservationForm()">
-                  <label for="startDateTime">Fecha y Hora de Inicio:</label>
-                  <input type="datetime-local" id="startDateTime" [(ngModel)]="reservationForm.startDateTime" name="startDateTime" readonly>
-
-                  <label for="endDateTime">Fecha y Hora de Fin:</label>
-                  <input type="datetime-local" id="endDateTime" [(ngModel)]="reservationForm.endDateTime" name="endDateTime" readonly>
-
-                  <label for="name">Nombre de la persona con quien jugará:</label>
-                  <input type="text" id="name" [(ngModel)]="reservationForm.name" name="name" required>
-
-                  <label for="dni">DNI de la persona con quien jugará:</label>
-                  <input type="text" id="dni" [(ngModel)]="reservationForm.dni" name="dni" required>
-
-                  <label for="comment">Comentario:</label>
-                  <textarea id="comment" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
-                <div>
-                  <button type="submit" class=".submit-button.center">Guardar Reserva</button>
-                </div>
-
-                </form>
-
-              </div>
-            </ng-template>-->
 
             <div class="container pt-4 animated fadeIn">
 
@@ -173,48 +130,10 @@
                           </div>
 
 
-
-
-                        <!--<div class="form-group mt-1">
-                          <label for="price">Tiempo de juego:</label>
-                        </div>
-
-                          <div class="row justify-content-center">
-                            <div class="col-auto">
-                              <button class="btn btn-primary" type="button" [disabled]="isSumaDisabled" (click)="sumar()">+</button>
-                            </div>
-                            <div class="col text-center" style="text-align: center;">
-                              <p style="color: #4f5353; padding-top: 7px;">{{ valor }} minuto(s) </p>
-                              <input type="text" id="timeGame" class="form-control" [(ngModel)]="reservationForm.timeGame" name="timeGame"readonly>
-                            </div>
-                            <div class="col-auto">
-                              <button class="btn btn-dark" type="button" [disabled]="isRestaDisabled" (click)="restar()">-</button>
-                            </div>
-                          </div>-->
-
-
-
-
-
                       <div class="form-group">
                         <label for="price">Tiempo de juego:</label>
                         <input type="text" id="timeGame" class="form-control" [(ngModel)]="reservationForm.timeGame" name="timeGame"readonly>
                       </div>
-
-                      <!-- <div class="form-group">
-                        <label for="name">Nombre de la persona con quien jugará:</label>
-                        <input type="text" id="name" class="form-control" [(ngModel)]="reservationForm.name" name="name" required>
-                      </div>
-
-                      <div class="form-group">
-                        <label for="dni">DNI de la persona con quien jugará:</label>
-                        <input type="text" id="dni" class="form-control" [(ngModel)]="reservationForm.dni" name="dni" required>
-                      </div>
-
-                      <div class="form-group">
-                        <label for="comment">Comentario:</label>
-                        <textarea id="comment" class="form-control" [(ngModel)]="reservationForm.comment" name="comment"></textarea>
-                      </div> -->
 
                       <div class="text-center mt-2">
                         <button type="submit" class="btn btn-success">
@@ -252,33 +171,7 @@
 
 <br><br><br>
 
-
-
-
-
-
-  <!-- <div class="floating-bar">
-    <a href="#"> <i class="fa fa-shopping-cart" aria-hidden="true" style="color: #157347; font-size: 25px; padding-top: 17px;" ></i></a>
-  </div> -->
-
-
-<!-- Modal -->
 <ng-template #paymentModal let-modal>
-
-  <!--<div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="paymentModalLabel">Información de pago</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Por el momento, los pagos se deben realizar en caja antes de hacer la reserva.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
-      </div>
-    </div>
-  </div>-->
   <div class="modal-header bg-success">
     <div class="card-centered">
 

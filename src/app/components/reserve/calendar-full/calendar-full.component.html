@@ -101,7 +101,7 @@
 
 
                   <div class="modal-body">
-                    <form (submit)="submitReservationForm2()">
+                    <form (submit)="submitReservationForm3()">
 
 
                       <div class="row">
@@ -171,7 +171,7 @@
 
 <br><br><br>
 
-<ng-template #paymentModal let-modal>
+<!--<ng-template #paymentModal let-modal>
   <div class="modal-header bg-success">
     <div class="card-centered">
 
@@ -200,4 +200,22 @@
     </form>
   </div>
 
+</ng-template>-->
+
+<ng-template #paymentModal >
+  <div  class="form">
+    <h1 class="pay-title">{{ title }}</h1>
+    <div class="pay-container">
+      <div id="myPaymentForm">
+        <div class="kr-smart-form" kr-card-form-expanded></div>
+      </div>
+      <div data-test="payment-message">{{ message }}</div>
+    </div>
+  </div>
 </ng-template>
+
+
+
+
+
+

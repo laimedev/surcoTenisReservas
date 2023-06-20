@@ -8,6 +8,12 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="assets/images/cropped-logo.png">
+  <!-- theme and plugins. should be loaded in the HEAD section -->
+<link rel="stylesheet"
+href="https://api.micuentaweb.pe/static/js/krypton-client/V4.0/ext/neon-reset.css">
+<script
+    src="https://api.micuentaweb.pe/static/js/krypton-client/V4.0/ext/neon.js">
+</script>
 <meta name="google" content="notranslate" />
 
   <link href="assets/css/animate.min.css" rel="stylesheet"/>
@@ -34,21 +40,21 @@
 
       <script>
         function culqi () {
-          if (Culqi.token) { 
+          if (Culqi.token) {
             // Get the token ID:
             console.log('culqi token', Culqi.token)
-    
+
             var token = Culqi.token.id;
             var correo = Culqi.token.email;
-    
+
             localStorage.setItem('correo_usuario_pago', correo);
-            
+
             console.log('token-a',token);
             console.log('correo-a',correo);
-    
+
             var payment_event = new CustomEvent ('payment_event', {detail: token});
             document.dispatchEvent (payment_event);
-    
+
           } else { // ¡Hubo algún problema!
             // Mostramos JSON de objeto error en consola
             console.log(Culqi.error);
@@ -57,7 +63,7 @@
         };
     </script>
 
-    
+
 
   <script>
     Culqi.publicKey = 'pk_live_ea1621fef7a79560';
@@ -67,7 +73,7 @@
 
 
 
-  
+
 </body>
 
 

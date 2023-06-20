@@ -14,6 +14,8 @@ import esLocale from '@fullcalendar/core/locales/es';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import KRGlue from '@lyracom/embedded-form-glue'
+import { firstValueFrom } from 'rxjs'
 
 @Component({
   selector: 'app-calendar-full',
@@ -24,6 +26,9 @@ import Swal from 'sweetalert2';
 export class CalendarFullComponent implements OnInit {
   @ViewChild('reservationModal') reservationModal: any;
   @ViewChild('paymentModal') paymentModal: any;
+
+  title: string = 'Angular + KR.attachForm'
+  message: string = ''
 
   showReservationForm = false;
   reservationForm: any = {
@@ -141,7 +146,8 @@ export class CalendarFullComponent implements OnInit {
     private changeDetector: ChangeDetectorRef,
     private modalService: NgbModal,
     private toastr: ToastrService,
-    private activeModal: NgbActiveModal
+    private activeModal: NgbActiveModal,
+    private chRef: ChangeDetectorRef
     ){
 
   }
@@ -628,5 +634,93 @@ export class CalendarFullComponent implements OnInit {
   }
   openPaymentModal() {
     this.modalService.open(this.paymentModal, { centered: true }); // Abre el modal utilizando la referencia
+    this.izipay()
+  }
+
+  submitReservationForm3() {
+    this.isLoading2 = true;
+    this.userDataJson = localStorage.getItem('userData');
+    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+    const payload = {
+      ddUsuario: 1,
+      ddlClientes: userData.codCliente,
+      ddlLocalidad: this.localidadSelect,
+      ddCaja: 7,
+      txtFecha: this.formatDate(this.reservationForm.startDateTime),
+      txtHoraInicial: this.formatTime(this.reservationForm.startDateTime),
+      txtHoraFinal: this.formatTime(this.reservationForm.endDateTime),
+      txtTiempo: this.reservationForm.timeGame,
+      estado: 'SIN CONFIRMAR',
+      pago: 0,
+      txtComentario: this.reservationForm.comment,
+      costoTarifa:this.reservationForm.price,
+      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+      updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    };
+    console.log({payload})
+
+
+
+    this.isLoading2 = false;
+    this.modalService.dismissAll();
+
+
+    this.product[0].amount = this.reservationForm.price
+    localStorage.setItem('paymentPrice', this.reservationForm.price);
+    localStorage.setItem('dataPayment',  JSON.stringify(payload));
+
+   this.openPaymentModal();
+
+  }
+
+
+  izipay() {
+    const endpoint = 'https://api.micuentaweb.pe'
+    const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0'
+    let formToken = ''
+
+    const observable = this.http.post(
+      'http://localhost:5000/createPayment',
+      { paymentConf: { amount: 200 , currency: 'PEN' } },
+      { responseType: 'text' }
+    )
+    firstValueFrom(observable)
+      .then((resp: any) => {
+        formToken = resp
+        return KRGlue.loadLibrary(
+          endpoint,
+          publicKey
+        ) /* Load the remote library */
+      })
+      .then(({ KR }) =>
+        KR.setFormConfig({
+          /* set the minimal configuration */
+          formToken: formToken,
+          'kr-language': 'es-ES' /* to update initialization parameter */
+        })
+      )
+      .then(({ KR }) => KR.onSubmit(this.onSubmit))
+      .then(({ KR }) =>
+        KR.attachForm('#myPaymentForm')
+      ) /* Attach a payment form  to myPaymentForm div*/
+      .then(({ KR, result }) =>
+        KR.showForm(result.formId)
+      ) /* show the payment form */
+      .catch(error => {
+        this.message = error.message + ' (see console for more details)'
+      })
+  }
+
+  private onSubmit = (paymentData: KRPaymentResponse) => {
+    this.http
+      .post('http://localhost:5000/validatePayment', paymentData, {
+        responseType: 'text'
+      })
+      .subscribe((response: any) => {
+        if (response) {
+          this.message = 'Payment successful!'
+          this.chRef.detectChanges()
+        }
+      })
   }
 }

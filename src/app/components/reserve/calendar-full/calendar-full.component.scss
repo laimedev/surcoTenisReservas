@@ -12,7 +12,7 @@
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 9999;
   }
-  
+
   .spinner {
     border: 4px solid #f3f3f3;
     border-top: 4px solid #3498db;
@@ -21,7 +21,7 @@
     height: 40px;
     animation: spin 2s linear infinite;
   }
-  
+
   @keyframes spin {
     0% {
       transform: rotate(0deg);
@@ -30,7 +30,7 @@
       transform: rotate(360deg);
     }
   }
-  
+
   .bootstrap-select.btn-group .dropdown-menu li a:hover {
     color: whitesmoke !important;
     background: #bf5279 !important;
@@ -61,7 +61,7 @@
   text-align: center;
   line-height: 45px;
   color: #333;
-  
+
 }
 
 
@@ -101,4 +101,17 @@
 .custom-select {
   // border: 1px solid #9c9999;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.pay-title {
+  margin: 40px 0 20px 0;
+  width: 100%;
+  text-align: center;
+}
+
+.pay-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

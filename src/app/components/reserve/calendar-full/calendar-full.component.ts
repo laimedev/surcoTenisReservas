@@ -733,8 +733,8 @@ export class CalendarFullComponent implements OnInit {
 
         console.log(this.reservationForm.price)
         this.showReservationForm = true; // Mostrar el formulario de reserva
-        //this.openReservationModal();
-      this.openPaymentModal()
+        this.openReservationModal();
+      //this.openPaymentModal()
         // Continuar con el proceso de guardar la reserva...
         this.isLoading = false
       },

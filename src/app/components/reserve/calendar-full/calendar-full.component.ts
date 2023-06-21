@@ -69,7 +69,7 @@ export class CalendarFullComponent implements OnInit {
     contentHeight: 'auto',
     selectLongPressDelay: 0,
     validRange: () => {
-      const today = moment().startOf('day');
+      const today = moment("2023-06-30").startOf('day');
       const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes, 2: martes, 3: miércoles, 4: jueves, 5: viernes, 6: sábado)
       let start, end;
       if (dayOfWeek == 0) { // Si es lunes
@@ -138,6 +138,7 @@ export class CalendarFullComponent implements OnInit {
   public valor: number = 50; // Inicializamos el valor en 50
   isSumaDisabled: boolean = false; // Indica si el botón de suma está deshabilitado
   isRestaDisabled: boolean = true; // Indica si el botón de resta está deshabilitado
+  payload: { ddUsuario: number; ddlClientes: any; ddlLocalidad: number; ddCaja: number; txtFecha: string; txtHoraInicial: string; txtHoraFinal: string; txtTiempo: any; estado: string; pago: number; txtComentario: any; costoTarifa: any; created_at: string; updated_at: string; } | undefined;
 
   constructor(public http: HttpClient,
     private clqSrv : ReserveService,
@@ -641,7 +642,7 @@ export class CalendarFullComponent implements OnInit {
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-    const payload = {
+    this.payload = {
       ddUsuario: 1,
       ddlClientes: userData.codCliente,
       ddlLocalidad: this.localidadSelect,
@@ -657,7 +658,7 @@ export class CalendarFullComponent implements OnInit {
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
       updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     };
-    console.log({payload})
+    console.log(this.payload)
 
 
 
@@ -665,9 +666,9 @@ export class CalendarFullComponent implements OnInit {
     this.modalService.dismissAll();
 
 
-    this.product[0].amount = this.reservationForm.price
-    localStorage.setItem('paymentPrice', this.reservationForm.price);
-    localStorage.setItem('dataPayment',  JSON.stringify(payload));
+    //this.product[0].amount = this.reservationForm.price
+    //localStorage.setItem('paymentPrice', this.reservationForm.price);
+    //localStorage.setItem('dataPayment',  JSON.stringify(payload));
 
    this.openPaymentModal();
 
@@ -678,10 +679,9 @@ export class CalendarFullComponent implements OnInit {
     const endpoint = 'https://api.micuentaweb.pe'
     const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0'
     let formToken = ''
-
     const observable = this.http.post(
       'http://localhost:5000/createPayment',
-      { paymentConf: { amount: 200 , currency: 'PEN' } },
+      { paymentConf: { amount:JSON.stringify(this.reservationForm.price * 100) , currency: 'PEN' } },
       { responseType: 'text' }
     )
     firstValueFrom(observable)
@@ -722,5 +722,37 @@ export class CalendarFullComponent implements OnInit {
           this.chRef.detectChanges()
         }
       })
+  }
+
+  crearRegistro() {
+
+    this.isLoading2 = true;
+    this.userDataJson = localStorage.getItem('userData');
+    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+    
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+
+    this.http.post(url, this.payload ,httpOptions).subscribe(
+      (response) => {
+        this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+        console.log(response);
+      },
+      (error) => {
+        this.toastr.error('Error al guardar la reserva:', error.error);
+        Swal.fire({
+          icon: 'warning',
+          text: `${error.error.error}`,
+          confirmButtonText: 'Ok, entendido',
+        }).then(() => {
+          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+        });
+
+      }
+    );
   }
 }

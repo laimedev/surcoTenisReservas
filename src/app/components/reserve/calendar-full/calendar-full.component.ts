@@ -12,10 +12,12 @@ import * as moment from 'moment';
 import { SharedModule } from '../../../shared/shared.module';
 import esLocale from '@fullcalendar/core/locales/es';
 import { ToastrService } from 'ngx-toastr';
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbActiveModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import KRGlue from '@lyracom/embedded-form-glue'
 import { firstValueFrom } from 'rxjs'
+import { v4 as uuidv4 } from 'uuid';
+
 
 @Component({
   selector: 'app-calendar-full',
@@ -27,7 +29,7 @@ export class CalendarFullComponent implements OnInit {
   @ViewChild('reservationModal') reservationModal: any;
   @ViewChild('paymentModal') paymentModal: any;
 
-  title: string = 'Angular + KR.attachForm'
+  title: string = 'Reserva de Cancha Tenis'
   message: string = ''
 
   showReservationForm = false;
@@ -139,6 +141,9 @@ export class CalendarFullComponent implements OnInit {
   isSumaDisabled: boolean = false; // Indica si el botón de suma está deshabilitado
   isRestaDisabled: boolean = true; // Indica si el botón de resta está deshabilitado
   payload: { ddUsuario: number; ddlClientes: any; ddlLocalidad: number; ddCaja: number; txtFecha: string; txtHoraInicial: string; txtHoraFinal: string; txtTiempo: any; estado: string; pago: number; txtComentario: any; costoTarifa: any; created_at: string; updated_at: string; } | undefined;
+  codRegistro: any;
+  clickPage: boolean = false;
+  codigoUnico: any;
 
   constructor(public http: HttpClient,
     private clqSrv : ReserveService,
@@ -148,9 +153,11 @@ export class CalendarFullComponent implements OnInit {
     private modalService: NgbModal,
     private toastr: ToastrService,
     private activeModal: NgbActiveModal,
-    private chRef: ChangeDetectorRef
+    private chRef: ChangeDetectorRef,
+    config: NgbModalConfig
     ){
-
+      //config.backdrop = 'static';
+      //config.keyboard = false;
   }
 
   ngOnInit(): void {
@@ -673,47 +680,325 @@ export class CalendarFullComponent implements OnInit {
    this.openPaymentModal();
 
   }
-
-
   izipay() {
-    const endpoint = 'https://api.micuentaweb.pe'
-    const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0'
-    let formToken = ''
-    const observable = this.http.post(
+    this.codigoUnico = this.generateOrderId()
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const endpoint = 'https://api.micuentaweb.pe';
+    //TEST
+    const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0';
+    //PRODUCCION
+    //const publicKey = "81246030:publickey_uoRIDdgvkxZL4m0cSakghA11gBpPkbCPaMo1cEr9BJOD8"
+    let formToken = '';
+
+    const createPaymentObservable = this.http.post(
       'http://localhost:5000/createPayment',
-      { paymentConf: { amount:JSON.stringify(this.reservationForm.price * 100) , currency: 'PEN' } },
+      {
+        paymentConf: {
+          amount: JSON.stringify(this.reservationForm.price * 100),
+          currency: 'PEN',
+          orderId: this.codigoUnico,
+          customer: {
+            email: userData.email
+        }
+        },
+      },
       { responseType: 'text' }
-    )
-    firstValueFrom(observable)
+    );
+      console.log(this.codRegistro)
+    firstValueFrom(createPaymentObservable)
       .then((resp: any) => {
-        formToken = resp
-        return KRGlue.loadLibrary(
-          endpoint,
-          publicKey
-        ) /* Load the remote library */
+        formToken = resp;
+        return KRGlue.loadLibrary(endpoint, publicKey); /* Load the remote library */
       })
       .then(({ KR }) =>
         KR.setFormConfig({
           /* set the minimal configuration */
           formToken: formToken,
-          'kr-language': 'es-ES' /* to update initialization parameter */
+          'kr-language': 'es-ES' /* to update initialization parameter */,
+
         })
       )
       .then(({ KR }) => KR.onSubmit(this.onSubmit))
+      .then(({ KR }) => KR.attachForm('#myPaymentForm')) /* Attach a payment form  to myPaymentForm div*/
+      .then(({ KR, result }) => KR.showForm(result.formId)) /* show the payment form */
       .then(({ KR }) =>
-        KR.attachForm('#myPaymentForm')
-      ) /* Attach a payment form  to myPaymentForm div*/
-      .then(({ KR, result }) =>
-        KR.showForm(result.formId)
-      ) /* show the payment form */
-      .catch(error => {
-        this.message = error.message + ' (see console for more details)'
-      })
+        KR.button.onClick(() => {
+          return new Promise<boolean>((resolve, reject) => {
+            this.crearRegistro()
+              .then(() => {
+                resolve(true);
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          });
+        })
+      ).then(({KR}) =>KR.onError((event)=>{
+        console.log({event})
+        this.eliminarRegistro(this.codRegistro)
+        Swal.fire({
+          icon: 'warning',
+          text: `Error al realizar el pago`,
+          confirmButtonText: 'Ok, entendido',
+        }).then(() => {
+          this.modalService.dismissAll()
+          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+        });
+      }))
+      .catch((error) => {
+
+        this.message = error.message + ' (see console for more details)';
+
+
+      });
   }
 
+
+  //izipay() {
+  //  //this.crearRegistro()
+  //  //console.log(this.codRegistro)
+  //  const endpoint = 'https://api.micuentaweb.pe'
+  //  const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0'
+  //  let formToken = ''
+  //  const observable = this.http.post(
+  //    'http://localhost:5000/createPayment',
+  //    { paymentConf: { amount:JSON.stringify(this.reservationForm.price * 100) , currency: 'PEN' ,orderId : "" } },
+  //    { responseType: 'text' }
+  //  )
+  //  firstValueFrom(observable)
+  //    .then((resp: any) => {
+  //      formToken = resp
+  //      return KRGlue.loadLibrary(
+  //        endpoint,
+  //        publicKey
+  //      ) /* Load the remote library */
+  //    })
+  //    .then(({ KR }) =>
+  //      KR.setFormConfig({
+  //        /* set the minimal configuration */
+  //        formToken: formToken,
+  //        'kr-language': 'es-ES' /* to update initialization parameter */
+  //      })
+  //    )
+//
+  //    .then(({ KR }) => KR.onSubmit(this.onSubmit))
+  //    .then(({ KR }) =>
+  //      KR.attachForm('#myPaymentForm')
+//
+  //    ) /* Attach a payment form  to myPaymentForm div*/
+  //    .then(({ KR, result }) =>
+  //      KR.showForm(result.formId)
+  //    ) /* show the payment form */
+  //    .then(({KR})=>KR.button.onClick(()=>{
+  //                  return new Promise<boolean>((resolve, reject) => {
+  //                              this.crearRegistro()
+  //                                .then(() => {
+  //                                  resolve(true);
+  //                                })
+  //                                .catch((error) => {
+  //                                  reject(error);
+  //                                });
+  //                            });
+  //                }))
+  //    .catch(error => {
+  //      this.message = error.message + ' (see console for more details)'
+  //    })
+  //}
+//
+
+  //izipay() {
+  //  const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
+  //  this.crearRegistro()
+  //    .then(() => {
+  //      console.log(this.codRegistro);
+  //      const endpoint = 'https://api.micuentaweb.pe';
+  //      const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0';
+  //      let formToken = '';
+  //      const observable = this.http.post(
+  //        'http://localhost:5000/createPayment',
+  //        {
+  //          paymentConf: {
+  //            amount: JSON.stringify(this.reservationForm.price * 100),
+  //            currency: 'PEN',
+  //            orderId: this.codRegistro,
+  //            customer: {
+  //              email: userData.email
+  //          }
+//
+  //           } },
+  //        { responseType: 'text' }
+  //      );
+  //      return firstValueFrom(observable)
+  //        .then((resp: any) => {
+  //          formToken = resp;
+  //          return KRGlue.loadLibrary(
+  //            endpoint,
+  //            publicKey
+  //          ); /* Load the remote library */
+  //        })
+  //        .then(({ KR }) =>
+  //          KR.setFormConfig({
+  //            /* set the minimal configuration */
+  //            formToken: formToken,
+  //            'kr-language': 'es-ES' /* to update initialization parameter */
+  //          })
+  //        )
+  //        .then(({ KR }) => KR.onSubmit(this.onSubmit))
+  //        .then(({ KR }) =>
+  //          KR.attachForm('#myPaymentForm')
+  //        ) /* Attach a payment form  to myPaymentForm div*/
+  //        .then(({ KR, result }) =>
+  //          KR.showForm(result.formId)
+  //        ) /* show the payment form */
+  //          .then(({KR})=>KR.button.onClick(()=>{
+  //            return new Promise<boolean>((resolve, reject) => {
+  //                        this.crearRegistro()
+  //                          .then(() => {
+  //                            resolve(true);
+  //                          })
+  //                          .catch((error) => {
+  //                            reject(error);
+  //                          });
+  //                      });
+  //          }))
+  //        .catch(error => {
+  //          this.message = error.message + ' (see console for more details)';
+  //        });
+  //    })
+  //    .catch(error => {
+  //      console.error('Error al crear el registro:', error);
+  //    });
+  //}
+
+
+//
+//izipay() {
+//  const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
+//  this.codRegistro = '';
+//
+//  const endpoint = 'https://api.micuentaweb.pe';
+//  const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0';
+//  let formToken = '';
+//
+//  const observable = this.http.post(
+//    'http://localhost:5000/createPayment',
+//    {
+//      paymentConf: {
+//        amount: JSON.stringify(this.reservationForm.price * 100),
+//        currency: 'PEN',
+//        orderId: this.codRegistro,
+//        customer: {
+//          email: userData.email
+//        }
+//      }
+//    },
+//    { responseType: 'text' }
+//  );
+//
+//  firstValueFrom(observable)
+//    .then((resp: any) => {
+//      formToken = resp;
+//      return KRGlue.loadLibrary(endpoint, publicKey);
+//    })
+//    .then(({ KR }) => {
+//      KR.setFormConfig({
+//        formToken: formToken,
+//        'kr-language': 'es-ES'
+//      });
+//
+//      KR.button.onClick(() => {
+//        return new Promise<boolean>((resolve, reject) => {
+//          this.crearRegistro()
+//            .then(() => {
+//              resolve(true);
+//            })
+//            .catch((error) => {
+//              reject(error);
+//            });
+//        });
+//      });
+//    })
+//    .then(({ KR }) => KR.onSubmit(this.onSubmit))
+//    .then(({ KR }) => KR.attachForm('#myPaymentForm'))
+//    .then(({ KR, result }) => KR.showForm(result.formId))
+//    .catch((error) => {
+//      this.message = error.message + ' (see console for more details)';
+//    });
+//}
+
+
+
+
+
   private onSubmit = (paymentData: KRPaymentResponse) => {
+console.log(this.codRegistro)
     this.http
       .post('http://localhost:5000/validatePayment', paymentData, {
+        responseType: 'text'
+      })
+      .subscribe((response: any) => {
+        if (response) {
+          console.log({response})
+      let importePago = this.reservationForm.price
+       let date = moment().format('YYYY-MM-DD HH:mm:ss')
+       this.updateRegistro(this.codRegistro,this.codigoUnico)
+
+       this.registrarPago( date,importePago,this.codRegistro)
+
+          this.message = 'Payment successful!'
+          this.chRef.detectChanges()
+          Swal.fire({
+            icon: 'success',
+            title: `Su compra a sido exitosa`,
+            text:  `su operacion fue realizada exitosamente`,
+            confirmButtonText: 'Ok, muchas gracias!!',
+          }).then(()=>{
+            this.modalService.dismissAll()
+            this.router.navigate(['/reserve/profile']);
+              setTimeout(() => {
+                this.router.navigate(['/reserve/profile']);
+                location.reload();
+              }, 1000);
+
+          })
+
+        }
+      },
+      (error: any) => {
+        console.error('Error al validar el pago:', error);
+
+      }
+    );
+}
+  /*
+  private onSubmit = (paymentData: KRPaymentResponse) => {
+    const codRegistro =  JSON.parse(localStorage.getItem('codRegistro')!);
+    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
+
+    this.isLoading2 = true;
+    this.userDataJson = localStorage.getItem('userData');
+
+
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+
+    this.http.post(url, this.payload ,httpOptions).subscribe(
+      (response: any) => {
+        const newData = Object.assign({}, paymentData, { orderId : response.codRegistro ,
+          email: "joseyzambranovpe@gmail.com",
+
+
+
+        })
+        console.log({newData})
+        this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+        console.log(response);
+        this.http
+      .post('http://localhost:5000/validatePayment', newData, {
         responseType: 'text'
       })
       .subscribe((response: any) => {
@@ -722,14 +1007,28 @@ export class CalendarFullComponent implements OnInit {
           this.chRef.detectChanges()
         }
       })
-  }
+      },
+      (error) => {
+        this.toastr.error('Error al guardar la reserva:', error.error);
+        Swal.fire({
+          icon: 'warning',
+          text: `${error.error.error}`,
+          confirmButtonText: 'Ok, entendido',
+        }).then(() => {
+          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+        });
 
+      }
+    );
+  }
+  */
+/*
   crearRegistro() {
 
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-    
+
     const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
     const httpOptions = {
       headers: {
@@ -755,4 +1054,144 @@ export class CalendarFullComponent implements OnInit {
       }
     );
   }
+  */
+  crearRegistro() {
+    return new Promise<void>((resolve, reject) => {
+      this.isLoading2 = true;
+      this.userDataJson = localStorage.getItem('userData');
+      const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
+
+      const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+      const httpOptions = {
+        headers: {
+          Authorization: `Bearer ${userData.token}`
+        }
+      };
+
+      this.http.post(url, this.payload, httpOptions).subscribe(
+        (response:any) => {
+          this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+          console.log(response);
+          this.codRegistro = response.codRegistro
+
+          resolve(); // Resolver la promesa cuando se haya guardado el registro
+        },
+        (error) => {
+          this.toastr.error('Error al guardar la reserva:', error.error);
+          Swal.fire({
+            icon: 'warning',
+            text: `${error.error.error}`,
+            confirmButtonText: 'Ok, entendido',
+          }).then(() => {
+            location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+          });
+          reject(error); // Rechazar la promesa en caso de error
+        }
+      );
+    });
+  }
+  crearRegistro2(data: any) {
+
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+    const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+
+    this.http.post(url, dataPayment ,httpOptions).subscribe(
+      (response) => {
+        this.toastr.success('Reserva guardada con éxito:', 'Éxito');
+        localStorage.setItem('codRegistro',  JSON.stringify(response));
+        //this.sendDataToCulqi(data);
+      },
+      (error) => {
+        this.toastr.error('Error al guardar la reserva:', error.error);
+        Swal.fire({
+          icon: 'warning',
+          text: `${error.error.error}`,
+          confirmButtonText: 'Ok, entendido',
+        }).then(() => {
+          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+        });
+        //Culqi.close();
+      }
+    );
+  }
+
+  updateRegistro( id : string , ventaId : string ) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+    const requestBody = {
+      venta_id: ventaId // Agrega el campo venda_id al cuerpo de la solicitud
+    };
+    this.http.put(url,requestBody, httpOptions).subscribe(
+      (response) => {
+        console.log("Actualizado  correctamente")
+      },
+      (error) => {
+        console.error('Error al Actualizar el registro:', error);
+      }
+    );
+  }
+
+  registrarPago( fechaPago : string , importePago : string ,codRegistro: string ) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/registrar-pago`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+    const requestBody = {
+
+        fechaPago:fechaPago,
+        importePago:importePago,
+        codRegistro:codRegistro
+
+    };
+    this.http.post(url,requestBody, httpOptions).subscribe(
+      (response) => {
+        console.log("pago registrado  correctamente")
+      },
+      (error) => {
+        console.error('Error al pagar registrado:', error);
+      }
+    );
+  }
+  clickPayTest(){
+    console.log("hello click")
+    this.clickPage = true
+  }
+
+
+  eliminarRegistro(id: string) {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/eliminar/${id}`;
+    const httpOptions = {
+      headers: {
+        Authorization: `Bearer ${userData.token}`
+      }
+    };
+
+    this.http.delete(url, httpOptions).subscribe(
+      (response) => {
+        console.log("borrado correctamente")
+      },
+      (error) => {
+        console.error('Error al eliminar el registro:', error);
+      }
+    );
+  }
+  generateOrderId() {
+    return uuidv4();
+  }
+
 }

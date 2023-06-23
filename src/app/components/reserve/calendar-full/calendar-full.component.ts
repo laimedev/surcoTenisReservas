@@ -156,8 +156,8 @@ export class CalendarFullComponent implements OnInit {
     private chRef: ChangeDetectorRef,
     config: NgbModalConfig
     ){
-      //config.backdrop = 'static';
-      //config.keyboard = false;
+      config.backdrop = 'static';
+      config.keyboard = false;
   }
 
   ngOnInit(): void {

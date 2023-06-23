@@ -202,12 +202,22 @@
 
 </ng-template>-->
 
-<ng-template #paymentModal >
+<ng-template #paymentModal  >
 
 
   <div  class="form">
-    <h1 class="pay-title">{{ title }}</h1>
+    <div class="modal-header bg-success">
+      <div class="card-centered">
+        <div class="card card-image" >
+          <img src="assets/logo.png" alt="Logo" width="70">
+        </div>
+      </div>
+      <h5 class="modal-title pay-title" style="color: #fff; margin-left: -70px;">{{ title }}</h5>
+     
+    </div>
+   
     <div class="pay-container" >
+      <br>
       <div id="myPaymentForm">
         <div class="kr-smart-form" kr-card-form-expanded ></div>
       </div>

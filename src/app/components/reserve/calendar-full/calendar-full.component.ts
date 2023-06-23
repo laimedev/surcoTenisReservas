@@ -140,7 +140,23 @@ export class CalendarFullComponent implements OnInit {
   public valor: number = 50; // Inicializamos el valor en 50
   isSumaDisabled: boolean = false; // Indica si el botón de suma está deshabilitado
   isRestaDisabled: boolean = true; // Indica si el botón de resta está deshabilitado
-  payload: { ddUsuario: number; ddlClientes: any; ddlLocalidad: number; ddCaja: number; txtFecha: string; txtHoraInicial: string; txtHoraFinal: string; txtTiempo: any; estado: string; pago: number; txtComentario: any; costoTarifa: any; created_at: string; updated_at: string; } | undefined;
+  payload: {
+    ddUsuario: number;
+    ddlClientes: any;
+    ddlLocalidad: number;
+    ddCaja: number;
+    txtFecha: string;
+    txtHoraInicial: string;
+    txtHoraFinal: string;
+    txtTiempo: any;
+    estado: string;
+    pago: number;
+    txtComentario: any;
+    costoTarifa: any;
+    created_at: string;
+    updated_at: string;
+    venta_id:string;
+   } | undefined;
   codRegistro: any;
   clickPage: boolean = false;
   codigoUnico: any;
@@ -646,6 +662,7 @@ export class CalendarFullComponent implements OnInit {
   }
 
   submitReservationForm3() {
+    this.codigoUnico = this.generateOrderId()
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
@@ -664,6 +681,7 @@ export class CalendarFullComponent implements OnInit {
       costoTarifa:this.reservationForm.price,
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
       updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+      venta_id: this.codigoUnico,
     };
     console.log(this.payload)
 
@@ -682,7 +700,7 @@ export class CalendarFullComponent implements OnInit {
   }
   izipay() {
     this.isLoading = true;
-    this.codigoUnico = this.generateOrderId()
+
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const endpoint = 'https://api.micuentaweb.pe';
     //TEST
@@ -718,20 +736,24 @@ export class CalendarFullComponent implements OnInit {
           'kr-language': 'es-ES' /* to update initialization parameter */,
 
         })
-        
+
       )
-      
+
       .then(({ KR }) => KR.onSubmit(this.onSubmit))
       .then(({ KR }) => KR.attachForm('#myPaymentForm')) /* Attach a payment form  to myPaymentForm div*/
       .then(({ KR, result }) => KR.showForm(result.formId)) /* show the payment form */
       .then(({ KR }) =>
         KR.button.onClick(() => {
+          this.isLoading = true;
           return new Promise<boolean>((resolve, reject) => {
+
             this.crearRegistro()
               .then(() => {
+                this.isLoading = false;
                 resolve(true);
               })
               .catch((error) => {
+                this.isLoading = false;
                 reject(error);
               });
           });
@@ -741,7 +763,7 @@ export class CalendarFullComponent implements OnInit {
         this.eliminarRegistro(this.codRegistro)
         Swal.fire({
           icon: 'warning',
-          text: `Error al realizar el pago`,
+          text: `${event.errorMessage}`,
           confirmButtonText: 'Ok, entendido',
         }).then(() => {
 
@@ -1066,7 +1088,9 @@ console.log(this.codRegistro)
       this.userDataJson = localStorage.getItem('userData');
       const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
 
-      const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+      //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+      const url = `http://localhost:5000/api/registro-cliente/guardar`;
+
       const httpOptions = {
         headers: {
           Authorization: `Bearer ${userData.token}`
@@ -1128,7 +1152,8 @@ console.log(this.codRegistro)
 
   updateRegistro( id : string , ventaId : string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
+    //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
+    const url = `http://localhost:5000/api/registro-cliente/confirmar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -1195,8 +1220,33 @@ console.log(this.codRegistro)
       }
     );
   }
-  generateOrderId() {
-    return uuidv4();
+  //generateOrderId() {
+  //  return uuidv4();
+  //}
+
+
+
+   generateOrderId() {
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+    const timestamp = moment().format("ss");
+    const randomDigits = Math.floor(Math.random() * 100000000);
+    const randomLetters = this.generateRandomLetters(4); // Genera 4 letras aleatorias
+    const orderId = (parseInt(timestamp) * 100000000 + randomDigits).toString().substr(0, 4) + userData.codCliente + randomLetters;
+
+    return orderId;
   }
+
+   generateRandomLetters(length: number) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // Define las letras posibles
+    let randomLetters = '';
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * letters.length);
+      randomLetters += letters.charAt(randomIndex);
+    }
+
+    return randomLetters;
+  }
+
 
 }

@@ -156,8 +156,8 @@ export class CalendarFullComponent implements OnInit {
     private chRef: ChangeDetectorRef,
     config: NgbModalConfig
     ){
-      //config.backdrop = 'static';
-      //config.keyboard = false;
+      config.backdrop = 'static';
+      config.keyboard = false;
   }
 
   ngOnInit(): void {
@@ -681,6 +681,7 @@ export class CalendarFullComponent implements OnInit {
 
   }
   izipay() {
+    this.isLoading = true;
     this.codigoUnico = this.generateOrderId()
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const endpoint = 'https://api.micuentaweb.pe';
@@ -717,7 +718,9 @@ export class CalendarFullComponent implements OnInit {
           'kr-language': 'es-ES' /* to update initialization parameter */,
 
         })
+        
       )
+      
       .then(({ KR }) => KR.onSubmit(this.onSubmit))
       .then(({ KR }) => KR.attachForm('#myPaymentForm')) /* Attach a payment form  to myPaymentForm div*/
       .then(({ KR, result }) => KR.showForm(result.formId)) /* show the payment form */
@@ -741,16 +744,19 @@ export class CalendarFullComponent implements OnInit {
           text: `Error al realizar el pago`,
           confirmButtonText: 'Ok, entendido',
         }).then(() => {
+
           this.modalService.dismissAll()
-          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
+          location.reload();
+          this.isLoading = false; // Utilizar window.location.reload() en lugar de location.reload()
         });
       }))
       .catch((error) => {
-
+        this.isLoading = false;
         this.message = error.message + ' (see console for more details)';
 
 
       });
+      this.isLoading = false;
   }
 
 
@@ -1057,7 +1063,6 @@ console.log(this.codRegistro)
   */
   crearRegistro() {
     return new Promise<void>((resolve, reject) => {
-      this.isLoading2 = true;
       this.userDataJson = localStorage.getItem('userData');
       const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
 

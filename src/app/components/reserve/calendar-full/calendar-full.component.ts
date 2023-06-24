@@ -71,7 +71,7 @@ export class CalendarFullComponent implements OnInit {
     contentHeight: 'auto',
     selectLongPressDelay: 0,
     validRange: () => {
-      const today = moment("2023-06-30").startOf('day');
+      const today = moment().startOf('day');
       const dayOfWeek = today.day(); // Obtener el día de la semana (0: domingo, 1: lunes, 2: martes, 3: miércoles, 4: jueves, 5: viernes, 6: sábado)
       let start, end;
       if (dayOfWeek == 0) { // Si es lunes
@@ -704,13 +704,13 @@ export class CalendarFullComponent implements OnInit {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     const endpoint = 'https://api.micuentaweb.pe';
     //TEST
-    const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0';
+    //const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0';
     //PRODUCCION
-    //const publicKey = "81246030:publickey_uoRIDdgvkxZL4m0cSakghA11gBpPkbCPaMo1cEr9BJOD8"
+    const publicKey = "81246030:publickey_uoRIDdgvkxZL4m0cSakghA11gBpPkbCPaMo1cEr9BJOD8"
     let formToken = '';
 
     const createPaymentObservable = this.http.post(
-      'http://localhost:5000/createPayment',
+      'https://api-rest-tennis.joseyzambranov.repl.co/createPayment',
       {
         paymentConf: {
           amount: JSON.stringify(this.reservationForm.price * 100),
@@ -961,7 +961,7 @@ export class CalendarFullComponent implements OnInit {
   private onSubmit = (paymentData: KRPaymentResponse) => {
 console.log(this.codRegistro)
     this.http
-      .post('http://localhost:5000/validatePayment', paymentData, {
+      .post('https://api-rest-tennis.joseyzambranov.repl.co/validatePayment', paymentData, {
         responseType: 'text'
       })
       .subscribe((response: any) => {
@@ -1089,7 +1089,7 @@ console.log(this.codRegistro)
       const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
 
       //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
-      const url = `http://localhost:5000/api/registro-cliente/guardar`;
+      const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
 
       const httpOptions = {
         headers: {
@@ -1153,7 +1153,7 @@ console.log(this.codRegistro)
   updateRegistro( id : string , ventaId : string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
     //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
-    const url = `http://localhost:5000/api/registro-cliente/confirmar/${id}`;
+    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`

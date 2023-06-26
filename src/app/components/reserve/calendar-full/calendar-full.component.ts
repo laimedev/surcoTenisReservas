@@ -29,7 +29,7 @@ export class CalendarFullComponent implements OnInit {
   @ViewChild('reservationModal') reservationModal: any;
   @ViewChild('paymentModal') paymentModal: any;
 
-  title: string = 'Reserva de Cancha Tenis'
+  title: string = 'Reserva de Cancha'
   message: string = ''
 
   showReservationForm = false;

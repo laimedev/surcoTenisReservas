@@ -38,6 +38,7 @@
                       <table class="table table-striped pt-3">
                           <thead class="pt-3">
                               <tr>
+                                <th>Ver Ticket</th>
                                   <th>Codigo</th>
                                   <th>Cancha</th>
                                   <th>Hora Inicio</th>
@@ -45,11 +46,15 @@
                                   <th>Duración</th>
                                   <!-- <th>Estado</th> -->
                                   <th>Fecha registro</th>
-                                  <th>Ver Ticket</th>
                               </tr>
                           </thead>
                           <tbody>
                               <tr *ngFor="let data of reservas">
+                                <td>
+                                    <button class="btn btn-success" (click)="imprimir(data)">
+                                        <i class="fa fa-ticket" aria-hidden="true"></i>
+                                    </button>
+                                </td>
                                   <td>{{data.codRegistro}}</td>
                                   <td>{{data.nomLocalidad}}</td>
                                   <td>{{data.horainicio}}</td>
@@ -58,11 +63,7 @@
                                   <!-- <td>{{data.estadoRegistro}}</td> -->
                                   <!--<td>{{data.fechRegistro | date: 'dd/MM/yyyy '}}</td>-->
                                   <td>{{ data.fechRegistro.slice(0, 10) | date: 'dd/MM/yyyy' }}</td>
-                                  <td>
-                                      <button class="btn btn-success" (click)="imprimir(data)">
-                                          <i class="fa fa-ticket" aria-hidden="true"></i>
-                                      </button>
-                                  </td>
+                                  
                               </tr>
                           </tbody>
                       </table>

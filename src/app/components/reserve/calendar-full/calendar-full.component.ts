@@ -182,6 +182,9 @@ export class CalendarFullComponent implements OnInit {
     this.loadEvents();
     this.obetenerLocalidades();
     this.userDataJson = localStorage.getItem('userData');
+    const userData = JSON.parse(this.userDataJson!);
+    this.getInfoClient(userData.codCliente)
+
   }
 /*****************************************\PAGO********************************************* */
   payment(){
@@ -719,11 +722,13 @@ export class CalendarFullComponent implements OnInit {
           customer: {
             email: userData.email
         }
+
         },
+
       },
+
       { responseType: 'text' }
     );
-      console.log(this.codRegistro)
     firstValueFrom(createPaymentObservable)
       .then((resp: any) => {
         formToken = resp;
@@ -1247,6 +1252,33 @@ console.log(this.codRegistro)
 
     return randomLetters;
   }
+
+  getInfoClient(id:any){
+    const userData = JSON.parse(localStorage.getItem('userData')!);
+if(userData.email == null){
+  const token = localStorage.getItem("token");
+  const authToken = `Bearer ${token}` ;
+  const headers =  new HttpHeaders({
+  'Authorization': authToken
+  });
+
+  const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/cliente/perfil/${id}`;
+  this.http.get<any[]>(url, {headers}).subscribe(
+    (data: any) => {
+
+
+    userData.email = data.email; // Agregar el valor de data.email al objeto userData
+    localStorage.setItem('userData', JSON.stringify(userData));
+
+
+    },
+    (error: any) => {
+      console.log('Error fetching events:', error);
+    }
+  );
+}
+
+}
 
 
 }

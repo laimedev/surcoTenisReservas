@@ -18,7 +18,7 @@
     background-color: rgb(229, 248, 225, 0.5) !important;
   }
 
-  
+
 .swal2-popup .swal2-styled.swal2-confirm {
 	background-color: #006F57 !important;
 }
@@ -52,7 +52,7 @@
     text-transform: uppercase;
 }
 
-.fc .fc-timegrid-axis-cushion, .fc .fc-timegrid-slot-label-cushion { 
+.fc .fc-timegrid-axis-cushion, .fc .fc-timegrid-slot-label-cushion {
     padding: 5px
 }
 
@@ -68,7 +68,7 @@
 }
 
 
-.fc .fc-button-primary:disabled { 
+.fc .fc-button-primary:disabled {
     background-color: #198754;
     border-color: #198754;
     color: #ffff;
@@ -79,3 +79,9 @@
     border-color: #198754;
     color: #ffff;
 }
+
+.kr-payment-button{
+  background-color: #198754 !important;
+    border-color: #198754 !important;
+    color: rgb(0, 0, 0) !important;
+  }

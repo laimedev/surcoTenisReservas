@@ -56,7 +56,7 @@ export class CalendarFullComponent implements OnInit {
     },
     initialView: 'timeGridDay',
     events: [],
-    hiddenDays: this.getHiddenDays(),
+    //hiddenDays: this.getHiddenDays(),
     weekends: true,
     editable: false,
     selectable: true,

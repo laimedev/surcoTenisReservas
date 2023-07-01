@@ -713,8 +713,8 @@ export class CalendarFullComponent implements OnInit {
     let formToken = '';
 
     const createPaymentObservable = this.http.post(
-      'https://api-rest-tennis.joseyzambranov.repl.co/createPayment',
-      {
+    'https://api-rest-tennis.joseyzambranov.repl.co/createPayment', 
+    {
         paymentConf: {
           amount: JSON.stringify(this.reservationForm.price * 100),
           currency: 'PEN',
@@ -966,8 +966,8 @@ export class CalendarFullComponent implements OnInit {
   private onSubmit = (paymentData: KRPaymentResponse) => {
 console.log(this.codRegistro)
     this.http
-      .post('https://api-rest-tennis.joseyzambranov.repl.co/validatePayment', paymentData, {
-        responseType: 'text'
+      .post('https://api-rest-tennis.joseyzambranov.repl.co/validatePayment', paymentData, {       
+      responseType: 'text'
       })
       .subscribe((response: any) => {
         if (response) {
@@ -998,6 +998,18 @@ console.log(this.codRegistro)
         }
       },
       (error: any) => {
+        this.eliminarRegistro(this.codRegistro)
+        Swal.fire({
+          icon: 'warning',
+          title: `Error al validar el pago:`,
+          text: `${error.error}`,
+          confirmButtonText: 'Ok, entendido',
+        }).then(() => {
+
+          this.modalService.dismissAll()
+          location.reload();
+          this.isLoading = false; // Utilizar window.location.reload() en lugar de location.reload()
+        });
         console.error('Error al validar el pago:', error);
 
       }

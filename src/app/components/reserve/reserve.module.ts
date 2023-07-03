@@ -11,6 +11,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { ProfileComponent } from './profile/profile.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 //import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -19,6 +21,8 @@ import { ProfileComponent } from './profile/profile.component';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     CommonModule,

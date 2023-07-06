@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import KRGlue from '@lyracom/embedded-form-glue'
 import { firstValueFrom } from 'rxjs'
 import { v4 as uuidv4 } from 'uuid';
+import { environment } from 'src/app/environments/environment';
 
 
 @Component({
@@ -156,6 +157,7 @@ export class CalendarFullComponent implements OnInit {
     created_at: string;
     updated_at: string;
     venta_id:string;
+    version:string;
    } | undefined;
   codRegistro: any;
   clickPage: boolean = false;
@@ -649,7 +651,7 @@ export class CalendarFullComponent implements OnInit {
       fechaInicio.getHours() === 17 && fechaInicio.getMinutes() === 0 &&
       fechaFin.getHours() === 18 && fechaFin.getMinutes() === 50
     ) {
-      var resultado = parseFloat(precioBase) + 28; // Sumar 28 al precio base
+      var resultado = parseFloat(precioBase) + 30; // Sumar 28 al precio base
       return resultado.toFixed(2);
     }
     var multiplicador = 1;
@@ -685,6 +687,7 @@ export class CalendarFullComponent implements OnInit {
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
       updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
       venta_id: this.codigoUnico,
+      version:environment.version
     };
     console.log(this.payload)
 
@@ -713,7 +716,7 @@ export class CalendarFullComponent implements OnInit {
     let formToken = '';
 
     const createPaymentObservable = this.http.post(
-    'https://api-rest-tennis.joseyzambranov.repl.co/createPayment', 
+    'https://api-rest-tennis.joseyzambranov.repl.co/createPayment',
     {
         paymentConf: {
           amount: JSON.stringify(this.reservationForm.price * 100),
@@ -966,7 +969,7 @@ export class CalendarFullComponent implements OnInit {
   private onSubmit = (paymentData: KRPaymentResponse) => {
 console.log(this.codRegistro)
     this.http
-      .post('https://api-rest-tennis.joseyzambranov.repl.co/validatePayment', paymentData, {       
+      .post('https://api-rest-tennis.joseyzambranov.repl.co/validatePayment', paymentData, {
       responseType: 'text'
       })
       .subscribe((response: any) => {

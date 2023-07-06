@@ -6,7 +6,7 @@ import { Component, OnInit  } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  
+
   public userData = JSON.parse(localStorage.getItem("userData")!);
 
   constructor(){
@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
 
 
   ngOnInit(): void {
-    
+
   }
 
 

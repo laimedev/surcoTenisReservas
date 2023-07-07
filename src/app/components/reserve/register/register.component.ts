@@ -172,7 +172,7 @@ export class RegisterComponent implements OnInit{
     { value: "1927", label: "1927"},
     { value: "1926", label: "1926"},
     { value: "1925", label: "1925"},
-    
+
   ]
 
   errorSession: boolean = false
@@ -184,7 +184,7 @@ export class RegisterComponent implements OnInit{
   dateMonth: any = '';
   dateYear: any = '';
   submitted = false;
-  
+
   constructor(private cookie: CookieService,
     private toastr: ToastrService,
     private modalService: NgbModal,
@@ -221,7 +221,7 @@ export class RegisterComponent implements OnInit{
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    
+
   }
 
 
@@ -238,7 +238,7 @@ export class RegisterComponent implements OnInit{
   }
 
 
- 
+
 
 
 
@@ -251,10 +251,10 @@ export class RegisterComponent implements OnInit{
 
     if(this.formRegister.valid) {
       this.authService.registerCLient(this.formRegister.value).subscribe( (resp: any) => {
-        this.isLoading = false; 
+        this.isLoading = false;
 
 
-        
+
 
         Swal.fire({
           title: `Registrado correctamente, Bienvenido!!`,
@@ -281,9 +281,19 @@ export class RegisterComponent implements OnInit{
         this.router.navigateByUrl("/reserve/profile")
 
       }, error => {
-        console.log(error.error);
-        this.isLoading = false; 
-        this.toastr.error('Ocurrio un error:', error.error);
+
+        let resultError = error.error.error
+        if( resultError == null){
+          resultError = error.error.errors[0].msg;
+
+        }
+        Swal.fire({
+          icon: 'warning',
+          text:  `${resultError}`,
+          confirmButtonText: 'Ok, entendido',
+        })
+        this.isLoading = false;
+        this.toastr.error('Ocurrio un error:', resultError);
       })
     } else {
       this.isLoading = false; // Mostrar el spinner de carga
@@ -292,7 +302,7 @@ export class RegisterComponent implements OnInit{
       });
     }
 
-    
+
   }
 
 
@@ -307,7 +317,7 @@ export class RegisterComponent implements OnInit{
         if(resp['success'] == false) {
           console.log('No Existe persona asociada al DNI')
         } else {
-          
+
           this.formRegister.get('nombres')?.setValue(resp.nombres);
           this.formRegister.get('primer_apellido')?.setValue(resp.apellidoPaterno);
           this.formRegister.get('segundo_apellido')?.setValue(resp.apellidoMaterno);
@@ -315,7 +325,7 @@ export class RegisterComponent implements OnInit{
           // this.registerForm.get('nombre')?.setValue(resp['nombres']+ ' ' + resp['apellidoPaterno'] + ' ' + resp['apellidoMaterno'])
         }
       })
-      
+
     }
   }
 

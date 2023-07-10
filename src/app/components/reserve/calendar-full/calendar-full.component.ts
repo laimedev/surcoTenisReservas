@@ -204,7 +204,7 @@ export class CalendarFullComponent implements OnInit {
   /********************************LISTAR PEGISTROS************************************ */
   loadEvents() {
     this.isLoading = true;
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar/?id=${this.localidadSelect}`;
+    const url = `${environment.url}api/registro-cliente/listar/?id=${this.localidadSelect}`;
 
     this.http.get<any[]>(url).subscribe(
       (data: any[]) => {
@@ -372,7 +372,7 @@ export class CalendarFullComponent implements OnInit {
     this.isLoading2 = true;
     this.userDataJson = localStorage.getItem('userData');
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-    const url = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar';
+    const url = `${environment.url}api/registro-cliente/guardar`;
     const payload = {
       ddUsuario: 1,
       ddlClientes: userData.codCliente,
@@ -487,7 +487,7 @@ export class CalendarFullComponent implements OnInit {
   validateDateReserve(horainicio: any, fechRegistro: any, horafinal: any) {
     this.isLoading = true;
     const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
-    const validationEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/validar-Fecha-reserva';
+    const validationEndpoint = `${environment.url}api/registro-cliente/validar-Fecha-reserva`;
     const validationPayload = {
       txtFecha: fechRegistro,
       txtHoraInicial: horainicio,
@@ -535,7 +535,7 @@ export class CalendarFullComponent implements OnInit {
   validateCountReserve(fechRegistro: any,horainicio: any,  horafinal: any) {
     this.isLoading = true;
     const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
-    const validationEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/validar-cantidad-reserva';
+    const validationEndpoint = `${environment.url}api/registro-cliente/validar-cantidad-reserva`;
     const validationPayload = {
       txtFecha: fechRegistro,
       ddlLocalidad: this.localidadSelect,
@@ -580,7 +580,7 @@ export class CalendarFullComponent implements OnInit {
 
     this.isLoading = true
     const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-    const priceEndpoint = 'https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/precio';
+    const priceEndpoint = `${environment.url}api/registro-cliente/precio`;
     const pricePayload = {
       fechRegistro: fechRegistro,
       horainicio: horainicio,
@@ -642,7 +642,7 @@ export class CalendarFullComponent implements OnInit {
       this.isRestaDisabled = true;
     }
   }
-
+/*
   calPriceTime(horaInicio: any, horaFin: any, precioBase: any) {
     var fechaInicio = new Date(horaInicio);
     var fechaFin = new Date(horaFin);
@@ -660,7 +660,33 @@ export class CalendarFullComponent implements OnInit {
     }
     var resultado = multiplicador * parseFloat(precioBase); // Multiplicar por el precio base
     return resultado.toFixed(2);
+  }*/
+
+
+calPriceTime(horaInicio: any, horaFin: any, precioBase: any) {
+  const fechaInicio = moment(horaInicio);
+  const fechaFin = moment(horaFin);
+  const duracion = fechaFin.diff(fechaInicio, 'minutes'); // Duración en minutos
+
+  if (
+    fechaInicio.hours() === 17 &&
+    fechaInicio.minutes() === 0 &&
+    fechaFin.hours() === 18 &&
+    fechaFin.minutes() === 50
+  ) {
+    const resultado = parseFloat(precioBase) + 30; // Sumar 30 al precio base
+    return resultado.toFixed(2);
   }
+
+  let multiplicador = 1;
+  if (duracion > 50) {
+    multiplicador = 2;
+  }
+
+  const resultado = multiplicador * parseFloat(precioBase); // Multiplicar por el precio base
+  return resultado.toFixed(2);
+}
+
   openPaymentModal() {
     this.modalService.open(this.paymentModal, { centered: true }); // Abre el modal utilizando la referencia
     this.izipay()
@@ -716,7 +742,7 @@ export class CalendarFullComponent implements OnInit {
     let formToken = '';
 
     const createPaymentObservable = this.http.post(
-    'https://api-rest-tennis.joseyzambranov.repl.co/createPayment',
+    `${environment.url}createPayment`,
     {
         paymentConf: {
           amount: JSON.stringify(this.reservationForm.price * 100),
@@ -788,188 +814,10 @@ export class CalendarFullComponent implements OnInit {
       });
       this.isLoading = false;
   }
-
-
-  //izipay() {
-  //  //this.crearRegistro()
-  //  //console.log(this.codRegistro)
-  //  const endpoint = 'https://api.micuentaweb.pe'
-  //  const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0'
-  //  let formToken = ''
-  //  const observable = this.http.post(
-  //    'http://localhost:5000/createPayment',
-  //    { paymentConf: { amount:JSON.stringify(this.reservationForm.price * 100) , currency: 'PEN' ,orderId : "" } },
-  //    { responseType: 'text' }
-  //  )
-  //  firstValueFrom(observable)
-  //    .then((resp: any) => {
-  //      formToken = resp
-  //      return KRGlue.loadLibrary(
-  //        endpoint,
-  //        publicKey
-  //      ) /* Load the remote library */
-  //    })
-  //    .then(({ KR }) =>
-  //      KR.setFormConfig({
-  //        /* set the minimal configuration */
-  //        formToken: formToken,
-  //        'kr-language': 'es-ES' /* to update initialization parameter */
-  //      })
-  //    )
-//
-  //    .then(({ KR }) => KR.onSubmit(this.onSubmit))
-  //    .then(({ KR }) =>
-  //      KR.attachForm('#myPaymentForm')
-//
-  //    ) /* Attach a payment form  to myPaymentForm div*/
-  //    .then(({ KR, result }) =>
-  //      KR.showForm(result.formId)
-  //    ) /* show the payment form */
-  //    .then(({KR})=>KR.button.onClick(()=>{
-  //                  return new Promise<boolean>((resolve, reject) => {
-  //                              this.crearRegistro()
-  //                                .then(() => {
-  //                                  resolve(true);
-  //                                })
-  //                                .catch((error) => {
-  //                                  reject(error);
-  //                                });
-  //                            });
-  //                }))
-  //    .catch(error => {
-  //      this.message = error.message + ' (see console for more details)'
-  //    })
-  //}
-//
-
-  //izipay() {
-  //  const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
-  //  this.crearRegistro()
-  //    .then(() => {
-  //      console.log(this.codRegistro);
-  //      const endpoint = 'https://api.micuentaweb.pe';
-  //      const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0';
-  //      let formToken = '';
-  //      const observable = this.http.post(
-  //        'http://localhost:5000/createPayment',
-  //        {
-  //          paymentConf: {
-  //            amount: JSON.stringify(this.reservationForm.price * 100),
-  //            currency: 'PEN',
-  //            orderId: this.codRegistro,
-  //            customer: {
-  //              email: userData.email
-  //          }
-//
-  //           } },
-  //        { responseType: 'text' }
-  //      );
-  //      return firstValueFrom(observable)
-  //        .then((resp: any) => {
-  //          formToken = resp;
-  //          return KRGlue.loadLibrary(
-  //            endpoint,
-  //            publicKey
-  //          ); /* Load the remote library */
-  //        })
-  //        .then(({ KR }) =>
-  //          KR.setFormConfig({
-  //            /* set the minimal configuration */
-  //            formToken: formToken,
-  //            'kr-language': 'es-ES' /* to update initialization parameter */
-  //          })
-  //        )
-  //        .then(({ KR }) => KR.onSubmit(this.onSubmit))
-  //        .then(({ KR }) =>
-  //          KR.attachForm('#myPaymentForm')
-  //        ) /* Attach a payment form  to myPaymentForm div*/
-  //        .then(({ KR, result }) =>
-  //          KR.showForm(result.formId)
-  //        ) /* show the payment form */
-  //          .then(({KR})=>KR.button.onClick(()=>{
-  //            return new Promise<boolean>((resolve, reject) => {
-  //                        this.crearRegistro()
-  //                          .then(() => {
-  //                            resolve(true);
-  //                          })
-  //                          .catch((error) => {
-  //                            reject(error);
-  //                          });
-  //                      });
-  //          }))
-  //        .catch(error => {
-  //          this.message = error.message + ' (see console for more details)';
-  //        });
-  //    })
-  //    .catch(error => {
-  //      console.error('Error al crear el registro:', error);
-  //    });
-  //}
-
-
-//
-//izipay() {
-//  const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
-//  this.codRegistro = '';
-//
-//  const endpoint = 'https://api.micuentaweb.pe';
-//  const publicKey = '81246030:testpublickey_kt72SwvRQKdOYwyTtZ6dkKnZyvTY1oaztrWmJrVbG5oC0';
-//  let formToken = '';
-//
-//  const observable = this.http.post(
-//    'http://localhost:5000/createPayment',
-//    {
-//      paymentConf: {
-//        amount: JSON.stringify(this.reservationForm.price * 100),
-//        currency: 'PEN',
-//        orderId: this.codRegistro,
-//        customer: {
-//          email: userData.email
-//        }
-//      }
-//    },
-//    { responseType: 'text' }
-//  );
-//
-//  firstValueFrom(observable)
-//    .then((resp: any) => {
-//      formToken = resp;
-//      return KRGlue.loadLibrary(endpoint, publicKey);
-//    })
-//    .then(({ KR }) => {
-//      KR.setFormConfig({
-//        formToken: formToken,
-//        'kr-language': 'es-ES'
-//      });
-//
-//      KR.button.onClick(() => {
-//        return new Promise<boolean>((resolve, reject) => {
-//          this.crearRegistro()
-//            .then(() => {
-//              resolve(true);
-//            })
-//            .catch((error) => {
-//              reject(error);
-//            });
-//        });
-//      });
-//    })
-//    .then(({ KR }) => KR.onSubmit(this.onSubmit))
-//    .then(({ KR }) => KR.attachForm('#myPaymentForm'))
-//    .then(({ KR, result }) => KR.showForm(result.formId))
-//    .catch((error) => {
-//      this.message = error.message + ' (see console for more details)';
-//    });
-//}
-
-
-
-
-
   private onSubmit = (paymentData: KRPaymentResponse) => {
 console.log(this.codRegistro)
     this.http
-      .post('https://api-rest-tennis.joseyzambranov.repl.co/validatePayment', paymentData, {
+      .post(`${environment.url}validatePayment`, paymentData, {
       responseType: 'text'
       })
       .subscribe((response: any) => {
@@ -1018,98 +866,11 @@ console.log(this.codRegistro)
       }
     );
 }
-  /*
-  private onSubmit = (paymentData: KRPaymentResponse) => {
-    const codRegistro =  JSON.parse(localStorage.getItem('codRegistro')!);
-    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-
-    this.isLoading2 = true;
-    this.userDataJson = localStorage.getItem('userData');
-
-
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
-    const httpOptions = {
-      headers: {
-        Authorization: `Bearer ${userData.token}`
-      }
-    };
-
-    this.http.post(url, this.payload ,httpOptions).subscribe(
-      (response: any) => {
-        const newData = Object.assign({}, paymentData, { orderId : response.codRegistro ,
-          email: "joseyzambranovpe@gmail.com",
-
-
-
-        })
-        console.log({newData})
-        this.toastr.success('Reserva guardada con éxito:', 'Éxito');
-        console.log(response);
-        this.http
-      .post('http://localhost:5000/validatePayment', newData, {
-        responseType: 'text'
-      })
-      .subscribe((response: any) => {
-        if (response) {
-          this.message = 'Payment successful!'
-          this.chRef.detectChanges()
-        }
-      })
-      },
-      (error) => {
-        this.toastr.error('Error al guardar la reserva:', error.error);
-        Swal.fire({
-          icon: 'warning',
-          text: `${error.error.error}`,
-          confirmButtonText: 'Ok, entendido',
-        }).then(() => {
-          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
-        });
-
-      }
-    );
-  }
-  */
-/*
-  crearRegistro() {
-
-    this.isLoading2 = true;
-    this.userDataJson = localStorage.getItem('userData');
-    const userData = JSON.parse(this.userDataJson?this.userDataJson:"");
-
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
-    const httpOptions = {
-      headers: {
-        Authorization: `Bearer ${userData.token}`
-      }
-    };
-
-    this.http.post(url, this.payload ,httpOptions).subscribe(
-      (response) => {
-        this.toastr.success('Reserva guardada con éxito:', 'Éxito');
-        console.log(response);
-      },
-      (error) => {
-        this.toastr.error('Error al guardar la reserva:', error.error);
-        Swal.fire({
-          icon: 'warning',
-          text: `${error.error.error}`,
-          confirmButtonText: 'Ok, entendido',
-        }).then(() => {
-          location.reload(); // Utilizar window.location.reload() en lugar de location.reload()
-        });
-
-      }
-    );
-  }
-  */
   crearRegistro() {
     return new Promise<void>((resolve, reject) => {
       this.userDataJson = localStorage.getItem('userData');
       const userData = JSON.parse(this.userDataJson ? this.userDataJson : '');
-
-      //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
-      const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+      const url = `${environment.url}api/registro-cliente/guardar`;
 
       const httpOptions = {
         headers: {
@@ -1142,7 +903,7 @@ console.log(this.codRegistro)
   crearRegistro2(data: any) {
 
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+    const url = `${environment.url}api/registro-cliente/guardar`;
     const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
     const httpOptions = {
       headers: {
@@ -1172,8 +933,7 @@ console.log(this.codRegistro)
 
   updateRegistro( id : string , ventaId : string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    //const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
+    const url = `${environment.url}api/registro-cliente/confirmar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -1194,7 +954,7 @@ console.log(this.codRegistro)
 
   registrarPago( fechaPago : string , importePago : string ,codRegistro: string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/registrar-pago`;
+    const url = `${environment.url}api/registro-cliente/registrar-pago`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -1224,7 +984,7 @@ console.log(this.codRegistro)
 
   eliminarRegistro(id: string) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/eliminar/${id}`;
+    const url = `${environment.url}api/registro-cliente/eliminar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -1277,7 +1037,7 @@ if(userData.email == null){
   'Authorization': authToken
   });
 
-  const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/cliente/perfil/${id}`;
+  const url = `${environment.url}api/cliente/perfil/${id}`;
   this.http.get<any[]>(url, {headers}).subscribe(
     (data: any) => {
 

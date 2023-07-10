@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { environment } from 'src/app/environments/environment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -12,12 +13,12 @@ export class ForgotPasswordComponent {
   email: string = '';
   message: string = '';
   isLoading: boolean = false;
- 
+
   constructor(private http: HttpClient,public router: Router,) {}
-  
+
   sendResetRequest() {
     this.isLoading = true;
-    this.http.post('https://api-rest-tennis.joseyzambranov.repl.co/api/forgot-password', { email: this.email })
+    this.http.post(`${environment.url}api/forgot-password`, { email: this.email })
       .subscribe(
         (response:any) => {
           this.isLoading = false;
@@ -28,14 +29,14 @@ export class ForgotPasswordComponent {
             text:  `Porfavor revise su correo electronico`,
             confirmButtonText: 'Ok, muchas gracias!!',
           }).then(()=>{
-              
+
             this.router.navigate(['/reserve/']);
               setTimeout(() => {
                 this.router.navigate(['/reserve/']);
               }, 1000);
 
           })
-          
+
         },
         (error) => {
           this.isLoading = false;
@@ -47,8 +48,8 @@ export class ForgotPasswordComponent {
           this.message = error.error.error;
           console.error(error);
         }
-        
+
       );
-      
+
   }
 }

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PdfMakeWrapper, Txt, Img, Table, QR } from 'pdfmake-wrapper';
 import * as moment from 'moment';
+import { environment } from 'src/app/environments/environment';
 
 
 @Component({
@@ -195,8 +196,7 @@ export class ProfileComponent implements OnInit {
 		'Authorization': authToken
 		});
 
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/listar-cliente/${this.userData.codCliente}`;
-    //const url = `http://localhost:5000/api/registro-cliente/listar-cliente/${this.userData.codCliente}`;
+    const url = `${environment.url}api/registro-cliente/listar-cliente/${this.userData.codCliente}`;
 
     this.http.get<any[]>(url, {headers}).subscribe(
       (data: any) => {
@@ -222,7 +222,7 @@ export class ProfileComponent implements OnInit {
 		'Authorization': authToken
 		});
 
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/cliente/perfil/${this.userData.codCliente}`;
+    const url = `${environment.url}api/cliente/perfil/${this.userData.codCliente}`;
     this.http.get<any[]>(url, {headers}).subscribe(
       (data: any) => {
 
@@ -398,7 +398,7 @@ export class ProfileComponent implements OnInit {
         data.duracion,
         data.costoTarifa,
       ],
-  ]).alignment('left').italics().layout('noBorders').widths([ 40,40,35,50  ]).end);
+  ]).alignment('center').italics().layout('noBorders').widths([ 40,40,35,50  ]).end);
 
   pdf.add( new Txt('---------------------------------------------------------------------------------------------------').alignment('center').italics().end);
 

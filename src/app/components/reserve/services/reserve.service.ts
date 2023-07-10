@@ -176,7 +176,7 @@ export class ReserveService {
 
   eliminarRegistro(id: string) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/eliminar/${id}`;
+    const url = `${environment.url}api/registro-cliente/eliminar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -197,7 +197,7 @@ export class ReserveService {
   crearRegistro(data: any) {
 
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/guardar`;
+    const url = `${environment.url}api/registro-cliente/guardar`;
     const dataPayment =  JSON.parse(localStorage.getItem('dataPayment')!);
     const httpOptions = {
       headers: {
@@ -227,7 +227,7 @@ export class ReserveService {
 
   updateRegistro( id : string , ventaId : string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/confirmar/${id}`;
+    const url = `${environment.url}api/registro-cliente/confirmar/${id}`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`
@@ -248,7 +248,7 @@ export class ReserveService {
 
   registrarPago( fechaPago : string , importePago : string ,codRegistro: string ) {
     const userData = JSON.parse(localStorage.getItem('userData')!);
-    const url = `https://api-rest-tennis.joseyzambranov.repl.co/api/registro-cliente/registrar-pago`;
+    const url = `${environment.url}api/registro-cliente/registrar-pago`;
     const httpOptions = {
       headers: {
         Authorization: `Bearer ${userData.token}`

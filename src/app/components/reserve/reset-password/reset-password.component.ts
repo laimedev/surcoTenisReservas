@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { environment } from 'src/app/environments/environment';
 
 @Component({
   selector: 'app-reset-password',
@@ -20,7 +21,7 @@ export class ResetPasswordComponent {
   resetPassword(): void {
     this.isLoading = true;
     const token = window.location.href.split('?token=')[1];
-    const resetUrl = 'https://api-rest-tennis.joseyzambranov.repl.co/api/forgot-password/reset-password';
+    const resetUrl = `${environment.url}api/forgot-password/reset-password`;
     const body = { token, password: this.password };
 
     this.http.post(resetUrl, body)
@@ -33,14 +34,14 @@ export class ResetPasswordComponent {
             title: `${response.message}`,
             confirmButtonText: 'Ok, muchas gracias!!',
           }).then(()=>{
-              
+
             this.router.navigate(['/reserve/login']);
               setTimeout(() => {
                 this.router.navigate(['/reserve/login']);
               }, 1000);
 
           })
-          
+
         },
         (error) => {
           this.isLoading = false;
@@ -52,7 +53,7 @@ export class ResetPasswordComponent {
           this.message = error.error.error;
           console.error(error);
         }
-        
+
       );
   }
   togglePassword(): void {
